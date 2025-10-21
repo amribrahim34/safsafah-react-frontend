@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import CatalogPage from "./pages/CatalogPage";
 import SkinCareQuize from "./pages/SkinCareQuize";
 import Product from "./pages/ProductDetails";
+import CartPage from "./pages/CartPage.jsx";
 import './App.css';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/catalog" element={<CatalogPage />} />
         <Route path="/quize" element={<SkinCareQuize />} />
         <Route path="/product/:id" element={<Product />} />
+        <Route path="/cart" element={<CartPage />} />
         {/* <Route path="/about" element={<About />} /> */}
       </Routes>
     </Router>
