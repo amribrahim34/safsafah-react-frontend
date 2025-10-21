@@ -151,22 +151,22 @@ export default function ProductPage(){
           </div>
 
           {/* Trust + Delivery + COD */}
-          <div className="mt-6 grid md:grid-cols-3 gap-3">
-            <TrustBadges brand={BRAND} lang={lang} />
-            <DeliveryETA brand={BRAND} lang={lang} />
-            <div className="rounded-2xl border border-neutral-200 p-3 text-sm">
+          <div className="mt-6 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(260px,1fr))]">
+            <TrustBadges brand={BRAND} lang={lang} flow />
+            <DeliveryETA brand={BRAND} lang={lang} className="h-full"  />
+            <div className="rounded-2xl border border-neutral-200 p-3 text-sm h-full">
               <div className="font-semibold">{lang==="ar"?"الدفع عند الاستلام":"Cash on Delivery"}</div>
               <div className="text-neutral-600">{lang==="ar"?"إرجاع مجاني خلال 14 يوم":"Free returns within 14 days"}</div>
             </div>
-          </div>
 
-          {/* Description */}
+          </div>
+        </div>
+        {/* Description */}
           <div className="mt-6">
             <div className="font-bold mb-1">{lang==="ar"?"الوصف":"Description"}</div>
             <p className="text-neutral-700 text-sm">{lang==="ar"?PRODUCT.description.ar:PRODUCT.description.en}</p>
             <div className="text-neutral-500 text-xs mt-2">{lang==="ar"?PRODUCT.details.ar:PRODUCT.details.en}</div>
           </div>
-        </div>
       </section>
 
       {/* Trust Phase — Reviews (folded by default) */}
