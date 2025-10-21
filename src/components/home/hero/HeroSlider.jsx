@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { buildUrlWithParams, getCtaFilters } from "../../../lib/navigation";
 
 export default function HeroSlider({ slides, brand }) {
   const ref = useRef(null);
@@ -36,8 +38,19 @@ export default function HeroSlider({ slides, brand }) {
                   <h1 className="text-3xl md:text-5xl font-black leading-tight">{s.title}</h1>
                   <p className="mt-2 text-white/90 text-lg md:text-xl">{s.sub}</p>
                   <div className="mt-5 flex gap-3">
-                    <a href="#" className="rounded-2xl px-5 py-3 font-semibold text-white" style={{ background: brand.primary }}>{s.cta1}</a>
-                    <a href="#" className="rounded-2xl border px-5 py-3 font-semibold text-white/90 border-white/70">{s.cta2}</a>
+                    <Link 
+                      to={buildUrlWithParams('/catalog', getCtaFilters(s.cta1))}
+                      className="rounded-2xl px-5 py-3 font-semibold text-white" 
+                      style={{ background: brand.primary }}
+                    >
+                      {s.cta1}
+                    </Link>
+                    <Link 
+                      to={buildUrlWithParams('/catalog', getCtaFilters(s.cta2))}
+                      className="rounded-2xl border px-5 py-3 font-semibold text-white/90 border-white/70"
+                    >
+                      {s.cta2}
+                    </Link>
                   </div>
                 </div>
               </div>

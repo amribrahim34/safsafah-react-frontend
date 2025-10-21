@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { BRAND } from "../content/brand";
 import { IMG } from "../content/images";
 import { COPY } from "../content/copy";
@@ -35,7 +36,7 @@ export default function Home() {
   return (
     <div id="home" className="min-h-screen bg-white text-neutral-900">
       <PromoBar text={T.promo} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} />
+      <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
 
       <HeroSlider slides={T.slider} brand={BRAND} />
 
@@ -55,7 +56,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xl md:text-2xl font-extrabold">{T.sections.trending}</h2>
-            <a href="#" className="font-semibold" style={{ color: BRAND.primary }}>{lang === "ar" ? "المزيد" : "View all"}</a>
+            <Link to="/catalog" className="font-semibold" style={{ color: BRAND.primary }}>{lang === "ar" ? "المزيد" : "View all"}</Link>
           </div>
           <ProductGrid products={PRODUCTS} lang={lang} brand={BRAND} />
         </div>

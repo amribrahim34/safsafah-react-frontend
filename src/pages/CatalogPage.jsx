@@ -1,5 +1,6 @@
 // src/pages/catalog/CatalogPage.jsx
-import React, { useMemo, useState, useMemo as useMemo2 } from "react";
+import React, { useMemo, useState, useMemo as useMemo2, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { BRAND } from "../content/brand";
 import { COPY } from "../content/copy";
 import { IMG } from "../content/images";
@@ -45,6 +46,7 @@ export default function CatalogPage(){
   const [lang, setLang] = useState("ar");
   const T = useMemo(()=> COPY[lang], [lang]);
   useDir(lang);
+  const [searchParams] = useSearchParams();
 
   // filters state
   const [q,setQ] = useState("");
@@ -56,6 +58,21 @@ export default function CatalogPage(){
   const [tags,setTags] = useState([]);
   const [skins,setSkins] = useState([]);
   const [sort,setSort] = useState("relevance");
+
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    const onSaleParam = searchParams.get('onSale');
+    const tagsParam = searchParams.get('tags');
+    const sortParam = searchParams.get('sort');
+    const brandParam = searchParams.get('brand');
+    
+    if (categoryParam) setCategory(categoryParam);
+    if (onSaleParam === 'true') setOnSale(true);
+    if (tagsParam) setTags(tagsParam.split(','));
+    if (sortParam) setSort(sortParam);
+    if (brandParam) setBrand(brandParam.split(','));
+  }, [searchParams]);
 
   const facets = useMemo(()=> buildFacets(CATALOG), []);
   // init price
@@ -110,7 +127,7 @@ export default function CatalogPage(){
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       <PromoBar text={T.promo} lang={lang} onToggleLang={()=>setLang(lang==="ar"?"en":"ar")} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} />
+      <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
 
       {/* Page title + sort */}
       <section className="max-w-7xl mx-auto px-4 pt-6">

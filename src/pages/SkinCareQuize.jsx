@@ -146,7 +146,7 @@ export default function QuizPage(){
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       <PromoBar text={T.promo} lang={lang} onToggleLang={()=>setLang(lang==="ar"?"en":"ar")} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} />
+      <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
 
       <section className="max-w-3xl mx-auto px-4 pt-8 pb-4">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-2">{lang==="ar"?"اعرف روتينك في دقيقة":"Find your routine in 1 minute"}</h1>
