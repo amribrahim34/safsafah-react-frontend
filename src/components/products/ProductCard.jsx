@@ -1,9 +1,18 @@
 import { Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export default function ProductCard({ name, price, rating, img, lang, brand }) {
+export default function ProductCard({ id, name, price, rating, img, lang, brand }) {
   const priceFmt = new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", { style: "currency", currency: "EGP", maximumFractionDigits: 0 }).format(price);
+  
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // TODO: Implement add to cart functionality
+    console.log('Add to cart:', id);
+  };
+
   return (
-    <div className="rounded-2xl bg-white border border-neutral-200 overflow-hidden">
+    <Link to={`/product/${id}`} className="block rounded-2xl bg-white border border-neutral-200 overflow-hidden hover:shadow-lg transition-shadow duration-200">
       <img src={img} alt="product" className="w-full h-56 object-cover" loading="lazy" />
       <div className="p-3">
         <div className="font-semibold min-h-[3rem]">{lang === "ar" ? name.ar : name.en}</div>
@@ -13,11 +22,15 @@ export default function ProductCard({ name, price, rating, img, lang, brand }) {
         </div>
         <div className="mt-2 flex items-center justify-between">
           <div className="font-extrabold">{priceFmt}</div>
-          <button className="rounded-xl text-white text-sm px-3 py-2" style={{ background: brand.primary }}>
+          <button 
+            onClick={handleAddToCart}
+            className="rounded-xl text-white text-sm px-3 py-2 hover:opacity-90 transition-opacity" 
+            style={{ background: brand.primary }}
+          >
             {lang === "ar" ? "أضف" : "Add"}
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
