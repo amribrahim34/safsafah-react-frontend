@@ -7,15 +7,15 @@ import { useDir } from "../hooks/useDir";
 
 import PromoBar from "../components/header/PromoBar";
 import Header from "../components/header/Header";
-import HeroSlider from "../components/hero/HeroSlider";
-import Banners from "../components/banners/Banners";
+import HeroSlider from "../components/home/hero/HeroSlider";
+import Banners from "../components/home/banners/Banners";
 import CategoriesGrid from "../components/categories/CategoriesGrid";
 import ProductGrid from "../components/products/ProductGrid";
 import BottomTabs from "../components/appchrome/BottomTabs";
 import FloatingCart from "../components/appchrome/FloatingCart";
 import USPGrid from "../components/usp/USPGrid";
-import JournalSection from "../components/journal/JournalSection";
-import Newsletter from "../components/newsletter/Newsletter";
+import JournalSection from "../components/home/journal/JournalSection";
+import Newsletter from "../components/home/newsletter/Newsletter";
 import Footer from "../components/footer/Footer";
 
 // import Newsletter, JournalSection, Footer ... (same idea)
