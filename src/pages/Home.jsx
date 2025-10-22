@@ -19,6 +19,13 @@ import JournalSection from "../components/home/journal/JournalSection";
 import Newsletter from "../components/home/newsletter/Newsletter";
 import Footer from "../components/footer/Footer";
 
+import BrandTrust from "../components/home/trust/BrandTrust";
+import Testimonials from "../components/home/trust/Testimonials";
+import NewArrivals from "../components/home/arrivals/NewArrivals";
+import CuratedCollections from "../components/home/collections/CuratedCollections";
+import MoreBanners from "../components/home/banners/ExtraBanners";
+
+
 // import Newsletter, JournalSection, Footer ... (same idea)
 
 export default function Home() {
@@ -40,9 +47,25 @@ export default function Home() {
 
       <HeroSlider slides={T.slider} brand={BRAND} />
 
+      {/* Trust hits early */}
+      <BrandTrust brand={BRAND} lang={lang} />
+
+
       <section className="max-w-7xl mx-auto px-4 py-6">
-        {/* your USP component can go here using same props style */}
+        <USPGrid brand={BRAND} lang={lang} copy={COPY[lang]} />
       </section>
+
+      {/* Rich visual banners */}
+      <section className="max-w-7xl mx-auto px-4 pb-6">
+        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND} lang={lang} />
+      </section>
+      <MoreBanners brand={BRAND} lang={lang} />
+
+      
+      {/* Explore */}
+      <CuratedCollections brand={BRAND} lang={lang} />
+      <NewArrivals brand={BRAND} lang={lang} products={PRODUCTS.slice(0,8)} />
+
 
       <section className="max-w-7xl mx-auto px-4 pb-6">
         <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND} lang={lang} />
@@ -61,11 +84,9 @@ export default function Home() {
           <ProductGrid products={PRODUCTS} lang={lang} brand={BRAND} />
         </div>
       </section>
-
-      {/* JournalSection, Newsletter, Footer — same prop pattern */}
-      <section className="max-w-7xl mx-auto px-4 py-6">
-        <USPGrid brand={BRAND} lang={lang} copy={COPY[lang]} />
-      </section>
+      
+      {/* Social proof near mid-page */}
+      <Testimonials brand={BRAND} lang={lang} />
 
       <JournalSection brand={BRAND} lang={lang} articles={[
         { img: IMG.bannerWide, titleEn: "SPF in Cairo: what actually works", titleAr: "واقي الشمس في القاهرة: ما الذي يعمل فعلاً؟" },
