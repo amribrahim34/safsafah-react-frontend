@@ -4,6 +4,8 @@ import CatalogPage from "./pages/CatalogPage";
 import SkinCareQuize from "./pages/SkinCareQuize";
 import Product from "./pages/ProductDetails";
 import CartPage from "./pages/CartPage.jsx";
+import CheckoutPage from "./pages/CheckoutPage.jsx";
+import WalletPaymentPage from "./pages/WalletPaymentPage.jsx";
 import './App.css';
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
         <Route path="/quize" element={<SkinCareQuize />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/wallet-payment" element={<WalletPaymentPage />} />
         {/* <Route path="/about" element={<About />} /> */}
       </Routes>
     </Router>
