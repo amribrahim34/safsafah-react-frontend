@@ -1,10 +1,13 @@
+import React from "react";
+
 export default function OrdersTabs({ lang = "ar", brand, tab, setTab, counts }) {
   const isRTL = lang === "ar";
   const pills = [
-    { id: "all", ar: "الكل", en: "All", emoji: "🗂️", count: counts.all },
-    { id: "progress", ar: "قيد التنفيذ", en: "In Progress", emoji: "🟡", count: counts.progress },
-    { id: "delivered", ar: "تم التسليم", en: "Delivered", emoji: "🟢", count: counts.delivered },
-    { id: "canceled", ar: "ملغاة/مُرجعة", en: "Canceled", emoji: "🔴", count: counts.canceled },
+    { id: "all",       ar: "الكل",           en: "All",             emoji: "🗂️", count: counts.all },
+    { id: "progress",  ar: "قيد التنفيذ",    en: "In Progress",     emoji: "🟡", count: counts.progress },
+    { id: "shipped",   ar: "تم الشحن",       en: "Shipped",         emoji: "🔵", count: counts.shipped },
+    { id: "delivered", ar: "تم التسليم",    en: "Delivered",       emoji: "🟢", count: counts.delivered },
+    { id: "canceled",  ar: "ملغاة/مُرجعة",  en: "Canceled/Return", emoji: "🔴", count: counts.canceled },
   ];
 
   return (

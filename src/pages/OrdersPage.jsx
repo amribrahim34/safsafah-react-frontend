@@ -11,50 +11,87 @@ import BottomTabs from "../components/appchrome/BottomTabs";
 import OrdersTabs from "../components/orders/OrdersTabs";
 import OrderCard from "../components/orders/OrderCard";
 
-// ---- DEMO DATA (replace with API) ----
+// ---- DEMO DATA (add more states for UX) ----
 const DEMO_ORDERS = [
+  // Delivered (review + reorder)
   {
     id: "EG-2025-11983",
     date: "2025-10-12",
     addrShort: "Madinaty, Cairo",
     payment: "COD",
-    stages: ["Placed", "Confirmed", "Shipped", "Delivered"],
+    stages: ["Placed","Confirmed","Shipped","Delivered"],
     eta: "2025-10-15",
     subtotal: 1420, shipping: 49, discount: 100, total: 1369,
     items: [
-      { id: 1, name: { en: "Vitamin C 15% Brightening Serum", ar: "سيروم فيتامين سي 15%" }, variant: "30ml", qty: 1, price: 830, imgKey: "bannerTall", reviewed: false },
-      { id: 2, name: { en: "Hydrating Cleanser", ar: "منظف مرطب" }, variant: "150ml", qty: 1, price: 490, imgKey: "cleanser", reviewed: true },
+      { id: 1, name: { en:"Vitamin C 15% Serum", ar:"سيروم فيتامين سي 15%" }, variant:"30ml", qty:1, price:830, imgKey:"bannerTall", reviewed:false },
+      { id: 2, name: { en:"Hydrating Cleanser", ar:"منظف مرطب" }, variant:"150ml", qty:1, price:490, imgKey:"cleanser", reviewed:true },
+      { id: 5, name: { en:"SPF 50 PA++++", ar:"واقي شمس SPF 50" }, variant:"50ml", qty:1, price:430, imgKey:"hero1", reviewed:true },
     ],
     status: "Delivered",
     returnInfo: null,
   },
+  // In Progress (cancel possible)
   {
     id: "EG-2025-12051",
     date: "2025-10-20",
     addrShort: "Dokki, Giza",
     payment: "Card •••• 4321",
-    stages: ["Placed", "Confirmed", "Shipped"],
+    stages: ["Placed","Confirmed"],
     eta: "2025-10-24",
     subtotal: 760, shipping: 0, discount: 0, total: 760,
     items: [
-      { id: 3, name: { en: "Ceramide Barrier Cream", ar: "كريم حاجز السيراميد" }, variant: "50ml", qty: 1, price: 760, imgKey: "cream", reviewed: false },
+      { id: 3, name: { en:"Ceramide Barrier Cream", ar:"كريم حاجز السيراميد" }, variant:"50ml", qty:1, price:760, imgKey:"cream", reviewed:false },
+      { id: 6, name: { en:"Gentle Oil Cleanser", ar:"منظف زيتي لطيف" }, variant:"140ml", qty:1, price:320, imgKey:"cleanser", reviewed:false },
+      { id: 7, name: { en:"Barrier Balm", ar:"بلسم الحاجز" }, variant:"30ml", qty:1, price:380, imgKey:"cream", reviewed:false },
+      { id: 8, name: { en:"Daily SPF", ar:"واقي شمس يومي" }, variant:"50ml", qty:1, price:430, imgKey:"hero1", reviewed:false },
     ],
     status: "In Progress",
     returnInfo: null,
   },
+  // Shipped / Out for Delivery (no cancel)
+  {
+    id: "EG-2025-12088",
+    date: "2025-10-22",
+    addrShort: "Heliopolis, Cairo",
+    payment: "Wallet",
+    stages: ["Placed","Confirmed","Shipped"],
+    eta: "2025-10-25",
+    subtotal: 990, shipping: 0, discount: 50, total: 940,
+    items: [
+      { id: 9,  name: { en:"Niacinamide 10%", ar:"نياسيناميد 10%" }, variant:"30ml", qty:1, price:520, imgKey:"bannerTall", reviewed:false },
+      { id: 10, name: { en:"Foam Cleanser",   ar:"منظف رغوي"     }, variant:"180ml", qty:1, price:470, imgKey:"cleanser", reviewed:false },
+    ],
+    status: "Shipped",
+    returnInfo: null,
+  },
+  // Returned / Canceled (view reason + reorder)
   {
     id: "EG-2025-11877",
     date: "2025-09-28",
     addrShort: "Alexandria",
     payment: "Wallet",
-    stages: ["Placed", "Confirmed", "Shipped", "Delivered"],
+    stages: ["Placed","Confirmed","Shipped","Delivered"],
     eta: "2025-10-01",
     subtotal: 430, shipping: 49, discount: 0, total: 479,
     items: [
-      { id: 4, name: { en: "SPF 50 PA++++", ar: "واقي شمس SPF 50" }, variant: "50ml", qty: 1, price: 430, imgKey: "hero1", reviewed: true },
+      { id: 4, name: { en:"SPF 50 PA++++", ar:"واقي شمس SPF 50" }, variant:"50ml", qty:1, price:430, imgKey:"hero1", reviewed:true },
     ],
     status: "Returned",
-    returnInfo: { state: "Refund Completed", refundTo: "Wallet", amount: 430, timeline: ["Request Sent", "Picked Up", "Refund Completed"], date: "2025-10-05" },
+    returnInfo: { state: "Refund Completed", refundTo: "Wallet", amount: 430, timeline: ["Request Sent","Picked Up","Refund Completed"], date: "2025-10-05" },
+  },
+  {
+    id: "EG-2025-11812",
+    date: "2025-09-18",
+    addrShort: "Giza",
+    payment: "COD",
+    stages: ["Placed","Canceled"],
+    eta: null,
+    subtotal: 350, shipping: 0, discount: 0, total: 350,
+    items: [
+      { id: 11, name: { en:"Hydrating Cleanser", ar:"منظف مرطب" }, variant:"150ml", qty:1, price:350, imgKey:"cleanser", reviewed:false },
+    ],
+    status: "Canceled",
+    returnInfo: { state: "Canceled by Customer" },
   },
 ];
 
@@ -64,9 +101,10 @@ export default function OrdersPage() {
   useDir(lang);
   const isRTL = lang === "ar";
 
-  const [tab, setTab] = useState("all"); // all | progress | delivered | canceled
+  const [tab, setTab] = useState("all"); // all | progress | delivered | shipped | canceled
   const filter = (o) => {
-    if (tab === "progress") return o.status === "In Progress";
+    if (tab === "progress") return o.status === "In Progress" || o.status === "Confirmed";
+    if (tab === "shipped")  return o.status === "Shipped" || o.status === "Out for Delivery";
     if (tab === "delivered") return o.status === "Delivered";
     if (tab === "canceled") return o.status === "Returned" || o.status === "Canceled";
     return true;
@@ -82,7 +120,7 @@ export default function OrdersPage() {
         <header className="px-4 pt-6 pb-3">
           <h1 className="text-2xl md:text-3xl font-extrabold">{isRTL ? "طلباتي 🛍️" : "My Orders 🛍️"}</h1>
           <p className="text-neutral-600">
-            {isRTL ? "تتبّع مشترياتك، أعد الشراء، أو اطلب المساعدة." : "Track your purchases, reorder your faves, or request support."}
+            {isRTL ? "تابعي الطلبات، أعيدي الشراء، أو اطلبِي الدعم." : "Track orders, buy again, or get support."}
           </p>
         </header>
 
@@ -96,7 +134,8 @@ export default function OrdersPage() {
               setTab={setTab}
               counts={{
                 all: DEMO_ORDERS.length,
-                progress: DEMO_ORDERS.filter(o => o.status === "In Progress").length,
+                progress: DEMO_ORDERS.filter(o => o.status === "In Progress" || o.status === "Confirmed").length,
+                shipped: DEMO_ORDERS.filter(o => o.status === "Shipped" || o.status === "Out for Delivery").length,
                 delivered: DEMO_ORDERS.filter(o => o.status === "Delivered").length,
                 canceled: DEMO_ORDERS.filter(o => o.status === "Returned" || o.status === "Canceled").length,
               }}
@@ -104,9 +143,9 @@ export default function OrdersPage() {
           </div>
         </div>
 
-        {/* Content */}
+        {/* Grid: larger separation between cards */}
         <section className="bg-neutral-50">
-          <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="max-w-7xl mx-auto px-4 py-6">
             {orders.length === 0 ? (
               <div className="rounded-2xl border border-neutral-200 p-6 bg-white text-center">
                 <div className="text-5xl mb-2">🧴</div>
@@ -119,7 +158,7 @@ export default function OrdersPage() {
                 </a>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-3">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
                 {orders.map((o) => (
                   <OrderCard key={o.id} lang={lang} brand={BRAND} order={o} />
                 ))}
@@ -129,7 +168,7 @@ export default function OrdersPage() {
         </section>
       </main>
 
-      <Footer  className="bg-neutral-50 text-neutral-700 text-sm md:text-base py-6 md:py-10" brand={BRAND} lang={lang} copy={t} />
+      <Footer brand={BRAND} lang={lang} copy={t} />
       <BottomTabs
         labels={{
           home: isRTL ? "الرئيسية" : "Home",
@@ -142,3 +181,4 @@ export default function OrdersPage() {
     </div>
   );
 }
+    
