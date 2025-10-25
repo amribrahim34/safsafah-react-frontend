@@ -11,7 +11,9 @@ export default function Header({ brand, searchPlaceholder, lang = "ar", user=nul
   const navItems = [
     { label: isRTL ? "الرئيسية" : "Home", path: "/" },
     { label: isRTL ? "المتجر" : "Shop", path: "/catalog" },
-    { label: isRTL ? "اختبار البشرة" : "Skin Quiz", path: "/quize" }
+    { label: isRTL ? "اختبار البشرة" : "Skin Quiz", path: "/quize" },
+    { label: isRTL ? "من نحن" : "About", path: "/about" },
+    { label: isRTL ? "تواصل معنا" : "Contact", path: "/contact" }
   ];
 
   return (

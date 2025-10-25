@@ -1,4 +1,5 @@
 import { Leaf, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Footer({ brand, lang, copy }) {
   const nav = copy.nav || {};
@@ -26,20 +27,24 @@ export default function Footer({ brand, lang, copy }) {
         <div>
           <div className="font-semibold mb-3">{lang==="ar" ? "روابط سريعة" : "Quick links"}</div>
           <ul className="space-y-2 text-neutral-600">
-            <li><a href="#" className="hover:opacity-80" style={{ color: brand.primary }}>{nav.shop || (lang==="ar"?"المتجر":"Shop")}</a></li>
-            <li><a href="#bestsellers" className="hover:opacity-80" style={{ color: brand.primary }}>{nav.bestsellers || (lang==="ar"?"الأكثر مبيعًا":"Bestsellers")}</a></li>
-            <li><a href="#categories" className="hover:opacity-80" style={{ color: brand.primary }}>{sections.categories || (lang==="ar"?"تسوق حسب الفئة":"Shop by category")}</a></li>
-            <li><a href="#" className="hover:opacity-80" style={{ color: brand.primary }}>{nav.contact || (lang==="ar"?"تواصل":"Contact")}</a></li>
+            <li><Link to="/catalog" className="hover:opacity-80" style={{ color: brand.primary }}>{nav.shop || (lang==="ar"?"المتجر":"Shop")}</Link></li>
+            <li><Link to="/catalog?sort=bestsellers" className="hover:opacity-80" style={{ color: brand.primary }}>{nav.bestsellers || (lang==="ar"?"الأكثر مبيعًا":"Bestsellers")}</Link></li>
+            <li><Link to="/catalog" className="hover:opacity-80" style={{ color: brand.primary }}>{sections.categories || (lang==="ar"?"تسوق حسب الفئة":"Shop by category")}</Link></li>
+            <li><Link to="/quize" className="hover:opacity-80" style={{ color: brand.primary }}>{lang==="ar"?"اختبار البشرة":"Skin Quiz"}</Link></li>
+            <li><Link to="/about" className="hover:opacity-80" style={{ color: brand.primary }}>{lang==="ar"?"من نحن":"About Us"}</Link></li>
+            <li><Link to="/contact" className="hover:opacity-80" style={{ color: brand.primary }}>{nav.contact || (lang==="ar"?"تواصل معنا":"Contact Us")}</Link></li>
           </ul>
         </div>
 
-        {/* Help */}
+        {/* Help & Account */}
         <div>
-          <div className="font-semibold mb-3">{lang==="ar" ? "المساعدة" : "Help"}</div>
+          <div className="font-semibold mb-3">{lang==="ar" ? "المساعدة والحساب" : "Help & Account"}</div>
           <ul className="space-y-2 text-neutral-600">
-            <li><a href="#" className="hover:opacity-80">FAQ</a></li>
-            <li><a href="#" className="hover:opacity-80">Shipping & Returns</a></li>
-            <li><a href="#" className="hover:opacity-80">Privacy</a></li>
+            <li><Link to="/account" className="hover:opacity-80" style={{ color: brand.primary }}>{lang==="ar"?"حسابي":"My Account"}</Link></li>
+            <li><Link to="/orders" className="hover:opacity-80" style={{ color: brand.primary }}>{lang==="ar"?"طلباتي":"My Orders"}</Link></li>
+            <li><Link to="/cart" className="hover:opacity-80" style={{ color: brand.primary }}>{lang==="ar"?"سلة التسوق":"Shopping Cart"}</Link></li>
+            <li><Link to="/checkout" className="hover:opacity-80" style={{ color: brand.primary }}>{lang==="ar"?"الدفع":"Checkout"}</Link></li>
+            <li><Link to="/refund-policy" className="hover:opacity-80" style={{ color: brand.primary }}>{lang==="ar"?"سياسة الإرجاع":"Refund Policy"}</Link></li>
           </ul>
         </div>
 
