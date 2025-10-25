@@ -11,6 +11,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import OrdersPage from "./pages/OrdersPage.jsx";
 import About from "./pages/About.jsx";
+import ContactUs from "./pages/ContactUs.jsx";
 
 import './App.css';
 
@@ -30,7 +31,7 @@ function App() {
         <Route path="/account" element={<ProfilePage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/about" element={<About />} />
-        {/* <Route path="/about" element={<About />} /> */}
+        <Route path="/contact" element={<ContactUs />} />
       </Routes>
     </Router>
   );
