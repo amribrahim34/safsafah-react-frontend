@@ -9,6 +9,7 @@ import WalletPaymentPage from "./pages/WalletPaymentPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import OrdersPage from "./pages/OrdersPage.jsx";
 import './App.css';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegisterPage />} />
         <Route path="/account" element={<ProfilePage />} />
+        <Route path="/orders" element={<OrdersPage />} />
         {/* <Route path="/about" element={<About />} /> */}
       </Routes>
     </Router>
