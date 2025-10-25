@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import OrdersPage from "./pages/OrdersPage.jsx";
 import About from "./pages/About.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
+import BrandLanding from "./pages/BrandLanding.jsx";
 
 import './App.css';
 
@@ -32,6 +33,8 @@ function App() {
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/brand/:name" element={<BrandLanding />} />
+        {/* <Route path="/collections/:slug" element={<BrandLanding />} /> */}
       </Routes>
     </Router>
   );

@@ -15,4 +15,7 @@ export const IMG = {
   retinolEyeCream: "/products/retinol-eye-cream-2.jpg",
   acidsSerum: "/products/acids-serum-2.jpg",
   acidsSerumAlt: "/products/acids-serum-3.jpg",
+
+  "brand:some-by-mi": "/assets/hero-some-by-mi.jpg",
+  "collection:winter-hydration": "/assets/hero-winter.jpg",
 };
