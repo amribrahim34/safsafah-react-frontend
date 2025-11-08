@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "./store";
 import Home from "./pages/Home";
 import CatalogPage from "./pages/CatalogPage";
 import SkinCareQuize from "./pages/SkinCareQuize";
@@ -6,8 +8,8 @@ import Product from "./pages/ProductDetails";
 import CartPage from "./pages/CartPage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import WalletPaymentPage from "./pages/WalletPaymentPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
-import RegisterPage from "./pages/RegisterPage.jsx";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import OrdersPage from "./pages/OrdersPage.jsx";
 import About from "./pages/About.jsx";
@@ -19,26 +21,28 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/catalog" element={<CatalogPage />} />
-        <Route path="/quize" element={<SkinCareQuize />} />
-        <Route path="/product/:id" element={<Product />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/wallet-payment" element={<WalletPaymentPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<RegisterPage />} />
-        <Route path="/account" element={<ProfilePage />} />
-        <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<ContactUs />} />
-        <Route path="/brand/:name" element={<BrandLanding />} />
-        <Route path="/refund-policy" element={<RefundPolicy />} />
-        {/* <Route path="/collections/:slug" element={<BrandLanding />} /> */}
-      </Routes>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/quize" element={<SkinCareQuize />} />
+          <Route path="/product/:id" element={<Product />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/wallet-payment" element={<WalletPaymentPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<RegisterPage />} />
+          <Route path="/account" element={<ProfilePage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/brand/:name" element={<BrandLanding />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+          {/* <Route path="/collections/:slug" element={<BrandLanding />} /> */}
+        </Routes>
+      </Router>
+    </Provider>
   );
 }
 
