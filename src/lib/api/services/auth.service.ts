@@ -22,10 +22,11 @@ export const authService = {
    * @param credentials - User email and password
    * @returns Authentication response with user data and token
    * @note Token storage is handled by Redux slice
+   * @note Backend returns AuthResponse directly (not wrapped in ApiResponse)
    */
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await post<AuthResponse, LoginRequest>('/auth/login', credentials);
-    return response;
+    const response = await post<any, LoginRequest>('/auth/login', credentials);
+    return response as unknown as AuthResponse;
   },
 
   /**
@@ -33,10 +34,11 @@ export const authService = {
    * @param userData - User registration information
    * @returns Authentication response with user data and token
    * @note Token storage is handled by Redux slice
+   * @note Backend returns AuthResponse directly (not wrapped in ApiResponse)
    */
   async register(userData: RegisterRequest): Promise<AuthResponse> {
-    const response = await post<AuthResponse, RegisterRequest>('/auth/register', userData);
-    return response;
+    const response = await post<any, RegisterRequest>('/auth/register', userData);
+    return response as unknown as AuthResponse;
   },
 
   /**

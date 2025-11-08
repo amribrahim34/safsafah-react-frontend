@@ -1,23 +1,24 @@
-// Product related types based on actual usage in the project
+// Product related types based on actual API response
 import { LocalizedText } from './common';
 
 export interface Product {
   id: number;
-  brand: string;
-  tags: string[];
-  name: LocalizedText;
+  nameAr: string;
+  nameEn: string;
+  descriptionAr?: string;
+  descriptionEn?: string;
+  categoryId: number;
+  brandId: number;
   price: number;
-  rating: number;
-  img: string;
+  image: string;
+  sku: string;
+  rating?: number;
+  tags?: string[];
   images?: string[];
-  category?: string;
-  subcategory?: string;
   skinTypes?: string[];
   onSale?: boolean;
   inStock?: boolean;
   stock?: number;
-  sku?: string;
-  description?: LocalizedText;
   usage?: LocalizedText;
   ingredients?: string[];
   createdAt?: string;
@@ -64,16 +65,14 @@ export interface ProductCategory {
 }
 
 export interface ProductFilters {
-  search?: string;
-  brands?: string[];
-  category?: string;
-  subcategory?: string;
-  tags?: string[];
-  skinTypes?: string[];
-  onSale?: boolean;
+  page?: number;
+  limit?: number;
+  categoryId?: number;
+  brandId?: number;
+  skinTypeId?: number;
+  searchQuery?: string;
   minPrice?: number;
   maxPrice?: number;
-  minRating?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }
