@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { BRAND } from "../content/brand";
 import { COPY } from "../content/copy";
-import { IMG } from "../content/images";
 import { useDir } from "../hooks/useDir";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { fetchCart, updateCartItem, removeFromCart } from "../store/slices/cartsSlice";
 
 import PromoBar from "../components/header/PromoBar";
 import Header from "../components/header/Header";
@@ -16,19 +17,38 @@ import FreeShippingBar from "../components/cart/FreeShippingBar";
 import EmptyCart from "../components/cart/EmptyCart";
 import PromoCode from "../components/cart/PromoCode";
 
-// DEMO: replace with your cart store/API
-const DEMO = [
-  { id: 201, name: { en: "Vitamin C 15% Brightening Serum", ar: "سيروم فيتامين سي 15% للتفتيح" }, price: 830, img: IMG.bannerTall, brand: "LUMI LABS", variant: "30ml", qty: 1, stock: 4 },
-  { id: 301, name: { en: "Ceramide Barrier Cream", ar: "كريم حاجز السيراميد" }, price: 760, img: IMG.cream, brand: "DERMA+", variant: "50ml", qty: 1, stock: 7 },
-];
-
 export default function CartPage() {
+  const dispatch = useAppDispatch();
+  const { cart, isLoading } = useAppSelector((state) => state.cart);
+
   const [lang, setLang] = useState("ar");
   const T = useMemo(() => COPY[lang], [lang]);
   useDir(lang);
 
-  const [items, setItems] = useState(DEMO);
   const [promo, setPromo] = useState("");
+
+  // Fetch cart data on component mount
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
+
+  // Map API cart items to component format
+  const items = useMemo(() => {
+    if (!cart?.items) return [];
+    return cart.items.map((item) => ({
+      id: item.id,
+      name: {
+        en: item.productNameEn,
+        ar: item.productNameAr,
+      },
+      price: item.productPrice,
+      img: item.productImage,
+      brand: "LUMI SKIN", // Default brand since API doesn't provide it
+      variant: "30ml", // Default variant since API doesn't provide it
+      qty: item.quantity,
+      stock: 10, // Default stock since API doesn't provide it
+    }));
+  }, [cart?.items]);
 
   const fmt = (n) =>
     new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", {
@@ -37,14 +57,20 @@ export default function CartPage() {
       maximumFractionDigits: 0,
     }).format(n);
 
-  const updateQty = (id, q) =>
-    setItems((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, qty: Math.max(1, Math.min(q, it.stock)) } : it))
-    );
+  const updateQty = (id, q) => {
+    // Find the item's stock limit
+    const item = items.find((it) => it.id === id);
+    if (item) {
+      const newQty = Math.max(1, Math.min(q, item.stock));
+      dispatch(updateCartItem({ itemId: id, quantity: newQty }));
+    }
+  };
 
-  const removeItem = (id) => setItems((prev) => prev.filter((it) => it.id !== id));
+  const removeItem = (id) => {
+    dispatch(removeFromCart(id));
+  };
 
-  const subtotal = items.reduce((a, b) => a + b.price * b.qty, 0);
+  const subtotal = cart?.totalPrice || 0;
   const discount = promo.trim().toUpperCase() === "GLOW10" ? Math.round(subtotal * 0.1) : 0;
   const shipping = subtotal - discount >= 500 ? 0 : 49;
   const total = Math.max(0, subtotal - discount + shipping);
@@ -59,7 +85,11 @@ export default function CartPage() {
           {lang === "ar" ? "سلة المشتريات" : "Your Cart"}
         </h1>
 
-        {items.length === 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neutral-900"></div>
+          </div>
+        ) : items.length === 0 ? (
           <EmptyCart lang={lang} brand={BRAND} />
         ) : (
           <>

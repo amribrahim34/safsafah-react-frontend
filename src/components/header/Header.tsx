@@ -208,15 +208,13 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
                     <div className="max-h-80 overflow-y-auto p-4 space-y-3">
                       {cart.items.map((item) => (
                         <div key={item.id} className="flex gap-3 p-2 rounded-xl hover:bg-neutral-50 transition-colors">
-                          <img
-                            src={getImageUrl(item.productImage)}
-                            alt={lang === "ar" ? item.productNameAr : item.productNameEn}
-                            className="w-16 h-16 object-cover rounded-lg"
-                            onError={(e) => {
-                              // Fallback to a placeholder if image fails to load
-                              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/64?text=No+Image';
-                            }}
-                          />
+                          {item.productImage && (
+                            <img
+                              src={getImageUrl(item.productImage)}
+                              alt={lang === "ar" ? item.productNameAr : item.productNameEn}
+                              className="w-16 h-16 object-cover rounded-lg"
+                            />
+                          )}
                           <div className="flex-1 min-w-0">
                             <h4 className="font-semibold text-sm truncate">
                               {lang === "ar" ? item.productNameAr : item.productNameEn}
