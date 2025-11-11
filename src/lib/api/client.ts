@@ -99,7 +99,21 @@ function createApiClient(): AxiosInstance {
     (config: InternalAxiosRequestConfig) => {
       const token = tokenManager.getToken();
 
-      if (token && config.headers) {
+      // Ensure headers object exists
+      if (!config.headers) {
+        config.headers = {} as any;
+      }
+
+      // Always set Content-Type and Accept for requests
+      if (!config.headers['Content-Type']) {
+        config.headers['Content-Type'] = 'application/json';
+      }
+      if (!config.headers['Accept']) {
+        config.headers['Accept'] = 'application/json';
+      }
+
+      // Add authentication token if available
+      if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
 
@@ -110,6 +124,7 @@ function createApiClient(): AxiosInstance {
           url: config.url,
           params: config.params,
           data: config.data,
+          headers: config.headers,
         });
       }
 

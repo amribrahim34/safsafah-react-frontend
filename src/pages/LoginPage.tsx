@@ -5,6 +5,7 @@ import { useDir } from '../hooks/useDir';
 import { IMG } from '../content/images';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { login, clearError } from '@/store/slices/authSlice';
+import { fetchCart } from '@/store/slices/cartsSlice';
 import type { Language } from '@/types';
 
 type LoginMode = 'email' | 'mobile';
@@ -102,6 +103,9 @@ export default function LoginPage() {
 
     // Check if login was successful
     if (login.fulfilled.match(result)) {
+      // Fetch cart after successful login
+      dispatch(fetchCart());
+
       // Show success message
       const successMessage = isRTL
         ? `مرحبًا ${result.payload.name}!`

@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import { fetchCart } from "./store/slices/cartsSlice";
 import Home from "./pages/Home";
 import CatalogPage from "./pages/CatalogPage";
 import SkinCareQuize from "./pages/SkinCareQuize";
@@ -19,29 +21,43 @@ import RefundPolicy from "./pages/RefundPolicyPage.jsx";
 
 import './App.css';
 
+function AppContent() {
+  useEffect(() => {
+    // Fetch cart on app mount if user is authenticated
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      store.dispatch(fetchCart());
+    }
+  }, []);
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/quize" element={<SkinCareQuize />} />
+        <Route path="/product/:id" element={<Product />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/wallet-payment" element={<WalletPaymentPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<RegisterPage />} />
+        <Route path="/account" element={<ProfilePage />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/brand/:name" element={<BrandLanding />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+        {/* <Route path="/collections/:slug" element={<BrandLanding />} /> */}
+      </Routes>
+    </Router>
+  );
+}
+
 function App() {
   return (
     <Provider store={store}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/catalog" element={<CatalogPage />} />
-          <Route path="/quize" element={<SkinCareQuize />} />
-          <Route path="/product/:id" element={<Product />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/wallet-payment" element={<WalletPaymentPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<RegisterPage />} />
-          <Route path="/account" element={<ProfilePage />} />
-          <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/brand/:name" element={<BrandLanding />} />
-          <Route path="/refund-policy" element={<RefundPolicy />} />
-          {/* <Route path="/collections/:slug" element={<BrandLanding />} /> */}
-        </Routes>
-      </Router>
+      <AppContent />
     </Provider>
   );
 }

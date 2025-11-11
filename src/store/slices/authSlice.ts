@@ -179,6 +179,9 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(logout.fulfilled, (state) => {
+        // Clear tokens from localStorage
+        tokenManager.clearTokens();
+
         // Reset to initial state
         state.user = null;
         state.token = null;
@@ -187,7 +190,9 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(logout.rejected, (state) => {
-        // Even if logout API fails, clear local state
+        // Even if logout API fails, clear local state and tokens
+        tokenManager.clearTokens();
+
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;

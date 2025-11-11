@@ -4,16 +4,22 @@
  * Type definitions for cart service requests and responses.
  */
 
-import type { CartItem } from '../models/cart';
+export interface CartItemResponse {
+  id: number;
+  productId: number;
+  productNameEn: string;
+  productNameAr: string;
+  productPrice: number;
+  productImage: string;
+  quantity: number;
+  subtotal: number;
+}
 
 export interface CartResponse {
-  items: CartItem[];
-  subtotal: number;
-  discount: number;
-  tax: number;
-  shipping: number;
-  total: number;
-  itemCount: number;
+  cartId: number;
+  items: CartItemResponse[];
+  totalItems: number;
+  totalPrice: number;
 }
 
 export interface AddToCartRequest {

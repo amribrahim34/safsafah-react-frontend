@@ -1,13 +1,29 @@
-import React, { useMemo, useRef, useState, useEffect } from "react";
-import { Search, User2, ShoppingBag } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Search, User2, ShoppingBag, LogOut } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { logout } from "@/store/slices/authSlice";
 import logo from "../../assets/safsafah-logo.png";
-import AccountMenu from "./AccountMenu";
-import CartDropdown from "./CartDropdown";
 
-export default function Header({ brand, searchPlaceholder, lang = "ar", user=null, cartItems=[], onLogout=()=>{} }) {
+interface HeaderProps {
+  brand: {
+    primary: string;
+    dark: string;
+    light: string;
+  };
+  searchPlaceholder: string;
+  lang?: string;
+}
+
+export default function Header({ brand, searchPlaceholder, lang = "ar" }: HeaderProps) {
   const location = useLocation();
-  const isRTL = lang === "ar";             // NEW
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  // Get auth state from Redux
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const cart = useAppSelector((state) => state.cart.cart);
+
+  const isRTL = lang === "ar";
   const navItems = [
     { label: isRTL ? "الرئيسية" : "Home", path: "/" },
     { label: isRTL ? "المتجر" : "Shop", path: "/catalog" },
@@ -16,16 +32,27 @@ export default function Header({ brand, searchPlaceholder, lang = "ar", user=nul
     { label: isRTL ? "تواصل معنا" : "Contact", path: "/contact" }
   ];
 
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout()).unwrap();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Even if logout fails, navigate to login
+      navigate('/login');
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
-        {/* Logo + name (don’t shrink) */}
+        {/* Logo + name (don't shrink) */}
         <Link to="/" className="flex items-center gap-3 shrink-0">
           <img src={logo} alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
           <div className="font-extrabold text-xl tracking-tight whitespace-nowrap">SAFSAFAH</div>
         </Link>
 
-        {/* Desktop nav — lighter spacing; don’t push */}
+        {/* Desktop nav — lighter spacing; don't push */}
         <nav className="hidden md:flex items-center gap-4 mx-4 shrink-0">
           {navItems.map((item) => (
             <Link
@@ -54,9 +81,9 @@ export default function Header({ brand, searchPlaceholder, lang = "ar", user=nul
           </div>
         </div>
 
-        {/* Actions (account/cart) — don’t shrink, keep tight */}
+        {/* Actions (account/cart) — don't shrink, keep tight */}
         <div className="flex items-center gap-2 md:gap-3 shrink-0">
-          {!user && (
+          {!isAuthenticated ? (
             <Link
               to="/login"
               className="hidden md:inline-block px-3 py-2 rounded-2xl text-sm font-semibold text-white whitespace-nowrap"
@@ -64,21 +91,33 @@ export default function Header({ brand, searchPlaceholder, lang = "ar", user=nul
             >
               {isRTL ? "تسجيل الدخول" : "Sign in"}
             </Link>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="hidden md:flex items-center gap-2 px-3 py-2 rounded-2xl text-sm font-semibold text-white whitespace-nowrap hover:opacity-90 transition-opacity"
+              style={{ background: brand.primary }}
+            >
+              <LogOut className="w-4 h-4" />
+              {isRTL ? "تسجيل الخروج" : "Logout"}
+            </button>
           )}
 
           {/* Account icon (no label on small to save width) */}
-          <Link to={user ? "/account" : "/login"} className="px-2 py-2 rounded-xl hover:bg-neutral-100">
+          <Link to={isAuthenticated ? "/account" : "/login"} className="px-2 py-2 rounded-xl hover:bg-neutral-100">
             <User2 className="w-6 h-6 text-neutral-800" />
           </Link>
 
-          {/* Cart icon with badge (example) */}
+          {/* Cart icon with badge */}
           <Link to="/cart" className="relative px-2 py-2 rounded-xl hover:bg-neutral-100">
             <ShoppingBag className="w-6 h-6 text-neutral-800" />
-            {/* replace 2 with your real count */}
-            <span className="absolute -top-1.5 -right-1.5 h-5 min-w-[20px] px-1 rounded-full text-[11px] flex items-center justify-center text-white"
-                  style={{ background: brand.primary }}>
-              2
-            </span>
+            {cart && cart.totalItems > 0 && (
+              <span
+                className="absolute -top-1.5 -right-1.5 h-5 min-w-[20px] px-1 rounded-full text-[11px] flex items-center justify-center text-white"
+                style={{ background: brand.primary }}
+              >
+                {cart.totalItems}
+              </span>
+            )}
           </Link>
         </div>
       </div>
