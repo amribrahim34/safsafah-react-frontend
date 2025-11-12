@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PromoCode({ lang, brand, value, onChange, hint }) {
+export default function PromoCode({ lang, brand, value, onChange, hint, onApply }) {
   return (
     <div className="rounded-2xl border border-neutral-200 p-3 bg-white">
       <div className="text-sm font-semibold mb-2">
@@ -12,11 +12,18 @@ export default function PromoCode({ lang, brand, value, onChange, hint }) {
           onChange={(e) => onChange(e.target.value)}
           className="flex-1 rounded-2xl border border-neutral-300 px-3 py-2"
           placeholder={hint}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && onApply) {
+              onApply();
+            }
+          }}
         />
         <button
-          className="px-4 py-2 rounded-2xl text-white font-semibold"
+          className="px-4 py-2 rounded-2xl text-white font-semibold disabled:opacity-50"
           style={{ background: brand.primary }}
           type="button"
+          onClick={onApply}
+          disabled={!value.trim()}
         >
           {lang === "ar" ? "تطبيق" : "Apply"}
         </button>

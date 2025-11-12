@@ -79,6 +79,36 @@ export const removeFromCart = createAsyncThunk(
 );
 
 /**
+ * Async thunk for applying promo code
+ */
+export const applyPromoCode = createAsyncThunk(
+  'cart/applyPromoCode',
+  async (code: string, { rejectWithValue }) => {
+    try {
+      const response = await cartService.applyPromoCode(code);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to apply promo code');
+    }
+  }
+);
+
+/**
+ * Async thunk for removing promo code
+ */
+export const removePromoCode = createAsyncThunk(
+  'cart/removePromoCode',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await cartService.removePromoCode();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to remove promo code');
+    }
+  }
+);
+
+/**
  * Cart slice
  */
 const cartsSlice = createSlice({
@@ -155,6 +185,34 @@ const cartsSlice = createSlice({
           .addCase(removeFromCart.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload as string || 'Failed to remove item from cart';
+          })
+          // Apply promo code cases
+          .addCase(applyPromoCode.pending, (state) => {
+            state.isLoading = true;
+            state.error = null;
+          })
+          .addCase(applyPromoCode.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.cart = action.payload;
+            state.error = null;
+          })
+          .addCase(applyPromoCode.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload as string || 'Failed to apply promo code';
+          })
+          // Remove promo code cases
+          .addCase(removePromoCode.pending, (state) => {
+            state.isLoading = true;
+            state.error = null;
+          })
+          .addCase(removePromoCode.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.cart = action.payload;
+            state.error = null;
+          })
+          .addCase(removePromoCode.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload as string || 'Failed to remove promo code';
           });
       },
 

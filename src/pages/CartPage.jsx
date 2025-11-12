@@ -3,7 +3,7 @@ import { BRAND } from "../content/brand";
 import { COPY } from "../content/copy";
 import { useDir } from "../hooks/useDir";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { fetchCart, updateCartItem, removeFromCart } from "../store/slices/cartsSlice";
+import { fetchCart, updateCartItem, removeFromCart, applyPromoCode } from "../store/slices/cartsSlice";
 
 import PromoBar from "../components/header/PromoBar";
 import Header from "../components/header/Header";
@@ -42,8 +42,9 @@ export default function CartPage() {
         ar: item.productNameAr,
       },
       price: item.productPrice,
+      productId: item.productId,
       img: item.productImage,
-      brand: "LUMI SKIN", // Default brand since API doesn't provide it
+      brand: item.brand, // Default brand since API doesn't provide it
       variant: "30ml", // Default variant since API doesn't provide it
       qty: item.quantity,
       stock: 10, // Default stock since API doesn't provide it
@@ -68,6 +69,18 @@ export default function CartPage() {
 
   const removeItem = (id) => {
     dispatch(removeFromCart(id));
+  };
+
+  const handleApplyPromo = async () => {
+    if (promo.trim()) {
+      try {
+        await dispatch(applyPromoCode(promo.trim())).unwrap();
+        // Success - cart will be updated automatically via Redux
+      } catch (error) {
+        // Error handling - you might want to show a toast notification here
+        console.error('Failed to apply promo code:', error);
+      }
+    }
   };
 
   const subtotal = cart?.totalPrice || 0;
@@ -104,8 +117,8 @@ export default function CartPage() {
                     lang={lang}
                     brand={BRAND}
                     item={it}
-                    onQty={(q) => updateQty(it.id, q)}
-                    onRemove={() => removeItem(it.id)}
+                    onQty={(q) => updateQty(it.productId, q)}
+                    onRemove={() => removeItem(it.productId)}
                   />
                 ))}
 
@@ -114,6 +127,7 @@ export default function CartPage() {
                   brand={BRAND}
                   value={promo}
                   onChange={setPromo}
+                  onApply={handleApplyPromo}
                   hint={lang === "ar" ? "جرّب GLOW10 للحصول على 10%" : "Try GLOW10 for 10% off"}
                 />
               </section>
