@@ -5,7 +5,7 @@
  * Handles fetching orders, creating orders, and order tracking.
  */
 
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ordersService } from '@/lib/api';
 import type {
   Order,
@@ -13,6 +13,73 @@ import type {
   OrderFilters,
   OrderSearchResult,
 } from '@/types';
+
+/**
+ * Paginated order item from API
+ */
+export interface PaginatedOrderItem {
+  id: number;
+  userId: number;
+  total: number;
+  subtotal: number;
+  tax: number;
+  shipping: number;
+  discount: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  address: {
+    id: number;
+    userId: number;
+    name: string | null;
+    latitude: number;
+    longitude: number;
+    details: string;
+    notes: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  items: Array<{
+    id: number;
+    orderId: number;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+    product: {
+      id: number;
+      nameAr: string;
+      nameEn: string;
+      descriptionAr: string;
+      descriptionEn: string;
+      categoryId: number;
+      brandId: number;
+      price: number;
+      sku: string;
+      createdAt: string;
+      updatedAt: string;
+      image: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  }>;
+}
+
+/**
+ * Paginated orders response
+ */
+export interface PaginatedOrdersResponse {
+  status: string;
+  orders: PaginatedOrderItem[];
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+  };
+  message: string;
+}
 
 /**
  * Orders state interface
@@ -25,6 +92,16 @@ export interface OrdersState {
   currentOrder: Order | null;
   isLoading: boolean;
   error: string | null;
+  // Paginated orders
+  paginatedOrders: PaginatedOrderItem[];
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+  } | null;
 }
 
 /**
@@ -38,6 +115,8 @@ const initialState: OrdersState = {
   currentOrder: null,
   isLoading: false,
   error: null,
+  paginatedOrders: [],
+  pagination: null,
 };
 
 /**
@@ -99,6 +178,22 @@ export const cancelOrder = createAsyncThunk<
     return response;
   } catch (error) {
     return rejectWithValue(error instanceof Error ? error.message : 'Failed to cancel order');
+  }
+});
+
+/**
+ * Async thunk for fetching paginated orders
+ */
+export const fetchPaginatedOrders = createAsyncThunk<
+  PaginatedOrdersResponse,
+  { page?: number; size?: number; status?: string },
+  { rejectValue: string }
+>('orders/fetchPaginatedOrders', async ({ page = 0, size = 10, status }, { rejectWithValue }) => {
+  try {
+    const response = await ordersService.getPaginatedOrders(page, size, status);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch paginated orders');
   }
 });
 
@@ -205,6 +300,23 @@ const ordersSlice = createSlice({
       .addCase(cancelOrder.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || 'Failed to cancel order';
+      });
+
+    // Fetch paginated orders
+    builder
+      .addCase(fetchPaginatedOrders.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPaginatedOrders.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.paginatedOrders = action.payload.orders;
+        state.pagination = action.payload.pagination;
+        state.error = null;
+      })
+      .addCase(fetchPaginatedOrders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || 'Failed to fetch paginated orders';
       });
   },
 });

@@ -39,6 +39,22 @@ export const ordersService = {
   },
 
   /**
+   * Fetches paginated orders with optional status filter
+   * @param page - Page number (0-indexed)
+   * @param size - Page size
+   * @param status - Optional order status filter
+   * @returns Paginated order list with metadata
+   */
+  async getPaginatedOrders(page: number = 0, size: number = 10, status?: string): Promise<any> {
+    const params: any = { page, size };
+    if (status) params.status = status;
+    const response = await get<any>('/orders/paginated', params);
+    // The get() function already returns response.data from axios
+    // Your API returns the full object: { status, orders, pagination, message }
+    return response;
+  },
+
+  /**
    * Fetches a single order by ID
    * @param orderId - The order ID
    * @returns Order details

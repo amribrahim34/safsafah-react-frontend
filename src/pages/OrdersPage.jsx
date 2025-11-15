@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { BRAND } from "../content/brand";
 import { COPY } from "../content/copy";
 import { useDir } from "../hooks/useDir";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { fetchPaginatedOrders } from "../store/slices/ordersSlice";
 
 import PromoBar from "../components/header/PromoBar";
 import Header from "../components/header/Header";
@@ -11,97 +13,99 @@ import BottomTabs from "../components/appchrome/BottomTabs";
 import OrdersTabs from "../components/orders/OrdersTabs";
 import OrderCard from "../components/orders/OrderCard";
 
-// ---- DEMO DATA (add more states for UX) ----
-const DEMO_ORDERS = [
-  // Delivered (review + reorder)
-  {
-    id: "EG-2025-11983",
-    date: "2025-10-12",
-    addrShort: "Madinaty, Cairo",
-    payment: "COD",
-    stages: ["Placed","Confirmed","Shipped","Delivered"],
-    eta: "2025-10-15",
-    subtotal: 1420, shipping: 49, discount: 100, total: 1369,
-    items: [
-      { id: 1, name: { en:"Vitamin C 15% Serum", ar:"سيروم فيتامين سي 15%" }, variant:"30ml", qty:1, price:830, imgKey:"bannerTall", reviewed:false },
-      { id: 2, name: { en:"Hydrating Cleanser", ar:"منظف مرطب" }, variant:"150ml", qty:1, price:490, imgKey:"cleanser", reviewed:true },
-      { id: 5, name: { en:"SPF 50 PA++++", ar:"واقي شمس SPF 50" }, variant:"50ml", qty:1, price:430, imgKey:"hero1", reviewed:true },
-    ],
-    status: "Delivered",
-    returnInfo: null,
-  },
-  // In Progress (cancel possible)
-  {
-    id: "EG-2025-12051",
-    date: "2025-10-20",
-    addrShort: "Dokki, Giza",
-    payment: "Card •••• 4321",
-    stages: ["Placed","Confirmed"],
-    eta: "2025-10-24",
-    subtotal: 760, shipping: 0, discount: 0, total: 760,
-    items: [
-      { id: 3, name: { en:"Ceramide Barrier Cream", ar:"كريم حاجز السيراميد" }, variant:"50ml", qty:1, price:760, imgKey:"cream", reviewed:false },
-      { id: 6, name: { en:"Gentle Oil Cleanser", ar:"منظف زيتي لطيف" }, variant:"140ml", qty:1, price:320, imgKey:"cleanser", reviewed:false },
-      { id: 7, name: { en:"Barrier Balm", ar:"بلسم الحاجز" }, variant:"30ml", qty:1, price:380, imgKey:"cream", reviewed:false },
-      { id: 8, name: { en:"Daily SPF", ar:"واقي شمس يومي" }, variant:"50ml", qty:1, price:430, imgKey:"hero1", reviewed:false },
-    ],
-    status: "In Progress",
-    returnInfo: null,
-  },
-  // Shipped / Out for Delivery (no cancel)
-  {
-    id: "EG-2025-12088",
-    date: "2025-10-22",
-    addrShort: "Heliopolis, Cairo",
-    payment: "Wallet",
-    stages: ["Placed","Confirmed","Shipped"],
-    eta: "2025-10-25",
-    subtotal: 990, shipping: 0, discount: 50, total: 940,
-    items: [
-      { id: 9,  name: { en:"Niacinamide 10%", ar:"نياسيناميد 10%" }, variant:"30ml", qty:1, price:520, imgKey:"bannerTall", reviewed:false },
-      { id: 10, name: { en:"Foam Cleanser",   ar:"منظف رغوي"     }, variant:"180ml", qty:1, price:470, imgKey:"cleanser", reviewed:false },
-    ],
-    status: "Shipped",
-    returnInfo: null,
-  },
-  // Returned / Canceled (view reason + reorder)
-  {
-    id: "EG-2025-11877",
-    date: "2025-09-28",
-    addrShort: "Alexandria",
-    payment: "Wallet",
-    stages: ["Placed","Confirmed","Shipped","Delivered"],
-    eta: "2025-10-01",
-    subtotal: 430, shipping: 49, discount: 0, total: 479,
-    items: [
-      { id: 4, name: { en:"SPF 50 PA++++", ar:"واقي شمس SPF 50" }, variant:"50ml", qty:1, price:430, imgKey:"hero1", reviewed:true },
-    ],
-    status: "Returned",
-    returnInfo: { state: "Refund Completed", refundTo: "Wallet", amount: 430, timeline: ["Request Sent","Picked Up","Refund Completed"], date: "2025-10-05" },
-  },
-  {
-    id: "EG-2025-11812",
-    date: "2025-09-18",
-    addrShort: "Giza",
-    payment: "COD",
-    stages: ["Placed","Canceled"],
-    eta: null,
-    subtotal: 350, shipping: 0, discount: 0, total: 350,
-    items: [
-      { id: 11, name: { en:"Hydrating Cleanser", ar:"منظف مرطب" }, variant:"150ml", qty:1, price:350, imgKey:"cleanser", reviewed:false },
-    ],
-    status: "Canceled",
-    returnInfo: { state: "Canceled by Customer" },
-  },
-];
+// Helper function to map API status to UI status
+const mapStatusToUI = (apiStatus) => {
+  const statusMap = {
+    PENDING: "In Progress",
+    CONFIRMED: "In Progress",
+    PROCESSING: "In Progress",
+    SHIPPED: "Shipped",
+    OUT_FOR_DELIVERY: "Shipped",
+    DELIVERED: "Delivered",
+    CANCELLED: "Canceled",
+    RETURNED: "Returned",
+  };
+  return statusMap[apiStatus] || apiStatus;
+};
+
+// Helper function to map API order to UI order format
+const mapApiOrderToUI = (apiOrder, lang) => {
+  const status = mapStatusToUI(apiOrder.status);
+
+  // Map stages based on status
+  let stages = ["Placed"];
+  if (status === "In Progress") {
+    stages = ["Placed", "Confirmed"];
+  } else if (status === "Shipped") {
+    stages = ["Placed", "Confirmed", "Shipped"];
+  } else if (status === "Delivered") {
+    stages = ["Placed", "Confirmed", "Shipped", "Delivered"];
+  } else if (status === "Canceled") {
+    stages = ["Placed", "Canceled"];
+  } else if (status === "Returned") {
+    stages = ["Placed", "Confirmed", "Shipped", "Delivered"];
+  }
+
+  return {
+    id: `EG-${apiOrder.id}`,
+    date: new Date(apiOrder.createdAt).toISOString().split("T")[0],
+    addrShort: apiOrder.address?.details || (lang === "ar" ? "العنوان غير متوفر" : "Address unavailable"),
+    payment: "COD", // Default, could be enhanced with actual payment method
+    stages,
+    eta: null, // Could be calculated if needed
+    subtotal: apiOrder.subtotal,
+    shipping: apiOrder.shipping,
+    discount: apiOrder.discount,
+    total: apiOrder.total,
+    items: apiOrder.items.map((item) => ({
+      id: item.id,
+      name: {
+        en: item.product.nameEn,
+        ar: item.product.nameAr,
+      },
+      variant: "", // Not provided in API
+      qty: item.quantity,
+      price: item.unitPrice,
+      img: item.product.image,
+      reviewed: false,
+    })),
+    status,
+    returnInfo: status === "Canceled" ? { state: "Canceled" } : null,
+  };
+};
 
 export default function OrdersPage() {
   const [lang, setLang] = useState("ar");
   const t = useMemo(() => COPY[lang], [lang]);
   useDir(lang);
   const isRTL = lang === "ar";
+  const dispatch = useAppDispatch();
 
   const [tab, setTab] = useState("all"); // all | progress | delivered | shipped | canceled
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 10;
+
+  // Get Redux state
+  const { paginatedOrders, pagination, isLoading } = useAppSelector((state) => state.orders);
+
+  // Fetch orders on mount and when tab/page changes
+  useEffect(() => {
+    const statusMap = {
+      progress: "PENDING",
+      shipped: "SHIPPED",
+      delivered: "DELIVERED",
+      canceled: "CANCELLED",
+    };
+
+    const status = tab === "all" ? undefined : statusMap[tab];
+    dispatch(fetchPaginatedOrders({ page: currentPage, size: pageSize, status }));
+  }, [dispatch, tab, currentPage]);
+
+  // Map API orders to UI format
+  const mappedOrders = useMemo(() => {
+    return paginatedOrders.map((order) => mapApiOrderToUI(order, lang));
+  }, [paginatedOrders, lang]);
+
   const filter = (o) => {
     if (tab === "progress") return o.status === "In Progress" || o.status === "Confirmed";
     if (tab === "shipped")  return o.status === "Shipped" || o.status === "Out for Delivery";
@@ -109,7 +113,18 @@ export default function OrdersPage() {
     if (tab === "canceled") return o.status === "Returned" || o.status === "Canceled";
     return true;
   };
-  const orders = DEMO_ORDERS.filter(filter);
+
+  const orders = mappedOrders.filter(filter);
+
+  // Get counts for tabs (from pagination or mapped orders)
+  const allOrders = paginatedOrders.map((order) => mapApiOrderToUI(order, lang));
+  const tabCounts = {
+    all: pagination?.totalElements || allOrders.length,
+    progress: allOrders.filter(o => o.status === "In Progress" || o.status === "Confirmed").length,
+    shipped: allOrders.filter(o => o.status === "Shipped" || o.status === "Out for Delivery").length,
+    delivered: allOrders.filter(o => o.status === "Delivered").length,
+    canceled: allOrders.filter(o => o.status === "Returned" || o.status === "Canceled").length,
+  };
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
@@ -131,14 +146,11 @@ export default function OrdersPage() {
               lang={lang}
               brand={BRAND}
               tab={tab}
-              setTab={setTab}
-              counts={{
-                all: DEMO_ORDERS.length,
-                progress: DEMO_ORDERS.filter(o => o.status === "In Progress" || o.status === "Confirmed").length,
-                shipped: DEMO_ORDERS.filter(o => o.status === "Shipped" || o.status === "Out for Delivery").length,
-                delivered: DEMO_ORDERS.filter(o => o.status === "Delivered").length,
-                canceled: DEMO_ORDERS.filter(o => o.status === "Returned" || o.status === "Canceled").length,
+              setTab={(newTab) => {
+                setTab(newTab);
+                setCurrentPage(0); // Reset to first page when changing tabs
               }}
+              counts={tabCounts}
             />
           </div>
         </div>
@@ -146,10 +158,17 @@ export default function OrdersPage() {
         {/* Grid: larger separation between cards */}
         <section className="bg-neutral-50">
           <div className="max-w-7xl mx-auto px-4 py-6">
-            {orders.length === 0 ? (
+            {isLoading ? (
+              <div className="rounded-2xl border border-neutral-200 p-12 bg-white text-center">
+                <div className="text-4xl mb-3">⏳</div>
+                <div className="text-lg font-semibold text-neutral-600">
+                  {isRTL ? "جاري تحميل طلباتك..." : "Loading your orders..."}
+                </div>
+              </div>
+            ) : orders.length === 0 ? (
               <div className="rounded-2xl border border-neutral-200 p-6 bg-white text-center">
                 <div className="text-5xl mb-2">🧴</div>
-                <div className="text-lg font-extrabold">{isRTL ? "لسّه ما طلبتيش توهّجك ✨" : "You haven’t ordered your glow yet ✨"}</div>
+                <div className="text-lg font-extrabold">{isRTL ? "لسّه ما طلبتيش توهّجك ✨" : "You haven't ordered your glow yet ✨"}</div>
                 <p className="text-neutral-600 mt-1">
                   {isRTL ? "ابدئي التسوق الآن — الأفضل مبيعًا بانتظارك." : "Start shopping — bestsellers are waiting."}
                 </p>
@@ -158,11 +177,48 @@ export default function OrdersPage() {
                 </a>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
-                {orders.map((o) => (
-                  <OrderCard key={o.id} lang={lang} brand={BRAND} order={o} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
+                  {orders.map((o) => (
+                    <OrderCard key={o.id} lang={lang} brand={BRAND} order={o} />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {pagination && pagination.totalPages > 1 && (
+                  <div className="mt-6 flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
+                      disabled={!pagination.hasPrevious}
+                      className={`px-4 py-2 rounded-xl font-semibold ${
+                        pagination.hasPrevious
+                          ? "bg-white border border-neutral-300 hover:bg-neutral-50"
+                          : "bg-neutral-100 text-neutral-400 cursor-not-allowed"
+                      }`}
+                    >
+                      {isRTL ? "السابق" : "Previous"}
+                    </button>
+
+                    <div className="px-4 py-2 bg-white border border-neutral-300 rounded-xl font-semibold">
+                      {isRTL
+                        ? `صفحة ${pagination.currentPage + 1} من ${pagination.totalPages}`
+                        : `Page ${pagination.currentPage + 1} of ${pagination.totalPages}`}
+                    </div>
+
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.min(pagination.totalPages - 1, p + 1))}
+                      disabled={!pagination.hasNext}
+                      className={`px-4 py-2 rounded-xl font-semibold ${
+                        pagination.hasNext
+                          ? "bg-white border border-neutral-300 hover:bg-neutral-50"
+                          : "bg-neutral-100 text-neutral-400 cursor-not-allowed"
+                      }`}
+                    >
+                      {isRTL ? "التالي" : "Next"}
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </section>
