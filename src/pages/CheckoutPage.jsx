@@ -19,6 +19,7 @@ import PaymentMethods from "../components/checkout/PaymentMethods";
 import CheckoutForm from "../components/checkout/CheckoutForm";
 import MobileCheckoutButton from "../components/checkout/MobileCheckoutButton";
 import SuccessToast from "../components/notifications/SuccessToast";
+import ErrorToast from "../components/notifications/ErrorToast";
 
 export default function CheckoutQuickPage() {
   const [lang, setLang] = useState("ar");
@@ -26,31 +27,13 @@ export default function CheckoutQuickPage() {
   useDir(lang);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { cart, isLoading } = useAppSelector((state) => state.cart);
-  const { isLoading: isCreatingOrder, error: orderError } = useAppSelector((state) => state.orders);
+  const { cart } = useAppSelector((state) => state.cart);
+  const { isLoading: isCreatingOrder } = useAppSelector((state) => state.orders);
 
   // Fetch cart data on component mount
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);
-
-  // Map API cart items to component format
-  const items = useMemo(() => {
-    if (!cart?.items) return [];
-    return cart.items.map((item) => ({
-      id: item.id,
-      name: {
-        en: item.productNameEn,
-        ar: item.productNameAr,
-      },
-      price: item.productPrice,
-      productId: item.productId,
-      img: item.productImage,
-      brand: item.brand,
-      variant: "30ml",
-      qty: item.quantity,
-    }));
-  }, [cart?.items]);
 
   const subtotal = cart?.totalPrice || 0;
   const discount = cart?.discountAmount || 0;
@@ -69,9 +52,10 @@ export default function CheckoutQuickPage() {
   });
   const [payment, setPayment] = useState("cod");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [validationError, setValidationError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const submitBtnRef = useRef(null);
 
@@ -106,12 +90,10 @@ export default function CheckoutQuickPage() {
     // Show specific validation error
     const error = getValidationError(formData.fullName, formData.mobile, formData.address);
     if (error) {
-      setValidationError(error);
-      alert(error);
+      setErrorMessage(error);
+      setShowError(true);
       return;
     }
-
-    setValidationError("");
 
     // If wallet: take user to wallet payment step
     if (payment === "wallet") {
@@ -151,7 +133,7 @@ export default function CheckoutQuickPage() {
     };
 
     try {
-      const result = await dispatch(createOrder(orderData)).unwrap();
+      await dispatch(createOrder(orderData)).unwrap();
 
       // Refetch cart since it's cleared on the backend
       await dispatch(fetchCart());
@@ -168,11 +150,12 @@ export default function CheckoutQuickPage() {
       }, 2000);
     } catch (error) {
       console.error("Order creation failed:", error);
-      alert(
+      setErrorMessage(
         lang === "ar"
           ? "فشل إنشاء الطلب. حاول مرة أخرى"
           : "Failed to create order. Please try again"
       );
+      setShowError(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -184,6 +167,13 @@ export default function CheckoutQuickPage() {
         <SuccessToast
           message={successMessage}
           onClose={() => setShowSuccess(false)}
+        />
+      )}
+
+      {showError && (
+        <ErrorToast
+          message={errorMessage}
+          onClose={() => setShowError(false)}
         />
       )}
 
