@@ -35,6 +35,10 @@ export default function MapPickerLite({ lang, brand, onPick }) {
     ensureLeaflet().then(() => {
       const L = window.L;
       if (!mapRef.current) return;
+
+      // Check if map is already initialized
+      if (mapInst.current) return;
+
       mapInst.current = L.map(mapRef.current, { zoomControl: true, attributionControl: false }).setView([30.0444, 31.2357], 12);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(mapInst.current);
 
@@ -83,13 +87,17 @@ export default function MapPickerLite({ lang, brand, onPick }) {
     });
 
     return () => {
-      // no tear-down needed; L will GC with component
+      // Clean up map instance on unmount
+      if (mapInst.current) {
+        mapInst.current.remove();
+        mapInst.current = null;
+      }
     };
-  }, [lang, onPick]);
+  }, []); // Remove lang and onPick from dependencies to prevent re-initialization
 
   return (
     <div className="mt-2">
-      <div className="text-sm font-semibold mb-1">{lang === "ar" ? "حدّد موقعك على الخريطة" : "Pin your location"}</div>
+      <div className="text-sm font-semibold mb-1">{lang === "ar" ? "حدّد موقعك على الخريطة (اختياري)" : "Pin your location (optional)"}</div>
       <div ref={mapRef} className="w-full h-64 rounded-2xl overflow-hidden border border-neutral-200" />
       <div className="text-xs text-neutral-600 mt-2">
         {label

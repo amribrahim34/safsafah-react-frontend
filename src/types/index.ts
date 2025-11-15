@@ -46,6 +46,7 @@ export type {
   OrderStatus,
   PaymentMethod,
   CreateOrderRequest,
+  CreateOrderApiRequest,
 } from './models/order';
 
 export type {

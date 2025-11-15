@@ -1,9 +1,11 @@
-import React, { useMemo, useState, useRef } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { BRAND } from "../content/brand";
 import { COPY } from "../content/copy";
-import { IMG } from "../content/images";
 import { useDir } from "../hooks/useDir";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { fetchCart } from "../store/slices/cartsSlice";
+import { createOrder } from "../store/slices/ordersSlice";
 
 import PromoBar from "../components/header/PromoBar";
 import Header from "../components/header/Header";
@@ -15,47 +17,153 @@ import OrderSummary from "../components/cart/OrderSummary";
 import PaymentMethods from "../components/checkout/PaymentMethods";
 import MapPicker from "../components/checkout/MapPicker";
 
-// DEMO cart (swap with your store/API)
-const DEMO_CART = [
-  { id: 201, name: { en: "Vitamin C 15% Brightening Serum", ar: "سيروم فيتامين سي 15% للتفتيح" }, price: 830, img: IMG.bannerTall, brand: "LUMI LABS", variant: "30ml", qty: 1, stock: 4 },
-  { id: 301, name: { en: "Ceramide Barrier Cream", ar: "كريم حاجز السيراميد" }, price: 760, img: IMG.cream, brand: "DERMA+", variant: "50ml", qty: 1, stock: 7 },
-];
-
 export default function CheckoutQuickPage() {
   const [lang, setLang] = useState("ar");
   const T = useMemo(() => COPY[lang], [lang]);
   useDir(lang);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { cart, isLoading } = useAppSelector((state) => state.cart);
+  const { isLoading: isCreatingOrder, error: orderError } = useAppSelector((state) => state.orders);
 
-  const [items] = useState(DEMO_CART);
-  const subtotal = items.reduce((a, b) => a + b.price * b.qty, 0);
+  // Fetch cart data on component mount
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
+
+  // Map API cart items to component format
+  const items = useMemo(() => {
+    if (!cart?.items) return [];
+    return cart.items.map((item) => ({
+      id: item.id,
+      name: {
+        en: item.productNameEn,
+        ar: item.productNameAr,
+      },
+      price: item.productPrice,
+      productId: item.productId,
+      img: item.productImage,
+      brand: item.brand,
+      variant: "30ml",
+      qty: item.quantity,
+    }));
+  }, [cart?.items]);
+
+  const subtotal = cart?.totalPrice || 0;
+  const discount = cart?.discountAmount || 0;
   const shipping = subtotal >= 500 ? 0 : 49;
-  const total = subtotal + shipping;
+  const total = Math.max(0, subtotal - discount + shipping);
   const fmt = (n) => new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", { style: "currency", currency: "EGP", maximumFractionDigits: 0 }).format(n);
 
-  // Minimal fields
+  // Form fields matching API structure
   const [fullName, setFullName] = useState("");
   const [mobile, setMobile] = useState("");
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [payment, setPayment] = useState("cod");
   const [coords, setCoords] = useState(null);
-  const [geoLabel, setGeoLabel] = useState(""); // human-readable area/address from reverse geocode
+  const [geoLabel, setGeoLabel] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({
+    fullName: "",
+    mobile: "",
+    address: "",
+  });
 
-  // one source of truth CTA (desktop or sticky mobile uses same ref/handler)
   const submitBtnRef = useRef(null);
+
+  // Improved Egyptian mobile validation
+  const validateEgyptianMobile = (number) => {
+    // Remove any spaces or special characters
+    const cleaned = number.replace(/[\s\-\(\)]/g, '');
+
+    // Egyptian mobile format: starts with 010, 011, 012, or 015, followed by 8 digits (total 11 digits)
+    const egyptianMobileRegex = /^(010|011|012|015)\d{8}$/;
+
+    return egyptianMobileRegex.test(cleaned);
+  };
+
+  // Validate individual fields
+  const validateField = (field, value) => {
+    switch (field) {
+      case "fullName":
+        if (!value.trim()) {
+          return lang === "ar"
+            ? "يجب إدخال الاسم"
+            : "Full name is required";
+        }
+        if (value.trim().split(" ").length < 2) {
+          return lang === "ar"
+            ? "يجب إدخال الاسم الأول واسم العائلة"
+            : "Please enter first and last name";
+        }
+        return "";
+
+      case "mobile":
+        if (!value.trim()) {
+          return lang === "ar"
+            ? "يجب إدخال رقم الموبايل"
+            : "Mobile number is required";
+        }
+        if (!validateEgyptianMobile(value)) {
+          return lang === "ar"
+            ? "رقم الموبايل غير صحيح. يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015 ويتكون من 11 رقم"
+            : "Invalid mobile number. Must start with 010, 011, 012, or 015 and be 11 digits";
+        }
+        return "";
+
+      case "address":
+        if (!value.trim()) {
+          return lang === "ar"
+            ? "يجب إدخال العنوان"
+            : "Address is required";
+        }
+        if (value.trim().length < 8) {
+          return lang === "ar"
+            ? "العنوان قصير جداً. يرجى إدخال عنوان تفصيلي (8 أحرف على الأقل)"
+            : "Address too short. Please enter a detailed address (at least 8 characters)";
+        }
+        return "";
+
+      default:
+        return "";
+    }
+  };
+
+  const getValidationError = () => {
+    const fullNameError = validateField("fullName", fullName);
+    if (fullNameError) return fullNameError;
+
+    const mobileError = validateField("mobile", mobile);
+    if (mobileError) return mobileError;
+
+    const addressError = validateField("address", address);
+    if (addressError) return addressError;
+
+    return "";
+  };
 
   const valid =
     fullName.trim().split(" ").length >= 2 &&
-    /^(01|\+201)[0-9]{8,10}$/.test(mobile) &&
-    address.trim().length >= 8 &&
-    (!!coords && !!geoLabel); // must pin on map and resolve an address label
+    validateEgyptianMobile(mobile) &&
+    address.trim().length >= 8;
 
-  const placeOrder = (e) => {
+  const isDisabled = !valid || isSubmitting;
+
+  const placeOrder = async (e) => {
     e.preventDefault();
-    if (!valid) {
-      return alert(lang === "ar" ? "أكمل الاسم، الموبايل، العنوان وحدد موقعك على الخريطة" : "Complete name, mobile, address and pin your location");
+
+    // Show specific validation error
+    const error = getValidationError();
+    if (error) {
+      setValidationError(error);
+      alert(error);
+      return;
     }
+
+    setValidationError("");
+
     // If wallet: take user to wallet payment step
     if (payment === "wallet") {
       // You can pass state or query params. Here we use state.
@@ -69,9 +177,41 @@ export default function CheckoutQuickPage() {
       return;
     }
 
-    // COD/Card (demo)
-    console.log("ORDER", { fullName, mobile, address, notes, payment, coords, geoLabel, items, totals: { subtotal, shipping, total } });
-    alert(lang === "ar" ? "تم إنشاء الطلب بنجاح 🎉" : "Order placed successfully 🎉");
+    setIsSubmitting(true);
+
+    // Map payment method to API format (matching backend allowed values)
+    // Backend accepts: WALLET, CREDIT_CARD, DEBIT_CARD, CASH_ON_DELIVERY, BANK_TRANSFER
+    const paymentTypeMap = {
+      cod: "CASH_ON_DELIVERY",
+      card: "CREDIT_CARD", // Changed from CARD to CREDIT_CARD
+      wallet: "WALLET",
+    };
+
+    // Prepare order data for the API
+    const orderData = {
+      customerName: fullName,
+      customerAddress: address,
+      customerMobile: mobile,
+      latitude: coords?.lat?.toString() || "0",
+      longitude: coords?.lng?.toString() || "0",
+      deliveryNotes: notes || undefined,
+      paymentType: paymentTypeMap[payment] || "CASH_ON_DELIVERY",
+    };
+
+    try {
+      const result = await dispatch(createOrder(orderData)).unwrap();
+
+      // Success - show message and navigate to home
+      alert(lang === "ar" ? "تم إنشاء الطلب بنجاح 🎉" : "Order placed successfully 🎉");
+
+      // Navigate to home page (since /account/orders doesn't exist yet)
+      navigate("/");
+    } catch (error) {
+      console.error("Order creation failed:", error);
+      alert(lang === "ar" ? "فشل إنشاء الطلب. حاول مرة أخرى" : "Failed to create order. Please try again");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -87,17 +227,69 @@ export default function CheckoutQuickPage() {
 
             <label className="block mb-3">
               <div className="text-sm font-semibold mb-1">{lang === "ar" ? "الاسم بالكامل *" : "Full name *"}</div>
-              <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-2xl border border-neutral-300 px-3 py-2" placeholder={lang === "ar" ? "الاسم الأول واسم العائلة" : "First & last name"} />
+              <input
+                value={fullName}
+                onChange={(e) => {
+                  setFullName(e.target.value);
+                  if (fieldErrors.fullName) {
+                    setFieldErrors(prev => ({ ...prev, fullName: "" }));
+                  }
+                }}
+                onBlur={(e) => {
+                  const error = validateField("fullName", e.target.value);
+                  setFieldErrors(prev => ({ ...prev, fullName: error }));
+                }}
+                className={`w-full rounded-2xl border px-3 py-2 ${fieldErrors.fullName ? "border-red-500" : "border-neutral-300"}`}
+                placeholder={lang === "ar" ? "الاسم الأول واسم العائلة" : "First & last name"}
+              />
+              {fieldErrors.fullName && (
+                <div className="text-xs text-red-600 mt-1">{fieldErrors.fullName}</div>
+              )}
             </label>
 
             <label className="block mb-3">
               <div className="text-sm font-semibold mb-1">{lang === "ar" ? "الموبايل *" : "Mobile *"}</div>
-              <input value={mobile} onChange={(e) => setMobile(e.target.value)} inputMode="tel" className="w-full rounded-2xl border border-neutral-300 px-3 py-2" placeholder={lang === "ar" ? "01xxxxxxxxx أو +201xxxxxxxxx" : "01xxxxxxxxx or +201xxxxxxxxx"} />
+              <input
+                value={mobile}
+                onChange={(e) => {
+                  setMobile(e.target.value);
+                  if (fieldErrors.mobile) {
+                    setFieldErrors(prev => ({ ...prev, mobile: "" }));
+                  }
+                }}
+                onBlur={(e) => {
+                  const error = validateField("mobile", e.target.value);
+                  setFieldErrors(prev => ({ ...prev, mobile: error }));
+                }}
+                inputMode="tel"
+                className={`w-full rounded-2xl border px-3 py-2 ${fieldErrors.mobile ? "border-red-500" : "border-neutral-300"}`}
+                placeholder={lang === "ar" ? "01xxxxxxxxx أو +201xxxxxxxxx" : "01xxxxxxxxx or +201xxxxxxxxx"}
+              />
+              {fieldErrors.mobile && (
+                <div className="text-xs text-red-600 mt-1">{fieldErrors.mobile}</div>
+              )}
             </label>
 
             <label className="block mb-3">
               <div className="text-sm font-semibold mb-1">{lang === "ar" ? "العنوان التفصيلي *" : "Address *"}</div>
-              <textarea value={address} onChange={(e) => setAddress(e.target.value)} className="w-full rounded-2xl border border-neutral-300 px-3 py-2 min-h-[80px]" placeholder={lang === "ar" ? "اسم الشارع، المبنى/العمارة، الدور/الشقة" : "Street, building, floor/apt"} />
+              <textarea
+                value={address}
+                onChange={(e) => {
+                  setAddress(e.target.value);
+                  if (fieldErrors.address) {
+                    setFieldErrors(prev => ({ ...prev, address: "" }));
+                  }
+                }}
+                onBlur={(e) => {
+                  const error = validateField("address", e.target.value);
+                  setFieldErrors(prev => ({ ...prev, address: error }));
+                }}
+                className={`w-full rounded-2xl border px-3 py-2 min-h-[80px] ${fieldErrors.address ? "border-red-500" : "border-neutral-300"}`}
+                placeholder={lang === "ar" ? "اسم الشارع، المبنى/العمارة، الدور/الشقة" : "Street, building, floor/apt"}
+              />
+              {fieldErrors.address && (
+                <div className="text-xs text-red-600 mt-1">{fieldErrors.address}</div>
+              )}
             </label>
 
             {/* Map simplified: no lat/lng fields, pick a point + show resolved address/area */}
@@ -131,7 +323,7 @@ export default function CheckoutQuickPage() {
         <aside
           className="
             self-start
-            md:sticky md:top-24  
+            md:sticky md:top-24
             md:max-h-[calc(100vh-6rem)]
             md:overflow-auto
           "
@@ -144,9 +336,31 @@ export default function CheckoutQuickPage() {
             discount={0}
             shipping={shipping}
             total={total}
+            checkoutButton={
+              <button
+                type="submit"
+                disabled={isDisabled}
+                className={`w-full px-6 py-4 rounded-2xl text-white font-semibold text-lg ${isDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
+                style={{ background: BRAND.primary }}
+              >
+                {isSubmitting || isCreatingOrder
+                  ? (lang === "ar" ? "جاري المعالجة..." : "Processing...")
+                  : payment === "wallet"
+                  ? (lang === "ar" ? "الدفع بالمحفظة" : "Wallet payment")
+                  : (lang === "ar" ? "إتمام الشراء" : "Checkout")}
+              </button>
+            }
           />
         </aside>
 
+        {/* Hidden submit button for mobile sticky CTA */}
+        <button
+          ref={submitBtnRef}
+          type="submit"
+          disabled={isDisabled}
+          className="hidden"
+          aria-hidden="true"
+        />
       </form>
 
       {/* SINGLE sticky CTA on mobile (same submit handler) */}
@@ -158,11 +372,15 @@ export default function CheckoutQuickPage() {
           </div>
           <button
             onClick={() => submitBtnRef.current?.click()}
-            disabled={!valid}
-            className={`px-5 py-3 rounded-2xl text-white font-semibold ${!valid ? "opacity-60" : ""}`}
+            disabled={isDisabled}
+            className={`px-5 py-3 rounded-2xl text-white font-semibold ${isDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
             style={{ background: BRAND.primary }}
           >
-            {payment === "wallet" ? (lang === "ar" ? "الدفع بالمحفظة" : "Wallet payment") : (lang === "ar" ? "إتمام الشراء" : "Checkout")}
+            {isSubmitting || isCreatingOrder
+              ? (lang === "ar" ? "جاري المعالجة..." : "Processing...")
+              : payment === "wallet"
+              ? (lang === "ar" ? "الدفع بالمحفظة" : "Wallet payment")
+              : (lang === "ar" ? "إتمام الشراء" : "Checkout")}
           </button>
         </div>
       </div>

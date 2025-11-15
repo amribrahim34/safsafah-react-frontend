@@ -9,6 +9,7 @@ import { get, post, patch } from '../client';
 import type {
   Order,
   CreateOrderRequest,
+  CreateOrderApiRequest,
   UpdateOrderRequest,
   OrderFilters,
   OrderSearchResult,
@@ -22,8 +23,8 @@ export const ordersService = {
    * @param orderData - Order creation data
    * @returns Created order details
    */
-  async createOrder(orderData: CreateOrderRequest): Promise<Order> {
-    const response = await post<Order, CreateOrderRequest>('/orders', orderData);
+  async createOrder(orderData: CreateOrderApiRequest): Promise<Order> {
+    const response = await post<Order, CreateOrderApiRequest>('/orders', orderData);
     return response.data;
   },
 

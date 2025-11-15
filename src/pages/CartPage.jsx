@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { BRAND } from "../content/brand";
 import { COPY } from "../content/copy";
 import { useDir } from "../hooks/useDir";
@@ -20,6 +21,7 @@ import PromoCode from "../components/cart/PromoCode";
 export default function CartPage() {
   const dispatch = useAppDispatch();
   const { cart, isLoading } = useAppSelector((state) => state.cart);
+  const navigate = useNavigate();
 
   const [lang, setLang] = useState("ar");
   const T = useMemo(() => COPY[lang], [lang]);
@@ -142,6 +144,7 @@ export default function CartPage() {
                   discount={discount}
                   shipping={shipping}
                   total={total}
+                  onCheckout={() => navigate("/checkout")}
                 />
               </aside>
             </div>
@@ -178,6 +181,7 @@ export default function CartPage() {
               </div>
             </div>
             <button
+              onClick={() => navigate("/checkout")}
               className="px-5 py-3 rounded-2xl text-white font-semibold"
               style={{ background: BRAND.primary }}
             >

@@ -127,6 +127,17 @@ export interface CreateOrderRequest {
   notes?: string;
 }
 
+// Actual API request format for creating orders
+export interface CreateOrderApiRequest {
+  customerName: string;
+  customerAddress: string;
+  customerMobile: string;
+  latitude: string;
+  longitude: string;
+  deliveryNotes?: string;
+  paymentType: 'CASH_ON_DELIVERY' | 'CREDIT_CARD' | 'DEBIT_CARD' | 'WALLET' | 'BANK_TRANSFER';
+}
+
 export interface UpdateOrderRequest {
   orderId: string;
   status?: OrderStatus;

@@ -9,6 +9,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import productsReducer from './slices/productsSlice';
 import cartReducer from './slices/cartsSlice';
+import ordersReducer from './slices/ordersSlice';
 
 /**
  * Configure and create the Redux store
@@ -18,6 +19,7 @@ export const store = configureStore({
     auth: authReducer,
     products: productsReducer,
     cart: cartReducer,
+    orders: ordersReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
