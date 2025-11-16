@@ -40,6 +40,18 @@ export interface Address {
   notes?: string;
 }
 
+export interface AddressResponse {
+  id: number;
+  userId: number;
+  name: string | null;
+  latitude: number;
+  longitude: number;
+  details: string;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ContactInfo {
   whatsapp: string;
   mobile: string;

@@ -22,6 +22,7 @@ export type {
   Language,
   LocalizedText,
   Address,
+  AddressResponse,
   ApiResponse,
   PaginationParams,
 } from './models/common';

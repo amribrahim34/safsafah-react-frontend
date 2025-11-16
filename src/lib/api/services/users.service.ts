@@ -9,6 +9,7 @@ import { get, post, put, patch, del } from '../client';
 import type {
   User,
   Address,
+  AddressResponse,
   ApiResponse,
   UpdateProfileRequest,
   ChangePasswordRequest,
@@ -48,9 +49,10 @@ export const usersService = {
    * Fetches user's saved addresses
    * @returns List of addresses
    */
-  async getAddresses(): Promise<Address[]> {
-    const response = await get<Address[]>('/users/me/addresses');
-    return response.data;
+  async getAddresses(): Promise<AddressResponse[]> {
+    const response = await get<AddressResponse[]>('/profile/addresses');
+    // Backend returns addresses array directly, not wrapped in ApiResponse
+    return response as any;
   },
 
   /**
