@@ -27,22 +27,25 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
   const isCartLoading = useAppSelector((state) => state.cart.isLoading);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isAccountHovered, setIsAccountHovered] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const isRTL = lang === "ar";
 
-  // Close cart when clicking outside
+  // Close cart and profile when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (isCartOpen && !target.closest('.cart-dropdown-container')) {
         setIsCartOpen(false);
       }
+      if (isProfileOpen && !target.closest('.profile-dropdown-container')) {
+        setIsProfileOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isCartOpen]);
+  }, [isCartOpen, isProfileOpen]);
   const navItems = [
     { label: isRTL ? "الرئيسية" : "Home", path: "/" },
     { label: isRTL ? "المتجر" : "Shop", path: "/catalog" },
@@ -131,18 +134,17 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
 
         {/* Actions (account/cart) — don't shrink, keep tight */}
         <div className="flex items-center gap-2 md:gap-3 shrink-0">
-          {/* Account icon with hover dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setIsAccountHovered(true)}
-            onMouseLeave={() => setIsAccountHovered(false)}
-          >
-            <button className="px-2 py-2 rounded-xl hover:bg-neutral-100">
+          {/* Account icon with click dropdown */}
+          <div className="relative profile-dropdown-container">
+            <button
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+              className="px-2 py-2 rounded-xl hover:bg-neutral-100"
+            >
               <User2 className="w-6 h-6 text-neutral-800" />
             </button>
 
             {/* Account Dropdown */}
-            {isAccountHovered && (
+            {isProfileOpen && (
               <div
                 className={`absolute top-full mt-2 w-48 bg-white rounded-xl shadow-2xl border border-neutral-200 overflow-hidden z-50 ${isRTL ? 'right-0' : 'left-0'}`}
               >
