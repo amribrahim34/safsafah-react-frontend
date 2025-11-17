@@ -5,7 +5,7 @@
  * address management, and user preferences.
  */
 
-import { get, post, put, patch, del } from '../client';
+import { get, post, put, patch, del, apiClient } from '../client';
 import type {
   User,
   Address,
@@ -23,6 +23,16 @@ export const usersService = {
    */
   async getProfile(): Promise<User> {
     const response = await get<User>('/users/me');
+    return response.data;
+  },
+
+  /**
+   * Fetches the current user's profile from /profile/me endpoint
+   * @returns User profile data
+   */
+  async getProfileMe(): Promise<any> {
+    const response = await apiClient.get('/profile/me');
+    // API returns user object directly, not wrapped in ApiResponse
     return response.data;
   },
 

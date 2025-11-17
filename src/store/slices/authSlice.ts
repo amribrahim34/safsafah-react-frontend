@@ -6,7 +6,7 @@
  */
 
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import { authService, tokenManager } from '@/lib/api';
+import { authService, tokenManager, usersService } from '@/lib/api';
 import type {
   User,
   LoginRequest,
@@ -77,6 +77,21 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
     } catch (error) {
       // Continue with logout even if API call fails
       return rejectWithValue(error instanceof Error ? error.message : 'Logout failed');
+    }
+  }
+);
+
+/**
+ * Async thunk for fetching user profile
+ */
+export const fetchUserProfile = createAsyncThunk<any, void, { rejectValue: string }>(
+  'auth/fetchUserProfile',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await usersService.getProfileMe();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch user profile');
     }
   }
 );
@@ -197,6 +212,30 @@ const authSlice = createSlice({
         state.token = null;
         state.isAuthenticated = false;
         state.isLoading = false;
+      });
+
+    // Fetch User Profile
+    builder
+      .addCase(fetchUserProfile.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Map API response to user object
+        state.user = {
+          id: action.payload.id.toString(),
+          name: action.payload.name,
+          email: action.payload.email,
+          phone: action.payload.mobile || '',
+          tier: 'Bronze',
+          points: action.payload.points || 0,
+        };
+        state.error = null;
+      })
+      .addCase(fetchUserProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || 'Failed to fetch user profile';
       });
   },
 });

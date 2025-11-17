@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { BRAND } from "../content/brand";
 import { COPY } from "../content/copy";
 import { useDir } from "../hooks/useDir";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchUserProfile } from "@/store/slices/authSlice";
 
 import PromoBar from "../components/header/PromoBar";
 import Header from "../components/header/Header";
@@ -23,16 +25,31 @@ export default function ProfilePage() {
   const t = useMemo(() => COPY[lang], [lang]);
   useDir(lang);
 
-  // mock user
-  const user = {
-    name: "Salma Hassan",
-    email: "salma@example.com",
-    phone: "+201011112222",
-    avatar: null,
-    tier: "Silver", // Bronze/Silver/Gold
-    points: 880,
-    nextTierAt: 1000, // points
-  };
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const isLoading = useAppSelector((state) => state.auth.isLoading);
+
+  useEffect(() => {
+    // Fetch user profile when component mounts
+    dispatch(fetchUserProfile());
+  }, [dispatch]);
+
+  if (isLoading && !user) {
+    return (
+      <div className="min-h-screen bg-white text-neutral-900">
+        <PromoBar text={t.promo} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
+        <Header brand={BRAND} searchPlaceholder={t.search} lang={lang} />
+        <main className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: BRAND.primary }}></div>
+              <p className="text-neutral-600">{lang === "ar" ? "جاري التحميل..." : "Loading..."}</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
@@ -40,7 +57,7 @@ export default function ProfilePage() {
       <Header brand={BRAND} searchPlaceholder={t.search} lang={lang} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
-        <OverviewHeader brand={BRAND} lang={lang} user={user} />
+        {user && <OverviewHeader brand={BRAND} lang={lang} user={user} />}
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr),380px] items-start mt-4">
           {/* LEFT: rich content */}
