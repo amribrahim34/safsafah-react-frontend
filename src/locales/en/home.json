@@ -54,5 +54,92 @@
     "cart": "Bag",
     "wishlist": "Wishlist",
     "account": "Account"
+  },
+  "brandTrust": {
+    "title": "Trusted brands + guarantees",
+    "authentic": "Authentic products",
+    "fast": "Fast delivery",
+    "cod": "Cash on delivery",
+    "returns": "Free returns"
+  },
+  "uspGrid": {
+    "items": [
+      {
+        "title": "Same/Next-day delivery",
+        "desc": "Cairo, Giza & nationwide."
+      },
+      {
+        "title": "100% authentic",
+        "desc": "Sealed & traceable."
+      },
+      {
+        "title": "Skin-kind",
+        "desc": "Derm-tested, cruelty-free."
+      },
+      {
+        "title": "Bilingual support",
+        "desc": "Arabic & English."
+      }
+    ]
+  },
+  "banners": {
+    "barrierKit": {
+      "badge": "NEW IN",
+      "title": "Barrier Reset Kit",
+      "desc": "Cleanser • Serum • Moisturizer — designed for Egypt's climate."
+    },
+    "weeklyOffer": {
+      "badge": "Weekly Offer",
+      "title": "20% off Serums"
+    }
+  },
+  "curatedCollections": {
+    "title": "Curated collections",
+    "items": [
+      { "label": "Glow & Brightening" },
+      { "label": "Acne Control" },
+      { "label": "Barrier Repair" },
+      { "label": "SPF Essentials" }
+    ]
+  },
+  "newArrivals": {
+    "title": "New arrivals",
+    "viewAll": "View all"
+  },
+  "testimonials": {
+    "title": "What Egyptians say",
+    "items": [
+      { "text": "Delivery next day & glow in a week!" },
+      { "text": "Real products, prices are fair." },
+      { "text": "Great support, love the SPF." }
+    ]
+  },
+  "journalSection": {
+    "title": "Glow Journal",
+    "readTime": "3-min read"
+  },
+  "extraBanners": {
+    "shopNow": "Shop now",
+    "items": [
+      { "title": "Derm-approved routines" },
+      { "title": "Hydrate without shine" },
+      { "title": "Cleansers that care" }
+    ]
+  },
+  "footer": {
+    "about": "We curate science-backed skincare for Egypt with fast delivery and honest advice.",
+    "quickLinks": "Quick links",
+    "helpAccount": "Help & Account",
+    "myAccount": "My Account",
+    "myOrders": "My Orders",
+    "shoppingCart": "Shopping Cart",
+    "checkout": "Checkout",
+    "refundPolicy": "Refund Policy",
+    "skinQuiz": "Skin Quiz",
+    "aboutUs": "About Us",
+    "contactUs": "Contact Us",
+    "ecoPackaging": "Eco-friendly packaging",
+    "secureCheckout": "Secure checkout & local cards",
+    "rights": "All rights reserved."
   }
 }

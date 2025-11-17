@@ -1,11 +1,14 @@
+import { useTranslation } from "react-i18next";
 import { Truck, ShieldCheck, Leaf, Globe } from "lucide-react";
 
 export default function USPGrid({ brand, lang, copy }) {
-  const items = copy.usps || [
-    { icon: Truck, title: lang==="ar"?"توصيل في نفس/اليوم التالي":"Same/Next-day delivery", desc: lang==="ar"?"القاهرة والجيزة وجميع المحافظات.":"Cairo, Giza & nationwide." },
-    { icon: ShieldCheck, title: lang==="ar"?"أصلي 100%":"100% authentic", desc: lang==="ar"?"مختوم ومضمون التتبّع.":"Sealed & traceable." },
-    { icon: Leaf, title: lang==="ar"?"لطيف على البشرة":"Skin-kind", desc: lang==="ar"?"مختبر وخالٍ من القسوة.":"Derm-tested, cruelty-free." },
-    { icon: Globe, title: lang==="ar"?"دعم ثنائي اللغة":"Bilingual support", desc: lang==="ar"?"العربية والإنجليزية.":"Arabic & English." },
+  const { t } = useTranslation('home');
+
+  const items = [
+    { icon: Truck, title: t('uspGrid.items.0.title'), desc: t('uspGrid.items.0.desc') },
+    { icon: ShieldCheck, title: t('uspGrid.items.1.title'), desc: t('uspGrid.items.1.desc') },
+    { icon: Leaf, title: t('uspGrid.items.2.title'), desc: t('uspGrid.items.2.desc') },
+    { icon: Globe, title: t('uspGrid.items.3.title'), desc: t('uspGrid.items.3.desc') },
   ];
 
   return (

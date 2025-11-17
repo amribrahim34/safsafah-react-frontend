@@ -1,8 +1,12 @@
+import { useTranslation } from "react-i18next";
+
 export default function JournalSection({ brand, lang, articles }) {
+  const { t } = useTranslation('home');
+
   return (
     <section className="max-w-7xl mx-auto px-4 py-8">
       <h2 className="text-xl md:text-2xl font-extrabold mb-4">
-        {lang === "ar" ? "مجلّة اللمعان" : "Glow Journal"}
+        {t('journalSection.title')}
       </h2>
       <div className="grid md:grid-cols-3 gap-4">
         {(articles || []).map((a, idx) => (
@@ -11,7 +15,7 @@ export default function JournalSection({ brand, lang, articles }) {
             <div className="p-4">
               <div className="font-semibold">{lang === "ar" ? a.titleAr : a.titleEn}</div>
               <div className="text-sm text-neutral-600 mt-1">
-                {a.meta || (lang === "ar" ? "قراءة سريعة" : "3-min read")}
+                {a.meta || t('journalSection.readTime')}
               </div>
             </div>
           </a>

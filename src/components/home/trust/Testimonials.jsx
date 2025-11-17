@@ -1,24 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { Star } from "lucide-react";
 import { IMG } from "../../../content/images";
 
 const DATA = [
-  { name: "Nour", city: "Cairo", rating: 5,
-    text: { en: "Delivery next day & glow in a week!", ar: "التوصيل تاني يوم وتوهّج خلال أسبوع!" },
-    img: IMG.bannerTall },
-  { name: "Omar", city: "Giza", rating: 4,
-    text: { en: "Real products, prices are fair.", ar: "منتجات أصلية والأسعار معقولة." },
-    img: IMG.cream },
-  { name: "Mariam", city: "Alex", rating: 5,
-    text: { en: "Great support, love the SPF.", ar: "دعم ممتاز وواقي الشمس رهيب." },
-    img: IMG.hero2 },
+  { name: "Nour", city: "Cairo", rating: 5, img: IMG.bannerTall, textIndex: 0 },
+  { name: "Omar", city: "Giza", rating: 4, img: IMG.cream, textIndex: 1 },
+  { name: "Mariam", city: "Alex", rating: 5, img: IMG.hero2, textIndex: 2 },
 ];
 
 export default function Testimonials({ brand, lang = "ar" }) {
+  const { t } = useTranslation('home');
+
   return (
     <section className="max-w-7xl mx-auto px-4 py-8">
       <h3 className="text-lg md:text-xl font-extrabold mb-3">
-        {lang === "ar" ? "قالوا عنّا (مصريين)" : "What Egyptians say"}
+        {t('testimonials.title')}
       </h3>
 
       <div className="relative -mx-4 md:mx-0">
@@ -39,7 +36,7 @@ export default function Testimonials({ brand, lang = "ar" }) {
                   </div>
                 </div>
               </header>
-              <p className="text-sm mt-2">{lang === "ar" ? r.text.ar : r.text.en}</p>
+              <p className="text-sm mt-2">{t(`testimonials.items.${r.textIndex}.text`)}</p>
             </article>
           ))}
         </div>
