@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { BRAND } from "../content/brand";
 import { IMG } from "../content/images";
 import { COPY } from "../content/copy";
@@ -29,23 +30,44 @@ import MoreBanners from "../components/home/banners/ExtraBanners";
 // import Newsletter, JournalSection, Footer ... (same idea)
 
 export default function Home() {
-  const [lang, setLang] = useState("ar");
+  const { t, i18n } = useTranslation('home');
+  const [lang, setLang] = useState(i18n.language);
   const T = useMemo(() => COPY[lang], [lang]);
   useDir(lang);
 
+  const toggleLanguage = () => {
+    const newLang = lang === "ar" ? "en" : "ar";
+    setLang(newLang);
+    i18n.changeLanguage(newLang);
+  };
+
   const categories = [
-    { labelEn: "Serums", labelAr: "سيرومات", img: IMG.serum },
-    { labelEn: "Cleansers", labelAr: "منظفات", img: IMG.cleanser },
-    { labelEn: "Moisturizers", labelAr: "مرطبات", img: IMG.cream },
-    { labelEn: "Makeup", labelAr: "مكياج", img: IMG.makeup },
+    { labelEn: t('categories.items.0.label'), labelAr: t('categories.items.0.label'), img: IMG.serum },
+    { labelEn: t('categories.items.1.label'), labelAr: t('categories.items.1.label'), img: IMG.cleanser },
+    { labelEn: t('categories.items.2.label'), labelAr: t('categories.items.2.label'), img: IMG.cream },
+    { labelEn: t('categories.items.3.label'), labelAr: t('categories.items.3.label'), img: IMG.makeup },
+  ];
+
+  // Prepare slider data with translations and images
+  const sliderData = [
+    { ...t('slider.0', { returnObjects: true }), img: IMG.hero1 },
+    { ...t('slider.1', { returnObjects: true }), img: IMG.hero2 },
+    { ...t('slider.2', { returnObjects: true }), img: IMG.hero3 },
+  ];
+
+  // Prepare journal articles with translations and images
+  const journalArticles = [
+    { img: IMG.bannerWide, titleEn: t('journal.articles.0.title'), titleAr: t('journal.articles.0.title') },
+    { img: IMG.bannerTall, titleEn: t('journal.articles.1.title'), titleAr: t('journal.articles.1.title') },
+    { img: IMG.oils, titleEn: t('journal.articles.2.title'), titleAr: t('journal.articles.2.title') },
   ];
 
   return (
     <div id="home" className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={T.promo} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
+      <PromoBar text={t('promo')} lang={lang} onToggleLang={toggleLanguage} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={t('search')} lang={lang} />
 
-      <HeroSlider slides={T.slider} brand={BRAND} />
+      <HeroSlider slides={sliderData} brand={BRAND} />
 
       {/* Trust hits early */}
       <BrandTrust brand={BRAND} lang={lang} />
@@ -78,8 +100,8 @@ export default function Home() {
       <section id="bestsellers" className="bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xl md:text-2xl font-extrabold">{T.sections.trending}</h2>
-            <Link to="/catalog" className="font-semibold" style={{ color: BRAND.primary }}>{lang === "ar" ? "المزيد" : "View all"}</Link>
+            <h2 className="text-xl md:text-2xl font-extrabold">{t('sections.trending')}</h2>
+            <Link to="/catalog" className="font-semibold" style={{ color: BRAND.primary }}>{t('sections.viewAll')}</Link>
           </div>
           <ProductGrid products={PRODUCTS} lang={lang} brand={BRAND} />
         </div>
@@ -88,11 +110,7 @@ export default function Home() {
       {/* Social proof near mid-page */}
       <Testimonials brand={BRAND} lang={lang} />
 
-      <JournalSection brand={BRAND} lang={lang} articles={[
-        { img: IMG.bannerWide, titleEn: "SPF in Cairo: what actually works", titleAr: "واقي الشمس في القاهرة: ما الذي يعمل فعلاً؟" },
-        { img: IMG.bannerTall, titleEn: "Niacinamide vs Vitamin C — when to use each", titleAr: "نيايسيناميد أم فيتامين سي؟ ومتى نستخدم كل واحد" },
-        { img: IMG.oils, titleEn: "7-day barrier repair plan", titleAr: "خطة إصلاح الحاجز خلال 7 أيام" },
-      ]} />
+      <JournalSection brand={BRAND} lang={lang} articles={journalArticles} />
 
       <Newsletter brand={BRAND} lang={lang} copy={COPY[lang]} />
 
@@ -100,11 +118,11 @@ export default function Home() {
 
       <FloatingCart brand={BRAND} />
       <BottomTabs labels={{
-        home: lang === "ar" ? "الرئيسية" : "Home",
-        cats: lang === "ar" ? "الفئات" : "Categories",
-        cart: lang === "ar" ? "السلة" : "Bag",
-        wish: lang === "ar" ? "المفضلة" : "Wishlist",
-        account: lang === "ar" ? "حسابي" : "Account"
+        home: t('bottomTabs.home'),
+        cats: t('bottomTabs.categories'),
+        cart: t('bottomTabs.cart'),
+        wish: t('bottomTabs.wishlist'),
+        account: t('bottomTabs.account')
       }} />
     </div>
   );

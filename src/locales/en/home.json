@@ -1,0 +1,58 @@
+{
+  "promo": "10% off your first order — use code: GLOW10",
+  "search": "Search serums, SPF, makeup…",
+  "slider": {
+    "0": {
+      "title": "SPF that loves Cairo sun",
+      "sub": "Light textures. High protection. Zero white cast.",
+      "cta1": "Shop SPF",
+      "cta2": "Learn more"
+    },
+    "1": {
+      "title": "Hydration for desert air",
+      "sub": "Ceramides + HA to rebuild your barrier.",
+      "cta1": "Moisturizers",
+      "cta2": "Serums"
+    },
+    "2": {
+      "title": "Makeup that lets skin breathe",
+      "sub": "Clean formulas. Wear all day.",
+      "cta1": "Shop Makeup",
+      "cta2": "Starter Kits"
+    }
+  },
+  "categories": {
+    "title": "Shop by category",
+    "items": [
+      { "label": "Serums" },
+      { "label": "Cleansers" },
+      { "label": "Moisturizers" },
+      { "label": "Makeup" }
+    ]
+  },
+  "sections": {
+    "trending": "Bestsellers",
+    "viewAll": "View all",
+    "journal": "Glow Journal"
+  },
+  "journal": {
+    "articles": {
+      "0": { "title": "SPF in Cairo: what actually works" },
+      "1": { "title": "Niacinamide vs Vitamin C — when to use each" },
+      "2": { "title": "7-day barrier repair plan" }
+    }
+  },
+  "newsletter": {
+    "title": "Get 10% off your first order",
+    "subtitle": "Routine tips, early drops and insider offers.",
+    "placeholder": "Enter your email",
+    "cta": "Subscribe"
+  },
+  "bottomTabs": {
+    "home": "Home",
+    "categories": "Categories",
+    "cart": "Bag",
+    "wishlist": "Wishlist",
+    "account": "Account"
+  }
+}
