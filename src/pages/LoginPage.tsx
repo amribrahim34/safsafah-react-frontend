@@ -152,7 +152,7 @@ export default function LoginPage() {
         {/* Visual side */}
         <aside className="relative hidden md:block">
           <img
-            src={IMG.bannerWide}
+            src={IMG.login}
             alt="Skincare visual"
             className="absolute inset-0 w-full h-full object-cover"
           />

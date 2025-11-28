@@ -13,8 +13,12 @@ export default function CheckoutForm({
   onFieldChange,
   fieldErrors,
   onFieldBlur,
+  addresses = [],
+  selectedAddressId,
+  onAddressSelect,
 }) {
   const { fullName, mobile, address, notes } = formData;
+  const isRTL = lang === "ar";
 
   return (
     <div className="rounded-3xl border border-neutral-200 p-4 bg-white">
@@ -47,6 +51,77 @@ export default function CheckoutForm({
         }
       />
 
+      {/* Saved Addresses */}
+      {addresses && addresses.length > 0 && (
+        <div className="mb-4">
+          <div className="text-sm font-semibold mb-2">
+            {isRTL ? "اختر عنوان محفوظ" : "Choose saved address"}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            {addresses.map((addr) => (
+              <div
+                key={addr.id}
+                onClick={() => onAddressSelect(addr)}
+                className={`
+                  rounded-lg border-2 p-2.5 cursor-pointer transition-all
+                  ${selectedAddressId === addr.id
+                    ? 'border-current bg-opacity-5'
+                    : 'border-neutral-200 hover:border-neutral-300'
+                  }
+                `}
+                style={selectedAddressId === addr.id ? { borderColor: brand.primary, backgroundColor: brand.primary + '0D' } : {}}
+              >
+                <div className="flex items-start gap-2">
+                  <div className={`
+                    w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5
+                    ${selectedAddressId === addr.id ? 'border-current' : 'border-neutral-300'}
+                  `}
+                  style={selectedAddressId === addr.id ? { borderColor: brand.primary } : {}}>
+                    {selectedAddressId === addr.id && (
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: brand.primary }}></div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-semibold truncate">
+                      {addr.name || (isRTL ? "📍 عنوان" : "📍 Address")}
+                    </div>
+                    <div className="text-xs text-neutral-700 line-clamp-2">{addr.details}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* New Address Option */}
+            <div
+              onClick={() => onAddressSelect("new")}
+              className={`
+                rounded-lg border-2 p-2.5 cursor-pointer transition-all
+                ${selectedAddressId === "new"
+                  ? 'border-current bg-opacity-5'
+                  : 'border-neutral-200 hover:border-neutral-300'
+                }
+              `}
+              style={selectedAddressId === "new" ? { borderColor: brand.primary, backgroundColor: brand.primary + '0D' } : {}}
+            >
+              <div className="flex items-center gap-2">
+                <div className={`
+                  w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0
+                  ${selectedAddressId === "new" ? 'border-current' : 'border-neutral-300'}
+                `}
+                style={selectedAddressId === "new" ? { borderColor: brand.primary } : {}}>
+                  {selectedAddressId === "new" && (
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: brand.primary }}></div>
+                  )}
+                </div>
+                <div className="text-xs font-semibold">
+                  {isRTL ? "+ إضافة عنوان جديد" : "+ Add new address"}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <FormTextarea
         label={lang === "ar" ? "العنوان التفصيلي *" : "Address *"}
         value={address}
@@ -58,24 +133,30 @@ export default function CheckoutForm({
             ? "اسم الشارع، المبنى/العمارة، الدور/الشقة"
             : "Street, building, floor/apt"
         }
+        disabled={selectedAddressId !== "new" && selectedAddressId !== null}
       />
 
-      <MapPicker
-        lang={lang}
-        brand={brand}
-        onPick={({ coords, label }) => {
-          onFieldChange("coords", coords);
-          onFieldChange("geoLabel", label);
-        }}
-      />
+      {/* Only show map picker for new addresses */}
+      {(selectedAddressId === "new" || selectedAddressId === null || addresses.length === 0) && (
+        <>
+          <MapPicker
+            lang={lang}
+            brand={brand}
+            onPick={({ coords, label }) => {
+              onFieldChange("coords", coords);
+              onFieldChange("geoLabel", label);
+            }}
+          />
 
-      {formData.geoLabel && (
-        <div className="mt-2 text-sm rounded-xl bg-neutral-50 border border-neutral-200 p-2">
-          <div className="font-semibold">
-            {lang === "ar" ? "الموقع المحدد" : "Selected location"}
-          </div>
-          <div className="text-neutral-700">{formData.geoLabel}</div>
-        </div>
+          {formData.geoLabel && (
+            <div className="mt-2 text-sm rounded-xl bg-neutral-50 border border-neutral-200 p-2">
+              <div className="font-semibold">
+                {lang === "ar" ? "الموقع المحدد" : "Selected location"}
+              </div>
+              <div className="text-neutral-700">{formData.geoLabel}</div>
+            </div>
+          )}
+        </>
       )}
 
       <FormTextarea

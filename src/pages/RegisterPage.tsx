@@ -102,7 +102,7 @@ export default function RegisterPage() {
         email: email.trim(),
         password: password,
         passwordConfirmation: password,
-        phone: mobile.trim(),
+        mobile: mobile.trim(),
       })
     );
 
@@ -136,7 +136,7 @@ export default function RegisterPage() {
         {/* Visual side (desktop) */}
         <aside className="relative hidden md:block">
           <img
-            src={IMG.bannerWide}
+            src={IMG.signup}
             alt="Skincare visual"
             className="absolute inset-0 w-full h-full object-cover"
           />

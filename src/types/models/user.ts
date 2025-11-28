@@ -1,5 +1,5 @@
 // User and account related types based on actual usage
-import { Address } from './common';
+import { Address, AddressResponse } from './common';
 
 export type UserTier = 'Bronze' | 'Silver' | 'Gold' | 'Platinum';
 
@@ -12,6 +12,7 @@ export interface User {
   tier: UserTier;
   points?: number;
   nextTierAt?: number;
+  addresses?: AddressResponse[];
   isEmailVerified?: boolean;
   isPhoneVerified?: boolean;
   isActive?: boolean;

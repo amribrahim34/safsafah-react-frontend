@@ -29,6 +29,7 @@ export default function CheckoutQuickPage() {
   const dispatch = useAppDispatch();
   const { cart } = useAppSelector((state) => state.cart);
   const { isLoading: isCreatingOrder } = useAppSelector((state) => state.orders);
+  const user = useAppSelector((state) => state.auth.user);
 
   // Fetch cart data on component mount
   useEffect(() => {
@@ -51,6 +52,61 @@ export default function CheckoutQuickPage() {
     geoLabel: "",
   });
   const [payment, setPayment] = useState("cod");
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+
+  // Prepopulate form with user data when available
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: user.name || "",
+        mobile: user.phone || "",
+      }));
+
+      // Select and populate first address by default
+      if (user.addresses && user.addresses.length > 0) {
+        const firstAddress = user.addresses[0];
+        setSelectedAddressId(firstAddress.id);
+        setFormData((prev) => ({
+          ...prev,
+          address: firstAddress.details || "",
+          notes: firstAddress.notes || "",
+          coords: {
+            lat: firstAddress.latitude,
+            lng: firstAddress.longitude,
+          },
+        }));
+      } else {
+        // If no addresses, set to "new" mode
+        setSelectedAddressId("new");
+      }
+    }
+  }, [user]);
+
+  // Handle address selection
+  const handleAddressSelect = (address) => {
+    if (address === "new") {
+      setSelectedAddressId("new");
+      setFormData((prev) => ({
+        ...prev,
+        address: "",
+        notes: "",
+        coords: null,
+        geoLabel: "",
+      }));
+    } else {
+      setSelectedAddressId(address.id);
+      setFormData((prev) => ({
+        ...prev,
+        address: address.details || "",
+        notes: address.notes || "",
+        coords: {
+          lat: address.latitude,
+          lng: address.longitude,
+        },
+      }));
+    }
+  };
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -190,6 +246,9 @@ export default function CheckoutQuickPage() {
             onFieldChange={handleFieldChange}
             fieldErrors={fieldErrors}
             onFieldBlur={handleFieldBlur}
+            addresses={user?.addresses || []}
+            selectedAddressId={selectedAddressId}
+            onAddressSelect={handleAddressSelect}
           />
 
           <PaymentMethods lang={lang} brand={BRAND} value={payment} onChange={setPayment} />

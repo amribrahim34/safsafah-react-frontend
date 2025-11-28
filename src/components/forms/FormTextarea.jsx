@@ -12,6 +12,7 @@ export default function FormTextarea({
   placeholder,
   className = "",
   minHeight = "80px",
+  disabled = false,
 }) {
   return (
     <label className="block mb-3">
@@ -20,9 +21,10 @@ export default function FormTextarea({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
+        disabled={disabled}
         className={`w-full rounded-2xl border px-3 py-2 ${
           error ? "border-red-500" : "border-neutral-300"
-        } ${className}`}
+        } ${disabled ? "bg-neutral-100 cursor-not-allowed" : ""} ${className}`}
         style={{ minHeight }}
         placeholder={placeholder}
       />

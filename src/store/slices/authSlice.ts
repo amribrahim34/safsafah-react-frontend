@@ -230,6 +230,7 @@ const authSlice = createSlice({
           phone: action.payload.mobile || '',
           tier: 'Bronze',
           points: action.payload.points || 0,
+          addresses: action.payload.addresses || [],
         };
         state.error = null;
       })
