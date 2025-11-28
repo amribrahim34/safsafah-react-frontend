@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchCart } from "../store/slices/cartsSlice";
 import { createOrder } from "../store/slices/ordersSlice";
+import { fetchUserProfile } from "../store/slices/authSlice";
 
 import PromoBar from "../components/header/PromoBar";
 import Header from "../components/header/Header";
@@ -31,10 +32,18 @@ export default function CheckoutQuickPage() {
   const { isLoading: isCreatingOrder } = useAppSelector((state) => state.orders);
   const user = useAppSelector((state) => state.auth.user);
 
-  // Fetch cart data on component mount
+  // Fetch cart and user profile on component mount
   useEffect(() => {
+    // Always fetch fresh cart data for checkout
     dispatch(fetchCart());
-  }, [dispatch]);
+
+    // Fetch user profile if authenticated
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      dispatch(fetchUserProfile());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run once on mount
 
   const subtotal = cart?.totalPrice || 0;
   const discount = cart?.discountAmount || 0;
