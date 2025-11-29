@@ -146,18 +146,39 @@ export default function CheckoutQuickPage() {
     setFieldError(field, error);
   };
 
-  const valid = isFormValid(formData.fullName, formData.mobile, formData.address);
+  // Validation: if using saved address, don't require address text field
+  const isUsingSavedAddress = selectedAddressId && selectedAddressId !== "new";
+  const valid = isUsingSavedAddress
+    ? formData.fullName.trim().length >= 2 && formData.mobile.trim().length >= 11 // Only validate name and mobile
+    : isFormValid(formData.fullName, formData.mobile, formData.address);
   const isDisabled = !valid || isSubmitting;
 
   const placeOrder = async (e) => {
     e.preventDefault();
 
-    // Show specific validation error
-    const error = getValidationError(formData.fullName, formData.mobile, formData.address);
-    if (error) {
-      setErrorMessage(error);
-      setShowError(true);
-      return;
+    // Validate required fields
+    if (isUsingSavedAddress) {
+      // Only validate name and mobile for saved addresses
+      const nameError = validateField("fullName", formData.fullName);
+      if (nameError) {
+        setErrorMessage(nameError);
+        setShowError(true);
+        return;
+      }
+      const mobileError = validateField("mobile", formData.mobile);
+      if (mobileError) {
+        setErrorMessage(mobileError);
+        setShowError(true);
+        return;
+      }
+    } else {
+      // Validate all fields for new addresses
+      const error = getValidationError(formData.fullName, formData.mobile, formData.address);
+      if (error) {
+        setErrorMessage(error);
+        setShowError(true);
+        return;
+      }
     }
 
     // If wallet: take user to wallet payment step
@@ -189,13 +210,20 @@ export default function CheckoutQuickPage() {
     // Prepare order data for the API
     const orderData = {
       customerName: formData.fullName,
-      customerAddress: formData.address,
       customerMobile: formData.mobile,
-      latitude: formData.coords?.lat?.toString() || "0",
-      longitude: formData.coords?.lng?.toString() || "0",
       deliveryNotes: formData.notes || undefined,
       paymentType: paymentTypeMap[payment] || "CASH_ON_DELIVERY",
     };
+
+    // If using a saved address, send only the address ID
+    if (selectedAddressId && selectedAddressId !== "new") {
+      orderData.addressId = selectedAddressId;
+    } else {
+      // For new addresses, send full address details
+      orderData.customerAddress = formData.address;
+      orderData.latitude = formData.coords?.lat?.toString() || "0";
+      orderData.longitude = formData.coords?.lng?.toString() || "0";
+    }
 
     try {
       await dispatch(createOrder(orderData)).unwrap();

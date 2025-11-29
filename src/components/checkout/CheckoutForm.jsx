@@ -122,19 +122,21 @@ export default function CheckoutForm({
         </div>
       )}
 
-      <FormTextarea
-        label={lang === "ar" ? "العنوان التفصيلي *" : "Address *"}
-        value={address}
-        onChange={(e) => onFieldChange("address", e.target.value)}
-        onBlur={(e) => onFieldBlur("address", e.target.value)}
-        error={fieldErrors.address}
-        placeholder={
-          lang === "ar"
-            ? "اسم الشارع، المبنى/العمارة، الدور/الشقة"
-            : "Street, building, floor/apt"
-        }
-        disabled={selectedAddressId !== "new" && selectedAddressId !== null}
-      />
+      {/* Only show address textarea for new addresses */}
+      {(selectedAddressId === "new" || selectedAddressId === null || addresses.length === 0) && (
+        <FormTextarea
+          label={lang === "ar" ? "العنوان التفصيلي *" : "Address *"}
+          value={address}
+          onChange={(e) => onFieldChange("address", e.target.value)}
+          onBlur={(e) => onFieldBlur("address", e.target.value)}
+          error={fieldErrors.address}
+          placeholder={
+            lang === "ar"
+              ? "اسم الشارع، المبنى/العمارة، الدور/الشقة"
+              : "Street, building, floor/apt"
+          }
+        />
+      )}
 
       {/* Only show map picker for new addresses */}
       {(selectedAddressId === "new" || selectedAddressId === null || addresses.length === 0) && (

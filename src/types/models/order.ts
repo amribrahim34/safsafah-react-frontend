@@ -130,12 +130,13 @@ export interface CreateOrderRequest {
 // Actual API request format for creating orders
 export interface CreateOrderApiRequest {
   customerName: string;
-  customerAddress: string;
+  customerAddress?: string;
   customerMobile: string;
-  latitude: string;
-  longitude: string;
+  latitude?: string;
+  longitude?: string;
   deliveryNotes?: string;
   paymentType: 'CASH_ON_DELIVERY' | 'CREDIT_CARD' | 'DEBIT_CARD' | 'WALLET' | 'BANK_TRANSFER';
+  addressId?: number; // Send this when using a saved address
 }
 
 export interface UpdateOrderRequest {
