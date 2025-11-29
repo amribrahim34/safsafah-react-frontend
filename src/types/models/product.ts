@@ -1,21 +1,43 @@
 // Product related types based on actual API response
 import { LocalizedText } from './common';
 
+export interface ProductBrand {
+  id: number;
+  nameAr: string;
+  nameEn: string;
+  logo: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ProductCategory {
+  id: number;
+  nameAr: string;
+  nameEn: string;
+  image: string | null;
+  parentId: number | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface Product {
   id: number;
   nameAr: string;
   nameEn: string;
   descriptionAr?: string;
   descriptionEn?: string;
-  categoryId: number;
-  brandId: number;
+  category: ProductCategory;
+  brand: ProductBrand;
   price: number;
   image: string;
   sku: string;
-  rating?: number;
+  canAddRating?: boolean;
+  averageRating?: number;
+  reviews?: ProductReview[];
   tags?: string[];
   images?: string[];
   skinTypes?: string[];
+  skinConcerns?: string[];
   onSale?: boolean;
   inStock?: boolean;
   stock?: number;
@@ -52,16 +74,6 @@ export interface ProductReview {
   date: string;
   verified?: boolean;
   images?: string[];
-}
-
-export interface ProductCategory {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  image?: string;
-  parentId?: string;
-  order?: number;
 }
 
 export interface ProductFilters {

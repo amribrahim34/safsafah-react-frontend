@@ -32,10 +32,12 @@ export const productsService = {
    * Fetches a single product by ID
    * @param productId - The product ID
    * @returns Product details
+   * @note Backend returns Product directly (not wrapped in ApiResponse)
    */
   async getProduct(productId: string | number): Promise<Product> {
-    const response = await get<Product>(`/products/${productId}`);
-    return response.data;
+    const response = await get<any>(`/products/${productId}`);
+    // API returns product directly, not wrapped
+    return response as unknown as Product;
   },
 
   /**
@@ -48,7 +50,7 @@ export const productsService = {
     brandSlug: string,
     filters?: ProductFilters
   ): Promise<ProductSearchResult> {
-    const response = await get<ProductSearchResult>(`/brands/${brandSlug}/products`, filters);
+    const response = await get<ProductSearchResult>(`/brands/${brandSlug}/products`, filters as Record<string, unknown>);
     return response.data;
   },
 
@@ -64,7 +66,7 @@ export const productsService = {
   ): Promise<ProductSearchResult> {
     const response = await get<ProductSearchResult>(
       `/categories/${categorySlug}/products`,
-      filters
+      filters as Record<string, unknown>
     );
     return response.data;
   },

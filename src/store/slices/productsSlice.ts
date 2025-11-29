@@ -14,6 +14,7 @@ import type { Product, ProductFilters, ProductSearchResult } from '@/types';
  */
 export interface ProductsState {
   products: Product[];
+  currentProduct: Product | null;
   total: number;
   page: number;
   limit: number;
@@ -29,6 +30,7 @@ export interface ProductsState {
   };
   filters: ProductFilters;
   isLoading: boolean;
+  isLoadingProduct: boolean;
   error: string | null;
 }
 
@@ -37,6 +39,7 @@ export interface ProductsState {
  */
 const initialState: ProductsState = {
   products: [],
+  currentProduct: null,
   total: 0,
   page: 1,
   limit: 10,
@@ -52,6 +55,7 @@ const initialState: ProductsState = {
     limit: 10,
   },
   isLoading: false,
+  isLoadingProduct: false,
   error: null,
 };
 
@@ -68,6 +72,22 @@ export const fetchProducts = createAsyncThunk<
     return response;
   } catch (error) {
     return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch products');
+  }
+});
+
+/**
+ * Async thunk for fetching a single product by ID
+ */
+export const fetchProductById = createAsyncThunk<
+  Product,
+  string | number,
+  { rejectValue: string }
+>('products/fetchProductById', async (productId, { rejectWithValue }) => {
+  try {
+    const response = await productsService.getProduct(productId);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch product');
   }
 });
 
@@ -109,6 +129,7 @@ const productsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // Fetch products
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.isLoading = true;
@@ -126,6 +147,22 @@ const productsSlice = createSlice({
       .addCase(fetchProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || 'Failed to fetch products';
+      });
+
+    // Fetch single product
+    builder
+      .addCase(fetchProductById.pending, (state) => {
+        state.isLoadingProduct = true;
+        state.error = null;
+      })
+      .addCase(fetchProductById.fulfilled, (state, action) => {
+        state.isLoadingProduct = false;
+        state.currentProduct = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchProductById.rejected, (state, action) => {
+        state.isLoadingProduct = false;
+        state.error = action.payload || 'Failed to fetch product';
       });
   },
 });
