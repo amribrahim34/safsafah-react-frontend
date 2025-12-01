@@ -107,8 +107,9 @@ export default function ProductPage(){
   const productDescription = lang === "ar" ? product.descriptionAr : product.descriptionEn;
   const brandName = lang === "ar" ? product.brand.nameAr : product.brand.nameEn;
   const categoryName = lang === "ar" ? product.category.nameAr : product.category.nameEn;
-  const rating = product.averageRating || 0;
+  const rating = product.averageRating?.parsedValue || product.averageRating || 0;
   const reviewCount = product.reviews?.length || 0;
+  const productPrice = product.price?.parsedValue || product.price || 0;
 
   // Build images array
   const images = product.image ? [
@@ -147,7 +148,7 @@ export default function ProductPage(){
 
           {/* Price, installment, stock */}
           <div className="mt-4 flex items-center gap-3 flex-wrap">
-            <div className="text-2xl font-black">{priceFmt(product.price)}</div>
+            <div className="text-2xl font-black">{priceFmt(productPrice)}</div>
             {/* <span className="text-sm px-2 py-1 rounded-full" style={{background:BRAND.light+"22", color:BRAND.dark}}>
               {lang==="ar"?"توصيل مجاني فوق 500 جنيه":"Free delivery over 500 EGP"}
             </span> */}
@@ -195,6 +196,7 @@ export default function ProductPage(){
             product={product}
             brand={BRAND}
             lang={lang}
+            userReview={userReview}
             onSuccess={() => {
               // Refresh product to get updated reviews
               dispatch(fetchProductById(id));
@@ -219,7 +221,7 @@ export default function ProductPage(){
                   <RatingBreakdown brand={BRAND} lang={lang} rating={rating} count={reviewCount} />
                 </div>
                 <div className="md:col-span-2">
-                  <Reviews brand={BRAND} lang={lang} />
+                  <Reviews brand={BRAND} lang={lang} reviews={product.reviews} />
                 </div>
               </div>
             )}
@@ -240,7 +242,7 @@ export default function ProductPage(){
         brand={BRAND}
         lang={lang}
         title={productTitle}
-        price={product.price}
+        price={productPrice}
         onAdd={() => handleAddToCart(() => setMiniCartOpen(true))}
         cartItem={cartItem}
         onIncrement={handleIncrement}
