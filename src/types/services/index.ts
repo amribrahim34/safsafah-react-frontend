@@ -6,3 +6,4 @@
 
 export * from './cart.types';
 export * from './user.types';
+export * from './wishlist.types';

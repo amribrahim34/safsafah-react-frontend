@@ -1,6 +1,7 @@
 import React from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Heart } from "lucide-react";
 import { useProductCart } from "../../hooks/useProductCart";
+import { useWishlist } from "../../hooks/useWishlist";
 
 export default function AddToCartControls({ product, brand, lang, onSuccess }) {
   const {
@@ -10,6 +11,12 @@ export default function AddToCartControls({ product, brand, lang, onSuccess }) {
     handleIncrement,
     handleDecrement,
   } = useProductCart(product);
+
+  const {
+    isInWishlist,
+    isLoading: isWishlistLoading,
+    handleToggleWishlist,
+  } = useWishlist(product);
 
   const onAddClick = () => {
     handleAddToCart(onSuccess);
@@ -64,8 +71,28 @@ export default function AddToCartControls({ product, brand, lang, onSuccess }) {
           </button>
         )}
 
-        <button className="px-4 py-3 rounded-2xl border font-semibold" style={{borderColor:brand.primary, color:brand.primary}}>
-          {lang==="ar"?"أضف للمفضلة":"Add to wishlist"}
+        <button
+          onClick={() => handleToggleWishlist()}
+          disabled={isWishlistLoading}
+          className="px-4 py-3 rounded-2xl border font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          style={{
+            borderColor: isInWishlist ? brand.primary : brand.primary,
+            color: isInWishlist ? '#fff' : brand.primary,
+            backgroundColor: isInWishlist ? brand.primary : 'transparent',
+          }}
+        >
+          <Heart
+            className="w-5 h-5"
+            fill={isInWishlist ? '#fff' : 'none'}
+          />
+          <span className="hidden sm:inline">
+            {isWishlistLoading
+              ? (lang==="ar"?"جاري المعالجة...":"Processing...")
+              : isInWishlist
+                ? (lang==="ar"?"في المفضلة":"In wishlist")
+                : (lang==="ar"?"أضف للمفضلة":"Add to wishlist")
+            }
+          </span>
         </button>
       </div>
 
