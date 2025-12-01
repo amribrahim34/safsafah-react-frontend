@@ -31,6 +31,7 @@ import RecentlyViewed from "../components/product_details/RecentlyViewed";
 import MiniCart from "../components/product_details/MiniCart";
 import ExitIntentModal from "../components/product_details/ExitIntentModal";
 import AddToCartControls from "../components/product_details/AddToCartControls";
+import AddReview from "../components/product_details/AddReview";
 import Stars from "../components/ui/Stars";
 
 // ---- Page ----
@@ -38,6 +39,7 @@ export default function ProductPage(){
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentProduct: product, isLoadingProduct, error } = useAppSelector((state) => state.products);
+  const { user } = useAppSelector((state) => state.auth);
 
   const [lang,setLang] = useState("ar");
   const T = useMemo(()=> COPY[lang], [lang]);
@@ -56,6 +58,12 @@ export default function ProductPage(){
     handleIncrement,
     handleDecrement,
   } = useProductCart(product);
+
+  // Find user's existing review
+  const userReview = useMemo(() => {
+    if (!user || !product?.reviews) return null;
+    return product.reviews.find(review => review.userId === user.id);
+  }, [user, product?.reviews]);
 
   // Fetch product and cart on mount
   useEffect(() => {
@@ -140,16 +148,16 @@ export default function ProductPage(){
           {/* Price, installment, stock */}
           <div className="mt-4 flex items-center gap-3 flex-wrap">
             <div className="text-2xl font-black">{priceFmt(product.price)}</div>
-            <span className="text-sm px-2 py-1 rounded-full" style={{background:BRAND.light+"22", color:BRAND.dark}}>
+            {/* <span className="text-sm px-2 py-1 rounded-full" style={{background:BRAND.light+"22", color:BRAND.dark}}>
               {lang==="ar"?"توصيل مجاني فوق 500 جنيه":"Free delivery over 500 EGP"}
-            </span>
+            </span> */}
           </div>
           {product.stock && (
             <div className={`mt-1 text-sm ${lang==='ar'?'text-right':''}`}>
               {lang==="ar"?`المتاح بالمخزون: ${product.stock}`:`Only ${product.stock} left in stock!`}
             </div>
           )}
-          <div className="mt-1 text-sm text-neutral-600">{lang==="ar"?"تقسيط متاح عبر ValU/Bank":"Installments available via ValU/Bank*"}</div>
+          {/* <div className="mt-1 text-sm text-neutral-600">{lang==="ar"?"تقسيط متاح عبر ValU/Bank":"Installments available via ValU/Bank*"}</div> */}
 
           {/* SKU */}
           <div className="mt-2 text-xs text-neutral-500">
@@ -165,14 +173,14 @@ export default function ProductPage(){
           />
 
           {/* Trust + Delivery + COD */}
-          <div className="mt-6 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(260px,1fr))]">
-            {/* <TrustBadges brand={BRAND} lang={lang} flow /> */}
+          {/* <div className="mt-6 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(260px,1fr))]">
+            <TrustBadges brand={BRAND} lang={lang} flow />
             <DeliveryETA brand={BRAND} lang={lang} className="h-full"  />
             <div className="rounded-2xl border border-neutral-200 p-3 text-sm h-full">
               <div className="font-semibold">{lang==="ar"?"الدفع عند الاستلام":"Cash on Delivery"}</div>
               <div className="text-neutral-600">{lang==="ar"?"إرجاع مجاني خلال 14 يوم":"Free returns within 14 days"}</div>
             </div>
-          </div>
+          </div> */}
 
           {/* Description */}
           {productDescription && (
@@ -181,6 +189,17 @@ export default function ProductPage(){
               <p className="text-neutral-700 text-sm">{productDescription}</p>
             </div>
           )}
+
+          {/* Add Review Section */}
+          <AddReview
+            product={product}
+            brand={BRAND}
+            lang={lang}
+            onSuccess={() => {
+              // Refresh product to get updated reviews
+              dispatch(fetchProductById(id));
+            }}
+          />
         </div>
       </section>
 

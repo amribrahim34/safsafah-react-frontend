@@ -5,7 +5,7 @@
  * product details, reviews, and wishlist management.
  */
 
-import { get, post, del } from '../client';
+import { get, post, del, put } from '../client';
 import type {
   Product,
   ProductFilters,
@@ -103,15 +103,40 @@ export const productsService = {
   /**
    * Submits a product review
    * @param productId - The product ID
-   * @param review - Review data
+   * @param rating - Rating (1-5)
+   * @param comment - Review comment
    * @returns Created review
    */
   async submitReview(
     productId: string | number,
-    review: Omit<ProductReview, 'id' | 'userId' | 'userName' | 'date'>
-  ): Promise<ProductReview> {
-    const response = await post<ProductReview>(`/products/${productId}/reviews`, review);
-    return response.data;
+    rating: number,
+    comment: string
+  ): Promise<any> {
+    const response = await post<any>('/reviews', {
+      productId,
+      rating,
+      comment,
+    });
+    return response as any;
+  },
+
+  /**
+   * Updates an existing review
+   * @param reviewId - The review ID
+   * @param rating - Updated rating (1-5)
+   * @param comment - Updated review comment
+   * @returns Updated review
+   */
+  async updateReview(
+    reviewId: string | number,
+    rating: number,
+    comment: string
+  ): Promise<any> {
+    const response = await put<any>(`/reviews/${reviewId}/update`, {
+      rating,
+      comment,
+    });
+    return response as any;
   },
 
   /**
