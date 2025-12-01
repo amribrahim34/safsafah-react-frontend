@@ -1,14 +1,14 @@
 // src/pages/product/ProductPage.jsx
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { Trash2 } from "lucide-react";
 import { BRAND } from "../content/brand";
 import { COPY } from "../content/copy";
 import { IMG } from "../content/images";
 import { useDir } from "../hooks/useDir";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchProductById } from "../store/slices/productsSlice";
-import { addToCart as addToCartAction, updateCartItem, removeFromCart, fetchCart } from "../store/slices/cartsSlice";
+import { fetchCart } from "../store/slices/cartsSlice";
+import { useProductCart } from "../hooks/useProductCart";
 
 // site chrome
 import PromoBar from "../components/header/PromoBar";
@@ -30,6 +30,7 @@ import BundleOffers from "../components/product_details/BundleOffers";
 import RecentlyViewed from "../components/product_details/RecentlyViewed";
 import MiniCart from "../components/product_details/MiniCart";
 import ExitIntentModal from "../components/product_details/ExitIntentModal";
+import AddToCartControls from "../components/product_details/AddToCartControls";
 import Stars from "../components/ui/Stars";
 
 // ---- Page ----
@@ -37,7 +38,6 @@ export default function ProductPage(){
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentProduct: product, isLoadingProduct, error } = useAppSelector((state) => state.products);
-  const { cart, isLoading: isAddingToCart } = useAppSelector((state) => state.cart);
 
   const [lang,setLang] = useState("ar");
   const T = useMemo(()=> COPY[lang], [lang]);
@@ -48,8 +48,14 @@ export default function ProductPage(){
 
   const priceFmt = new Intl.NumberFormat(lang==="ar"?"ar-EG":"en-EG",{ style:"currency", currency:"EGP", maximumFractionDigits:0 }).format;
 
-  // Check if product is already in cart
-  const cartItem = cart?.items.find((item) => item.productId === product?.id);
+  // Use product cart hook for cart operations
+  const {
+    cartItem,
+    isLoading: isAddingToCart,
+    handleAddToCart,
+    handleIncrement,
+    handleDecrement,
+  } = useProductCart(product);
 
   // Fetch product and cart on mount
   useEffect(() => {
@@ -58,68 +64,6 @@ export default function ProductPage(){
     }
     dispatch(fetchCart());
   }, [id, dispatch]);
-
-  const addToCart = async () => {
-    if (!product) return;
-
-    try {
-      await dispatch(addToCartAction({
-        productId: product.id,
-        quantity: 1,
-      })).unwrap();
-
-      // Show mini cart on success
-      setMiniCartOpen(true);
-    } catch (error) {
-      console.error('Failed to add to cart:', error);
-    }
-  };
-
-  const handleIncrement = async () => {
-    if (!product || !cartItem) return;
-
-    const newQuantity = (cartItem.quantity || 0) + 1;
-
-    // Check stock limit
-    if (product.stock && newQuantity > product.stock) {
-      return;
-    }
-
-    try {
-      await dispatch(updateCartItem({
-        itemId: cartItem.productId,
-        quantity: newQuantity
-      })).unwrap();
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    }
-  };
-
-  const handleDecrement = async () => {
-    if (!product || !cartItem) return;
-
-    const currentQty = cartItem.quantity || 0;
-
-    // If quantity is 1, remove the item instead of decrementing
-    if (currentQty <= 1) {
-      try {
-        await dispatch(removeFromCart(cartItem.productId)).unwrap();
-      } catch (error) {
-        console.error('Failed to remove from cart:', error);
-      }
-      return;
-    }
-
-    const newQuantity = currentQty - 1;
-    try {
-      await dispatch(updateCartItem({
-        itemId: cartItem.productId,
-        quantity: newQuantity
-      })).unwrap();
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    }
-  };
 
   // Loading state
   if (isLoadingProduct) {
@@ -212,67 +156,13 @@ export default function ProductPage(){
             {lang === "ar" ? "رمز المنتج: " : "SKU: "}{product.sku}
           </div>
 
-          {/* CTAs */}
-          <div className="mt-5">
-            <div className="flex items-center gap-3">
-              {/* Show quantity controller only if item is in cart */}
-              {cartItem && (
-                <div className="flex items-center border rounded-2xl overflow-hidden" style={{borderColor:BRAND.primary}}>
-                  <button
-                    className="px-3 py-2 hover:bg-neutral-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    onClick={handleDecrement}
-                    disabled={isAddingToCart}
-                    style={{ color: (cartItem?.quantity || 0) <= 1 ? '#ef4444' : BRAND.primary }}
-                  >
-                    {(cartItem?.quantity || 0) <= 1 ? (
-                      <Trash2 className="w-4 h-4" />
-                    ) : (
-                      '–'
-                    )}
-                  </button>
-                  <div className="px-4 py-2 min-w-[40px] text-center font-semibold" style={{color:BRAND.primary}}>
-                    {cartItem.quantity}
-                  </div>
-                  <button
-                    className="px-3 py-2 hover:bg-neutral-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    onClick={handleIncrement}
-                    disabled={isAddingToCart || (product.stock ? cartItem.quantity >= product.stock : false)}
-                    style={{color:BRAND.primary}}
-                  >
-                    +
-                  </button>
-                </div>
-              )}
-
-              {/* Add to cart button - hide when item is already in cart */}
-              {!cartItem && (
-                <button
-                  onClick={addToCart}
-                  disabled={isAddingToCart || (product.stock && product.stock < 1)}
-                  className="px-6 py-3 rounded-2xl text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{background:BRAND.primary}}
-                >
-                  {isAddingToCart
-                    ? (lang==="ar"?"جاري الإضافة...":"Adding...")
-                    : (product.stock && product.stock < 1)
-                      ? (lang==="ar"?"غير متوفر":"Out of stock")
-                      : (lang==="ar"?"أضِف إلى السلة":"Add to cart")
-                  }
-                </button>
-              )}
-
-              <button className="px-4 py-3 rounded-2xl border font-semibold" style={{borderColor:BRAND.primary, color:BRAND.primary}}>
-                {lang==="ar"?"أضف للمفضلة":"Add to wishlist"}
-              </button>
-            </div>
-
-            {/* Stock warning when at max */}
-            {cartItem && product.stock && cartItem.quantity >= product.stock && (
-              <div className="mt-2 text-sm text-amber-600">
-                {lang==="ar"?`الحد الأقصى المتاح: ${product.stock}`:`Maximum available: ${product.stock}`}
-              </div>
-            )}
-          </div>
+          {/* Add to Cart Controls */}
+          <AddToCartControls
+            product={product}
+            brand={BRAND}
+            lang={lang}
+            onSuccess={() => setMiniCartOpen(true)}
+          />
 
           {/* Trust + Delivery + COD */}
           <div className="mt-6 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(260px,1fr))]">
@@ -332,7 +222,7 @@ export default function ProductPage(){
         lang={lang}
         title={productTitle}
         price={product.price}
-        onAdd={addToCart}
+        onAdd={() => handleAddToCart(() => setMiniCartOpen(true))}
         cartItem={cartItem}
         onIncrement={handleIncrement}
         onDecrement={handleDecrement}
