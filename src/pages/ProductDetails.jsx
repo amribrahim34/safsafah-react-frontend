@@ -218,7 +218,13 @@ export default function ProductPage(){
             {showReviews && (
               <div className="mt-4 grid md:grid-cols-3 gap-6">
                 <div>
-                  <RatingBreakdown brand={BRAND} lang={lang} rating={rating} count={reviewCount} />
+                  <RatingBreakdown
+                    brand={BRAND}
+                    lang={lang}
+                    rating={rating}
+                    count={reviewCount}
+                    ratingDistribution={product.ratingDistribution}
+                  />
                 </div>
                 <div className="md:col-span-2">
                   <Reviews brand={BRAND} lang={lang} reviews={product.reviews} />
