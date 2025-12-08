@@ -106,13 +106,6 @@ export default function LoginPage() {
       // Fetch cart after successful login
       dispatch(fetchCart());
 
-      // Show success message
-      const successMessage = isRTL
-        ? `مرحبًا ${result.payload.name}!`
-        : `Welcome back, ${result.payload.name}!`;
-
-      alert(successMessage);
-
       // Navigate to home page
       navigate('/');
     }

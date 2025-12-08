@@ -18,7 +18,7 @@
  */
 
 // Export API client and utilities
-export { apiClient, tokenManager, ApiException } from './client';
+export { apiClient, tokenManager, ApiException, setupApiInterceptors } from './client';
 export { get, post, put, patch, del } from './client';
 
 // Export all services

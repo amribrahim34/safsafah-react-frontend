@@ -169,8 +169,17 @@ function createApiClient(): AxiosInstance {
         // Clear tokens on authentication failure
         tokenManager.clearTokens();
 
-        // Redirect to login page (you may want to use your router here)
-        if (typeof window !== 'undefined') {
+        // Clear Redux auth state if store is available
+        const store = getStoreInstance();
+        if (store) {
+          // Dynamically import to avoid circular dependency
+          import('@/store/slices/authSlice').then((module) => {
+            store.dispatch(module.clearAuthState());
+          });
+        }
+
+        // Redirect to login page only if not already there
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
           window.location.href = '/login';
         }
       }
@@ -200,6 +209,18 @@ function createApiClient(): AxiosInstance {
  * The configured API client instance
  */
 export const apiClient = createApiClient();
+
+/**
+ * Setup function to inject store into API client for auth state management
+ * This allows the API client to dispatch Redux actions on 401 errors
+ */
+let storeInstance: any = null;
+
+export const setupApiInterceptors = (store: any) => {
+  storeInstance = store;
+};
+
+export const getStoreInstance = () => storeInstance;
 
 /**
  * Type-safe wrapper for GET requests

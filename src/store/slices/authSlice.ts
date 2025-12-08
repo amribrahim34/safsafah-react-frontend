@@ -118,6 +118,18 @@ const authSlice = createSlice({
     },
 
     /**
+     * Clear auth state (used when token expires or on 401 errors)
+     */
+    clearAuthState: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isAuthenticated = false;
+      state.isLoading = false;
+      state.error = null;
+      tokenManager.clearTokens();
+    },
+
+    /**
      * Restore auth state from storage (on app init)
      */
     restoreAuth: (state) => {
@@ -244,7 +256,7 @@ const authSlice = createSlice({
 /**
  * Export actions
  */
-export const { clearError, setUser, restoreAuth } = authSlice.actions;
+export const { clearError, setUser, clearAuthState, restoreAuth } = authSlice.actions;
 
 /**
  * Export reducer

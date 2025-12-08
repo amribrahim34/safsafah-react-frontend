@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { store } from "./store";
 import { fetchCart } from "./store/slices/cartsSlice";
+import { fetchUserProfile, clearAuthState } from "./store/slices/authSlice";
+import { setupApiInterceptors } from "./lib/api/client";
 import Home from "./pages/Home";
 import CatalogPage from "./pages/CatalogPage";
 import SkinCareQuize from "./pages/SkinCareQuize";
@@ -18,17 +20,33 @@ import About from "./pages/About.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
 import BrandLanding from "./pages/BrandLanding.jsx";
 import RefundPolicy from "./pages/RefundPolicyPage.jsx";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 import './App.css';
 
 function AppContent() {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   useEffect(() => {
-    // Fetch cart on app mount if user is authenticated
+    // Validate token and fetch user data on app mount
     const token = localStorage.getItem('auth_token');
+
     if (token) {
-      store.dispatch(fetchCart());
+      // Attempt to fetch user profile to validate token
+      dispatch(fetchUserProfile())
+        .unwrap()
+        .then(() => {
+          // Token is valid, fetch cart
+          dispatch(fetchCart());
+        })
+        .catch((error) => {
+          // Token is invalid or expired, clear auth state
+          console.error('Token validation failed:', error);
+          dispatch(clearAuthState());
+        });
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <Router>
@@ -42,8 +60,8 @@ function AppContent() {
         <Route path="/wallet-payment" element={<WalletPaymentPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegisterPage />} />
-        <Route path="/account" element={<ProfilePage />} />
-        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/account" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path="/orders" element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/brand/:name" element={<BrandLanding />} />
@@ -55,6 +73,11 @@ function AppContent() {
 }
 
 function App() {
+  // Setup API interceptors with store access
+  useEffect(() => {
+    setupApiInterceptors(store);
+  }, []);
+
   return (
     <Provider store={store}>
       <AppContent />

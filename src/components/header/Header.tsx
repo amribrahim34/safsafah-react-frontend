@@ -134,25 +134,26 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
 
         {/* Actions (account/cart) — don't shrink, keep tight */}
         <div className="flex items-center gap-2 md:gap-3 shrink-0">
-          {/* Account icon with click dropdown */}
-          <div className="relative profile-dropdown-container">
-            <button
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="px-2 py-2 rounded-xl hover:bg-neutral-100"
-            >
-              <User2 className="w-6 h-6 text-neutral-800" />
-            </button>
-
-            {/* Account Dropdown */}
-            {isProfileOpen && (
-              <div
-                className={`absolute top-full mt-2 w-48 bg-white rounded-xl shadow-2xl border border-neutral-200 overflow-hidden z-50 ${isRTL ? 'right-0' : 'left-0'}`}
+          {/* Account icon with click dropdown - Only show if authenticated */}
+          {isAuthenticated && (
+            <div className="relative profile-dropdown-container">
+              <button
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="px-2 py-2 rounded-xl hover:bg-neutral-100"
               >
-                {isAuthenticated ? (
+                <User2 className="w-6 h-6 text-neutral-800" />
+              </button>
+
+              {/* Account Dropdown */}
+              {isProfileOpen && (
+                <div
+                  className={`absolute top-full mt-2 w-48 bg-white rounded-xl shadow-2xl border border-neutral-200 overflow-hidden z-50 ${isRTL ? 'right-0' : 'left-0'}`}
+                >
                   <div className="py-2">
                     <Link
                       to="/account"
                       className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 transition-colors text-neutral-700"
+                      onClick={() => setIsProfileOpen(false)}
                     >
                       <User2 className="w-5 h-5" />
                       <span className="font-medium">{isRTL ? "حسابي" : "My Account"}</span>
@@ -165,21 +166,10 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
                       <span className="font-medium">{isRTL ? "تسجيل الخروج" : "Logout"}</span>
                     </button>
                   </div>
-                ) : (
-                  <div className="py-2">
-                    <Link
-                      to="/login"
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 transition-colors"
-                      style={{ color: brand.primary }}
-                    >
-                      <User2 className="w-5 h-5" />
-                      <span className="font-medium">{isRTL ? "تسجيل الدخول" : "Sign in"}</span>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Cart icon with dropdown */}
           <div className="relative cart-dropdown-container">
