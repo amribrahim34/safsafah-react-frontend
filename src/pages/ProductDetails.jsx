@@ -39,7 +39,7 @@ export default function ProductPage(){
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentProduct: product, isLoadingProduct, error } = useAppSelector((state) => state.products);
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   const [lang,setLang] = useState("ar");
   const T = useMemo(()=> COPY[lang], [lang]);
@@ -191,17 +191,19 @@ export default function ProductPage(){
             </div>
           )}
 
-          {/* Add Review Section */}
-          <AddReview
-            product={product}
-            brand={BRAND}
-            lang={lang}
-            userReview={userReview}
-            onSuccess={() => {
-              // Refresh product to get updated reviews
-              dispatch(fetchProductById(id));
-            }}
-          />
+          {/* Add Review Section - Only show for authenticated users */}
+          {isAuthenticated && (
+            <AddReview
+              product={product}
+              brand={BRAND}
+              lang={lang}
+              userReview={userReview}
+              onSuccess={() => {
+                // Refresh product to get updated reviews
+                dispatch(fetchProductById(id));
+              }}
+            />
+          )}
         </div>
       </section>
 

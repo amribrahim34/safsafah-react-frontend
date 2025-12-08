@@ -373,9 +373,9 @@ export default function CatalogPage() {
       </section>
 
       {/* Trust + Footer */}
-      <section className="max-w-7xl mx-auto px-4 pb-10">
+      {/* <section className="max-w-7xl mx-auto px-4 pb-10">
         <USPGrid brand={BRAND} lang={lang} copy={T} />
-      </section>
+      </section> */}
       <Footer brand={BRAND} lang={lang} copy={T} />
 
       <FloatingCart brand={BRAND} />
