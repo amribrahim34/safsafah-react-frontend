@@ -11,3 +11,4 @@ export * from './user';
 export * from './cart';
 export * from './order';
 export * from './ui';
+export * from './beauty-profile';

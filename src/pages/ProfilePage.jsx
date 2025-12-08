@@ -1,9 +1,8 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { BRAND } from "../content/brand";
 import { COPY } from "../content/copy";
 import { useDir } from "../hooks/useDir";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchUserProfile } from "@/store/slices/authSlice";
+import { useAppSelector } from "@/store/hooks";
 
 import PromoBar from "../components/header/PromoBar";
 import Header from "../components/header/Header";
@@ -25,14 +24,11 @@ export default function ProfilePage() {
   const t = useMemo(() => COPY[lang], [lang]);
   useDir(lang);
 
-  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const isLoading = useAppSelector((state) => state.auth.isLoading);
 
-  useEffect(() => {
-    // Fetch user profile when component mounts
-    dispatch(fetchUserProfile());
-  }, [dispatch]);
+  // Note: User profile is already fetched in App.jsx on authentication
+  // No need to fetch again here to avoid infinite loops
 
   if (isLoading && !user) {
     return (
