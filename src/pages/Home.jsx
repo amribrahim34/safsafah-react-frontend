@@ -73,9 +73,9 @@ export default function Home() {
       <BrandTrust brand={BRAND} lang={lang} />
 
 
-      <section className="max-w-7xl mx-auto px-4 py-6">
+      {/* <section className="max-w-7xl mx-auto px-4 py-6">
         <USPGrid brand={BRAND} lang={lang} copy={COPY[lang]} />
-      </section>
+      </section> */}
 
       {/* Rich visual banners */}
       <section className="max-w-7xl mx-auto px-4 pb-6">
@@ -85,7 +85,7 @@ export default function Home() {
 
       
       {/* Explore */}
-      <CuratedCollections brand={BRAND} lang={lang} />
+      {/* <CuratedCollections brand={BRAND} lang={lang} /> */}
       <NewArrivals brand={BRAND} lang={lang} products={PRODUCTS.slice(0,8)} />
 
 
@@ -108,9 +108,9 @@ export default function Home() {
       </section>
       
       {/* Social proof near mid-page */}
-      <Testimonials brand={BRAND} lang={lang} />
+      {/* <Testimonials brand={BRAND} lang={lang} /> */}
 
-      <JournalSection brand={BRAND} lang={lang} articles={journalArticles} />
+      {/* <JournalSection brand={BRAND} lang={lang} articles={journalArticles} /> */}
 
       <Newsletter brand={BRAND} lang={lang} copy={COPY[lang]} />
 
