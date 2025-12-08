@@ -236,9 +236,9 @@ export default function ProductPage(){
       )}
 
       {/* Post-Intent — Recently viewed / Similar */}
-      <section className="max-w-7xl mx-auto px-4 pb-12">
+      {/* <section className="max-w-7xl mx-auto px-4 pb-12">
         <RecentlyViewed brand={BRAND} lang={lang} />
-      </section>
+      </section> */}
 
       <Footer brand={BRAND} lang={lang} copy={T} />
       <FloatingCart brand={BRAND} />
