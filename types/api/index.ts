@@ -7,3 +7,4 @@
 export * from './common.types';
 export * from './auth.types';
 export * from './beauty-profile.types';
+export * from './home.types';

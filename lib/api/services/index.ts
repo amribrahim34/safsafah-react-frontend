@@ -15,3 +15,4 @@ export { usersService } from './users.service';
 export { cartService } from './cart.service';
 export { wishlistService } from './wishlist.service';
 export { beautyProfileService } from './beauty-profile.service';
+export { homeService } from './home.service';
