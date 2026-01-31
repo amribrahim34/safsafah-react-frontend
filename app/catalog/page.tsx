@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { BRAND } from '../../content/brand';
 import { COPY } from '../../content/copy';
@@ -15,7 +15,6 @@ import ProductGrid from '../../components/products/ProductGrid';
 import BottomTabs from '../../components/appchrome/BottomTabs';
 import FloatingCart from '../../components/appchrome/FloatingCart';
 import Footer from '../../components/footer/Footer';
-import USPGrid from '../../components/usp/USPGrid';
 import Filters from '../../components/catalog/filters/Filters';
 import SortBar from '../../components/catalog/sortbar/SortBar';
 import ResultsMeta from '../../components/catalog/resultmeta/ResultsMeta';
@@ -29,6 +28,9 @@ export default function CatalogPage() {
   const [lang, setLang] = useState<Language>('ar');
   const T = useMemo(() => COPY[lang], [lang]);
   useDir(lang);
+
+  // Track if we're syncing from URL to prevent auto-apply loop
+  const isSyncingFromUrl = useRef(false);
 
   // Redux state
   const { products, total, page, limit, facets, isLoading, error } = useAppSelector(
@@ -66,6 +68,8 @@ export default function CatalogPage() {
    * Initialize filters from URL parameters
    */
   useEffect(() => {
+    isSyncingFromUrl.current = true;
+
     const searchQueryParam = searchParams.get('searchQuery');
     const brandIdParam = searchParams.get('brandId');
     const minPriceParam = searchParams.get('minPrice');
@@ -104,6 +108,11 @@ export default function CatalogPage() {
 
     setLocalFilters(filters);
     dispatch(setFilters(filters));
+
+    // Reset flag after state updates
+    setTimeout(() => {
+      isSyncingFromUrl.current = false;
+    }, 0);
   }, [searchParams, dispatch]);
 
   /**
@@ -112,6 +121,23 @@ export default function CatalogPage() {
   useEffect(() => {
     dispatch(fetchProducts(localFilters));
   }, [dispatch, localFilters]);
+
+  /**
+   * Auto-apply filters when UI state changes (debounced)
+   */
+  useEffect(() => {
+    // Don't auto-apply if we're syncing from URL
+    if (isSyncingFromUrl.current) {
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      applyFilters();
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, selectedBrands, priceRange]);
 
   /**
    * Apply filters - converts UI state to API filters and updates URL
