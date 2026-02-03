@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useMemo, useState, useEffect } from "react";
 import { BRAND } from "../../content/brand";
 import { COPY } from "../../content/copy";
@@ -108,7 +110,7 @@ export default function OrdersPage() {
 
   const filter = (o) => {
     if (tab === "progress") return o.status === "In Progress" || o.status === "Confirmed";
-    if (tab === "shipped")  return o.status === "Shipped" || o.status === "Out for Delivery";
+    if (tab === "shipped") return o.status === "Shipped" || o.status === "Out for Delivery";
     if (tab === "delivered") return o.status === "Delivered";
     if (tab === "canceled") return o.status === "Returned" || o.status === "Canceled";
     return true;
@@ -190,11 +192,10 @@ export default function OrdersPage() {
                     <button
                       onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
                       disabled={!pagination.hasPrevious}
-                      className={`px-4 py-2 rounded-xl font-semibold ${
-                        pagination.hasPrevious
+                      className={`px-4 py-2 rounded-xl font-semibold ${pagination.hasPrevious
                           ? "bg-white border border-neutral-300 hover:bg-neutral-50"
                           : "bg-neutral-100 text-neutral-400 cursor-not-allowed"
-                      }`}
+                        }`}
                     >
                       {isRTL ? "السابق" : "Previous"}
                     </button>
@@ -208,11 +209,10 @@ export default function OrdersPage() {
                     <button
                       onClick={() => setCurrentPage((p) => Math.min(pagination.totalPages - 1, p + 1))}
                       disabled={!pagination.hasNext}
-                      className={`px-4 py-2 rounded-xl font-semibold ${
-                        pagination.hasNext
+                      className={`px-4 py-2 rounded-xl font-semibold ${pagination.hasNext
                           ? "bg-white border border-neutral-300 hover:bg-neutral-50"
                           : "bg-neutral-100 text-neutral-400 cursor-not-allowed"
-                      }`}
+                        }`}
                     >
                       {isRTL ? "التالي" : "Next"}
                     </button>
@@ -237,4 +237,3 @@ export default function OrdersPage() {
     </div>
   );
 }
-    

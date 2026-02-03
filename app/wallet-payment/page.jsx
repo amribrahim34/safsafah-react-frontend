@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BRAND } from "../../content/brand";
 import { COPY } from "../../content/copy";
@@ -11,6 +11,14 @@ import BottomTabs from "../../components/appchrome/BottomTabs";
 import FloatingCart from "../../components/appchrome/FloatingCart";
 
 export default function WalletPaymentPage() {
+  return (
+    <Suspense fallback={<WalletPaymentLoading />}>
+      <WalletPaymentContent />
+    </Suspense>
+  );
+}
+
+function WalletPaymentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const langFromParams = searchParams.get('lang') || "ar";
@@ -106,6 +114,17 @@ export default function WalletPaymentPage() {
       <Footer brand={BRAND} lang={lang} copy={T} />
       <FloatingCart brand={BRAND} />
       <BottomTabs labels={{ home: lang === "ar" ? "الرئيسية" : "Home", cats: lang === "ar" ? "الفئات" : "Categories", cart: lang === "ar" ? "السلة" : "Bag", wish: lang === "ar" ? "المفضلة" : "Wishlist", account: lang === "ar" ? "حسابي" : "Account" }} />
+    </div>
+  );
+}
+
+function WalletPaymentLoading() {
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neutral-900 mx-auto mb-4"></div>
+        <p className="text-neutral-600">Loading payment...</p>
+      </div>
     </div>
   );
 }

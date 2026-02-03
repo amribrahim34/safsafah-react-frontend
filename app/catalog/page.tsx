@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { BRAND } from '../../content/brand';
 import { COPY } from '../../content/copy';
@@ -20,7 +20,16 @@ import SortBar from '../../components/catalog/sortbar/SortBar';
 import ResultsMeta from '../../components/catalog/resultmeta/ResultsMeta';
 import FilterPillBar from '../../components/catalog/filters/FilterPillBar';
 
+// Wrapper to handle Suspense boundary requirement
 export default function CatalogPage() {
+  return (
+    <Suspense fallback={<CatalogLoading />}>
+      <CatalogPageContent />
+    </Suspense>
+  );
+}
+
+function CatalogPageContent() {
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -413,6 +422,17 @@ export default function CatalogPage() {
           account: lang === 'ar' ? 'حسابي' : 'Account',
         }}
       />
+    </div>
+  );
+}
+
+function CatalogLoading() {
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neutral-900 mx-auto mb-4"></div>
+        <p className="text-neutral-600">Loading catalog...</p>
+      </div>
     </div>
   );
 }

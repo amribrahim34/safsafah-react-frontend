@@ -16,7 +16,7 @@ export default function MapPickerLite({ lang, brand, onPick }) {
   // lazy load leaflet
   useEffect(() => {
     const ensureLeaflet = async () => {
-      if (window.L) return;
+      // if (window.L) return;
       await new Promise((res) => {
         const link = document.createElement("link");
         link.rel = "stylesheet";
@@ -33,14 +33,14 @@ export default function MapPickerLite({ lang, brand, onPick }) {
     };
 
     ensureLeaflet().then(() => {
-      const L = window.L;
+      // const L = window.L;
       if (!mapRef.current) return;
 
       // Check if map is already initialized
       if (mapInst.current) return;
 
       mapInst.current = L.map(mapRef.current, { zoomControl: true, attributionControl: false }).setView([30.0444, 31.2357], 12);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(mapInst.current);
+      // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(mapInst.current);
 
       const setPoint = async (latlng) => {
         if (!markerRef.current) {

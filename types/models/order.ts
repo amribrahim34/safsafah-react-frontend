@@ -158,6 +158,7 @@ export interface OrderFilters {
   sortOrder?: 'asc' | 'desc';
   page?: number;
   limit?: number;
+  [key: string]: unknown; // Index signature for compatibility with Record<string, unknown>
 }
 
 export interface OrderSearchResult {

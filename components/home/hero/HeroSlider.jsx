@@ -16,14 +16,14 @@ export default function HeroSlider({ slides, brand }) {
     return () => clearInterval(id);
   }, [i, slides.length]);
 
-  useEffect(() => {
-    const onResize = () => {
-      const el = ref.current; if (!el) return;
-      el.scrollTo({ left: i * el.clientWidth });
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [i]);
+  // useEffect(() => {
+  //   const onResize = () => {
+  //     const el = ref.current; if (!el) return;
+  //     el.scrollTo({ left: i * el.clientWidth });
+  //   };
+  //   window.addEventListener("resize", onResize);
+  //   return () => window.removeEventListener("resize", onResize);
+  // }, [i]);
 
   return (
     <div className="relative">
@@ -60,7 +60,7 @@ export default function HeroSlider({ slides, brand }) {
       </div>
       <div className="absolute bottom-4 inset-x-0 flex justify-center gap-2">
         {slides.map((_, idx) => (
-          <button key={idx} onClick={() => setI(idx)} className={`w-2 h-2 rounded-full ${idx===i ? "bg-white" : "bg-white/50"}`} aria-label={`Go to ${idx+1}`} />
+          <button key={idx} onClick={() => setI(idx)} className={`w-2 h-2 rounded-full ${idx === i ? "bg-white" : "bg-white/50"}`} aria-label={`Go to ${idx + 1}`} />
         ))}
       </div>
     </div>

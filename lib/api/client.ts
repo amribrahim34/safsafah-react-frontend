@@ -31,6 +31,7 @@ export const tokenManager = {
    * Gets the authentication token from localStorage
    */
   getToken(): string | null {
+    if (typeof window === 'undefined') return null;
     return localStorage.getItem('auth_token');
   },
 
@@ -38,6 +39,7 @@ export const tokenManager = {
    * Sets the authentication token in localStorage
    */
   setToken(token: string): void {
+    if (typeof window === 'undefined') return;
     localStorage.setItem('auth_token', token);
   },
 
@@ -45,6 +47,7 @@ export const tokenManager = {
    * Removes the authentication token from localStorage
    */
   removeToken(): void {
+    if (typeof window === 'undefined') return;
     localStorage.removeItem('auth_token');
   },
 
@@ -52,6 +55,7 @@ export const tokenManager = {
    * Gets the refresh token from localStorage
    */
   getRefreshToken(): string | null {
+    if (typeof window === 'undefined') return null;
     return localStorage.getItem('refresh_token');
   },
 
@@ -59,6 +63,7 @@ export const tokenManager = {
    * Sets the refresh token in localStorage
    */
   setRefreshToken(token: string): void {
+    if (typeof window === 'undefined') return;
     localStorage.setItem('refresh_token', token);
   },
 
@@ -66,6 +71,7 @@ export const tokenManager = {
    * Removes the refresh token from localStorage
    */
   removeRefreshToken(): void {
+    if (typeof window === 'undefined') return;
     localStorage.removeItem('refresh_token');
   },
 

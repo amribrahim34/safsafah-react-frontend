@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "../lib/i18n";
 import { BRAND } from "../content/brand";
@@ -24,14 +24,24 @@ import CategoriesSection from "../components/home/categories/CategoriesSection";
 import BrandsSection from "../components/home/brands/BrandsSection";
 import MoreBanners from "../components/home/banners/ExtraBanners";
 
+// Force dynamic rendering (disable SSR)
+export const dynamic = 'force-dynamic';
 
 // import Newsletter, JournalSection, Footer ... (same idea)
 
 export default function Home() {
   const { t, i18n } = useTranslation('home');
-  const [lang, setLang] = useState<'en' | 'ar'>(i18n.language as 'en' | 'ar');
+  // Initialize with 'en' to ensure consistent server/client rendering
+  const [lang, setLang] = useState<'en' | 'ar'>('en');
   const T = useMemo(() => COPY[lang as keyof typeof COPY], [lang]);
   useDir(lang);
+
+  // Sync with i18n language after component mounts (client-side only)
+  useEffect(() => {
+    if (i18n.language !== lang) {
+      setLang(i18n.language as 'en' | 'ar');
+    }
+  }, [i18n.language]);
 
   const toggleLanguage = () => {
     const newLang = lang === "ar" ? "en" : "ar";

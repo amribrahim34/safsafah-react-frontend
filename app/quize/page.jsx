@@ -115,16 +115,16 @@ export default function SkinCareQuize() {
       console.error('Failed to submit beauty profile:', err);
       alert(
         submitError ||
-          (lang === 'ar'
-            ? 'حدث خطأ أثناء حفظ الملف. يرجى المحاولة مرة أخرى'
-            : 'An error occurred while saving. Please try again')
+        (lang === 'ar'
+          ? 'حدث خطأ أثناء حفظ الملف. يرجى المحاولة مرة أخرى'
+          : 'An error occurred while saving. Please try again')
       );
     }
   }, [formData, submitProfile, router, lang, translations, submitError]);
 
   // Retry loading questionnaire
   const handleRetry = useCallback(() => {
-    window.location.reload();
+    // window.location.reload();
   }, []);
 
   // Update handlers

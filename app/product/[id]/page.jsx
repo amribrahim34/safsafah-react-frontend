@@ -28,29 +28,29 @@ import RatingBreakdown from "../../../components/product_details/RatingBreakdown
 import Reviews from "../../../components/product_details/Reviews";
 import DeliveryETA from "../../../components/product_details/DeliveryETA";
 import StickyATCBar from "../../../components/product_details/StickyATCBar";
-import BundleOffers from "../components/product_details/BundleOffers";
-import RecentlyViewed from "../components/product_details/RecentlyViewed";
-import MiniCart from "../components/product_details/MiniCart";
-import ExitIntentModal from "../components/product_details/ExitIntentModal";
-import AddToCartControls from "../components/product_details/AddToCartControls";
-import AddReview from "../components/product_details/AddReview";
-import Stars from "../components/ui/Stars";
+import BundleOffers from "../../../components/product_details/BundleOffers";
+import RecentlyViewed from "../../../components/product_details/RecentlyViewed";
+import MiniCart from "../../../components/product_details/MiniCart";
+import ExitIntentModal from "../../../components/product_details/ExitIntentModal";
+import AddToCartControls from "../../../components/product_details/AddToCartControls";
+import AddReview from "../../../components/product_details/AddReview";
+import Stars from "../../../components/ui/Stars";
 
 // ---- Page ----
-export default function ProductPage(){
+export default function ProductPage() {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentProduct: product, isLoadingProduct, error } = useAppSelector((state) => state.products);
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
-  const [lang,setLang] = useState("ar");
-  const T = useMemo(()=> COPY[lang], [lang]);
+  const [lang, setLang] = useState("ar");
+  const T = useMemo(() => COPY[lang], [lang]);
   useDir(lang);
 
   const [showReviews, setShowReviews] = useState(false);
   const [miniCartOpen, setMiniCartOpen] = useState(false);
 
-  const priceFmt = new Intl.NumberFormat(lang==="ar"?"ar-EG":"en-EG",{ style:"currency", currency:"EGP", maximumFractionDigits:0 }).format;
+  const priceFmt = new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", { style: "currency", currency: "EGP", maximumFractionDigits: 0 }).format;
 
   // Use product cart hook for cart operations
   const {
@@ -79,7 +79,7 @@ export default function ProductPage(){
   if (isLoadingProduct) {
     return (
       <div className="min-h-screen bg-white text-neutral-900">
-        <PromoBar text={T.promo} lang={lang} onToggleLang={()=>setLang(lang==="ar"?"en":"ar")} brand={BRAND} />
+        <PromoBar text={T.promo} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
         <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <div className="text-xl">{lang === "ar" ? "جاري التحميل..." : "Loading..."}</div>
@@ -93,7 +93,7 @@ export default function ProductPage(){
   if (error || !product) {
     return (
       <div className="min-h-screen bg-white text-neutral-900">
-        <PromoBar text={T.promo} lang={lang} onToggleLang={()=>setLang(lang==="ar"?"en":"ar")} brand={BRAND} />
+        <PromoBar text={T.promo} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
         <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <div className="text-xl text-red-600">{lang === "ar" ? "فشل تحميل المنتج" : "Failed to load product"}</div>
@@ -122,7 +122,7 @@ export default function ProductPage(){
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={T.promo} lang={lang} onToggleLang={()=>setLang(lang==="ar"?"en":"ar")} brand={BRAND} />
+      <PromoBar text={T.promo} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
       <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
 
       {/* Hook Phase — Emotional Engagement */}
@@ -139,10 +139,10 @@ export default function ProductPage(){
           {rating > 0 && (
             <div className="mt-3 flex items-center gap-2">
               <Stars rating={rating} />
-              <span className="text-sm text-neutral-600">{rating.toFixed(1)} · {reviewCount} {lang==="ar"?"تقييم":"ratings"}</span>
+              <span className="text-sm text-neutral-600">{rating.toFixed(1)} · {reviewCount} {lang === "ar" ? "تقييم" : "ratings"}</span>
               {reviewCount > 0 && (
-                <button className="text-sm underline" onClick={()=>setShowReviews(true)}>
-                  {lang==="ar"?"قراءة المراجعات":"Read reviews"}
+                <button className="text-sm underline" onClick={() => setShowReviews(true)}>
+                  {lang === "ar" ? "قراءة المراجعات" : "Read reviews"}
                 </button>
               )}
             </div>
@@ -156,8 +156,8 @@ export default function ProductPage(){
             </span> */}
           </div>
           {product.stock && (
-            <div className={`mt-1 text-sm ${lang==='ar'?'text-right':''}`}>
-              {lang==="ar"?`المتاح بالمخزون: ${product.stock}`:`Only ${product.stock} left in stock!`}
+            <div className={`mt-1 text-sm ${lang === 'ar' ? 'text-right' : ''}`}>
+              {lang === "ar" ? `المتاح بالمخزون: ${product.stock}` : `Only ${product.stock} left in stock!`}
             </div>
           )}
           {/* <div className="mt-1 text-sm text-neutral-600">{lang==="ar"?"تقسيط متاح عبر ValU/Bank":"Installments available via ValU/Bank*"}</div> */}
@@ -188,7 +188,7 @@ export default function ProductPage(){
           {/* Description */}
           {productDescription && (
             <div className="mt-6">
-              <div className="font-bold mb-1">{lang==="ar"?"الوصف":"Description"}</div>
+              <div className="font-bold mb-1">{lang === "ar" ? "الوصف" : "Description"}</div>
               <p className="text-neutral-700 text-sm">{productDescription}</p>
             </div>
           )}
@@ -214,9 +214,9 @@ export default function ProductPage(){
         <section className="max-w-7xl mx-auto px-4 pb-8">
           <div className="rounded-3xl border border-neutral-200 p-4">
             <div className="flex items-center justify-between">
-              <div className="font-bold text-lg">{lang==="ar"?"آراء العملاء":"Customer reviews"}</div>
-              <button onClick={()=>setShowReviews(s=>!s)} className="text-sm underline">
-                {showReviews ? (lang==="ar"?"إخفاء":"Hide") : (lang==="ar"?"عرض المراجعات":"Show reviews")}
+              <div className="font-bold text-lg">{lang === "ar" ? "آراء العملاء" : "Customer reviews"}</div>
+              <button onClick={() => setShowReviews(s => !s)} className="text-sm underline">
+                {showReviews ? (lang === "ar" ? "إخفاء" : "Hide") : (lang === "ar" ? "عرض المراجعات" : "Show reviews")}
               </button>
             </div>
             {showReviews && (
@@ -246,7 +246,7 @@ export default function ProductPage(){
 
       <Footer brand={BRAND} lang={lang} copy={T} />
       <FloatingCart brand={BRAND} />
-      <BottomTabs labels={{ home: lang==="ar"?"الرئيسية":"Home", cats: lang==="ar"?"الفئات":"Categories", cart: lang==="ar"?"السلة":"Bag", wish: lang==="ar"?"المفضلة":"Wishlist", account: lang==="ar"?"حسابي":"Account" }} />
+      <BottomTabs labels={{ home: lang === "ar" ? "الرئيسية" : "Home", cats: lang === "ar" ? "الفئات" : "Categories", cart: lang === "ar" ? "السلة" : "Bag", wish: lang === "ar" ? "المفضلة" : "Wishlist", account: lang === "ar" ? "حسابي" : "Account" }} />
 
       <StickyATCBar
         brand={BRAND}
@@ -259,7 +259,7 @@ export default function ProductPage(){
         onDecrement={handleDecrement}
         isLoading={isAddingToCart}
       />
-      <MiniCart open={miniCartOpen} onClose={()=>setMiniCartOpen(false)} brand={BRAND} lang={lang} />
+      <MiniCart open={miniCartOpen} onClose={() => setMiniCartOpen(false)} brand={BRAND} lang={lang} />
       <ExitIntentModal brand={BRAND} lang={lang} />
     </div>
   );

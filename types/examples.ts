@@ -1,11 +1,11 @@
 // Example usage of TypeScript types
 // This file demonstrates how to use the defined types in your application
 
-import { 
-  Product, 
-  User, 
-  Order, 
-  CartItem, 
+import {
+  Product,
+  User,
+  Order,
+  CartItem,
   Address,
   Brand,
   LocalizedText,
@@ -59,25 +59,25 @@ export interface AppState {
 // Example: Form Validation
 export const validateUser = (user: Partial<User>): string[] => {
   const errors: string[] = [];
-  
+
   if (!user.name || user.name.trim().length < 2) {
     errors.push('Name must be at least 2 characters');
   }
-  
+
   if (!user.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) {
     errors.push('Valid email is required');
   }
-  
+
   if (!user.phone || !/^(01|\+201)[0-9]{8,10}$/.test(user.phone)) {
     errors.push('Valid Egyptian mobile number is required');
   }
-  
+
   return errors;
 };
 
 // Example: Type Guards
 export const isUser = (obj: any): obj is User => {
-  return obj && 
+  return obj &&
     typeof obj.id === 'string' &&
     typeof obj.name === 'string' &&
     typeof obj.email === 'string' &&
@@ -96,30 +96,35 @@ export const isProduct = (obj: any): obj is Product => {
 // Example: Sample Data
 export const sampleProduct: Product = {
   id: 1,
-  brand: "some-by-mi",
-  tags: ["retinol", "serum", "anti-aging"],
-  name: {
-    en: "Retinol Serum 2.5%",
-    ar: "سيروم ريتينول 2.5%"
+  brand: {
+    id: 1,
+    nameAr: "سوم باي مي",
+    nameEn: "Some By Mi",
+    logo: null
   },
+  category: {
+    id: 1,
+    nameAr: "سيروم",
+    nameEn: "Serums",
+    image: null,
+    parentId: null
+  },
+  nameAr: "سيروم ريتينول 2.5%",
+  nameEn: "Retinol Serum 2.5%",
   price: 590,
-  rating: 4.7,
-  img: "/products/retinol-serum-1.jpg",
+  averageRating: 4.7,
+  image: "/products/retinol-serum-1.jpg",
   images: [
     "/products/retinol-serum-1.jpg",
     "/products/retinol-serum-2.jpg"
   ],
-  category: "Serums",
-  subcategory: "Anti-Aging",
   skinTypes: ["oily", "combination", "normal"],
   onSale: true,
   inStock: true,
   stock: 50,
   sku: "SBM-RET-001",
-  description: {
-    en: "Advanced retinol serum for anti-aging and skin renewal",
-    ar: "سيروم ريتينول متقدم لمكافحة الشيخوخة وتجديد البشرة"
-  },
+  descriptionAr: "سيروم ريتينول متقدم لمكافحة الشيخوخة وتجديد البشرة",
+  descriptionEn: "Advanced retinol serum for anti-aging and skin renewal",
   usage: {
     en: "Apply 2-3 drops at night after cleansing",
     ar: "يُطبق 2-3 قطرات ليلاً بعد التنظيف"

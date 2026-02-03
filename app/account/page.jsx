@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useMemo, useState } from "react";
 import { BRAND } from "../../content/brand";
 import { COPY } from "../../content/copy";

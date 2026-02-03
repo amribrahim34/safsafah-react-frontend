@@ -104,7 +104,7 @@ export default function RegisterPage() {
         email: email.trim(),
         password: password,
         passwordConfirmation: password,
-        mobile: mobile.trim(),
+        phone: mobile.trim(),
       })
     );
 
@@ -190,9 +190,8 @@ export default function RegisterPage() {
                       onChange={handleInputChange(setName)}
                       placeholder={isRTL ? 'الاسم الأول واسم العائلة' : 'First & last name'}
                       disabled={isLoading}
-                      className={`w-full rounded-2xl border border-neutral-300 px-3 py-3 ${
-                        isRTL ? 'text-right' : ''
-                      } ${isLoading ? 'bg-neutral-50 cursor-not-allowed' : ''}`}
+                      className={`w-full rounded-2xl border border-neutral-300 px-3 py-3 ${isRTL ? 'text-right' : ''
+                        } ${isLoading ? 'bg-neutral-50 cursor-not-allowed' : ''}`}
                       style={{ outlineColor: BRAND.primary }}
                     />
                   </label>
@@ -208,9 +207,8 @@ export default function RegisterPage() {
                       inputMode="email"
                       placeholder="name@example.com"
                       disabled={isLoading}
-                      className={`w-full rounded-2xl border border-neutral-300 px-3 py-3 ${
-                        isRTL ? 'text-right' : ''
-                      } ${isLoading ? 'bg-neutral-50 cursor-not-allowed' : ''}`}
+                      className={`w-full rounded-2xl border border-neutral-300 px-3 py-3 ${isRTL ? 'text-right' : ''
+                        } ${isLoading ? 'bg-neutral-50 cursor-not-allowed' : ''}`}
                       style={{ outlineColor: BRAND.primary }}
                     />
                   </label>
@@ -228,9 +226,8 @@ export default function RegisterPage() {
                         isRTL ? '01xxxxxxxxx أو +201xxxxxxxxx' : '01xxxxxxxxx or +201xxxxxxxxx'
                       }
                       disabled={isLoading}
-                      className={`w-full rounded-2xl border border-neutral-300 px-3 py-3 ${
-                        isRTL ? 'text-right' : ''
-                      } ${isLoading ? 'bg-neutral-50 cursor-not-allowed' : ''}`}
+                      className={`w-full rounded-2xl border border-neutral-300 px-3 py-3 ${isRTL ? 'text-right' : ''
+                        } ${isLoading ? 'bg-neutral-50 cursor-not-allowed' : ''}`}
                       style={{ outlineColor: BRAND.primary }}
                     />
                   </label>
@@ -247,18 +244,16 @@ export default function RegisterPage() {
                         onChange={handleInputChange(setPassword)}
                         placeholder={isRTL ? '••••••••' : '••••••••'}
                         disabled={isLoading}
-                        className={`w-full rounded-2xl border border-neutral-300 px-3 py-3 ${
-                          isLoading ? 'bg-neutral-50 cursor-not-allowed' : ''
-                        }`}
+                        className={`w-full rounded-2xl border border-neutral-300 px-3 py-3 ${isLoading ? 'bg-neutral-50 cursor-not-allowed' : ''
+                          }`}
                         style={{ outlineColor: BRAND.primary }}
                       />
                       <button
                         type="button"
                         onClick={() => setShowPw((prev) => !prev)}
                         disabled={isLoading}
-                        className={`absolute top-1/2 -translate-y-1/2 text-sm text-neutral-700 ${
-                          isRTL ? 'left-3' : 'right-3'
-                        } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`absolute top-1/2 -translate-y-1/2 text-sm text-neutral-700 ${isRTL ? 'left-3' : 'right-3'
+                          } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
                         {showPw ? (isRTL ? 'إخفاء' : 'Hide') : isRTL ? 'إظهار' : 'Show'}
                       </button>
@@ -299,9 +294,8 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full mt-4 md:mt-6 px-5 py-3 rounded-2xl text-white font-semibold transition-opacity ${
-                    isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90'
-                  }`}
+                  className={`w-full mt-4 md:mt-6 px-5 py-3 rounded-2xl text-white font-semibold transition-opacity ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90'
+                    }`}
                   style={{ background: BRAND.primary }}
                 >
                   {isLoading
@@ -309,8 +303,8 @@ export default function RegisterPage() {
                       ? 'جاري إنشاء الحساب...'
                       : 'Creating account...'
                     : isRTL
-                    ? 'إنشاء حساب'
-                    : 'Create account'}
+                      ? 'إنشاء حساب'
+                      : 'Create account'}
                 </button>
 
                 {/* Sign in link */}

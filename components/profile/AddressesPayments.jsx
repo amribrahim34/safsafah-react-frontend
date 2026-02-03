@@ -1,9 +1,11 @@
+'use client';
+
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAddresses } from "@/store/slices/addressesSlice";
 
-export default function AddressesPayments({ brand, lang="ar" }) {
-  const isRTL = lang==="ar";
+export default function AddressesPayments({ brand, lang = "ar" }) {
+  const isRTL = lang === "ar";
   const dispatch = useAppDispatch();
   const { addresses = [], isLoading, error } = useAppSelector((state) => state.addresses || {});
 
@@ -13,7 +15,7 @@ export default function AddressesPayments({ brand, lang="ar" }) {
 
   return (
     <section className="rounded-3xl border border-neutral-200 p-4 bg-white">
-      <div className="text-lg font-extrabold mb-2">{isRTL?"العناوين والدفع":"Addresses & payment"}</div>
+      <div className="text-lg font-extrabold mb-2">{isRTL ? "العناوين والدفع" : "Addresses & payment"}</div>
 
       {isLoading && (
         <div className="text-sm text-neutral-500 py-4">
@@ -50,11 +52,11 @@ export default function AddressesPayments({ brand, lang="ar" }) {
       )}
 
       <div className="mt-3 text-sm text-neutral-600">
-        {isRTL?"الطريقة الافتراضية: الدفع عند الاستلام":"Default method: Cash on Delivery"}
+        {isRTL ? "الطريقة الافتراضية: الدفع عند الاستلام" : "Default method: Cash on Delivery"}
       </div>
       <div className="mt-2 flex gap-2">
-        <a href="/addresses" className="px-3 py-1.5 rounded-xl border text-sm">{isRTL?"إدارة العناوين":"Manage addresses"}</a>
-        <a href="/payment" className="px-3 py-1.5 rounded-xl border text-sm">{isRTL?"طرق الدفع":"Payment methods"}</a>
+        <a href="/addresses" className="px-3 py-1.5 rounded-xl border text-sm">{isRTL ? "إدارة العناوين" : "Manage addresses"}</a>
+        <a href="/payment" className="px-3 py-1.5 rounded-xl border text-sm">{isRTL ? "طرق الدفع" : "Payment methods"}</a>
       </div>
     </section>
   );

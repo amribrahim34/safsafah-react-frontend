@@ -102,9 +102,9 @@ export default function ContactUs() {
       const body = encodeURIComponent(
         // Include BOTH languages in the email body
         `Name: ${form.name}\nMobile: ${form.phone}\n\nMessage (EN):\n${form.message}\n\n` +
-          `الاسم: ${form.name}\nالموبايل: ${form.phone}\n\nالرسالة (AR):\n${form.message}`
+        `الاسم: ${form.name}\nالموبايل: ${form.phone}\n\nالرسالة (AR):\n${form.message}`
       );
-      window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
+      // window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
       setStatus({
         type: "success",
         msg: isRTL
@@ -294,11 +294,10 @@ export default function ContactUs() {
 
               {status.type !== "idle" && (
                 <div
-                  className={`mt-3 text-sm rounded-2xl px-3 py-2 border ${
-                    status.type === "error"
+                  className={`mt-3 text-sm rounded-2xl px-3 py-2 border ${status.type === "error"
                       ? "bg-red-50 border-red-200 text-red-700"
                       : "bg-green-50 border-green-200 text-green-700"
-                  }`}
+                    }`}
                   role={status.type === "error" ? "alert" : "status"}
                 >
                   {status.msg}
