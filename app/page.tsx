@@ -27,16 +27,13 @@ import MoreBanners from "../components/home/banners/ExtraBanners";
 // Force dynamic rendering (disable SSR)
 export const dynamic = 'force-dynamic';
 
-// import Newsletter, JournalSection, Footer ... (same idea)
 
 export default function Home() {
   const { t, i18n } = useTranslation('home');
-  // Initialize with 'en' to ensure consistent server/client rendering
-  const [lang, setLang] = useState<'en' | 'ar'>('en');
+  const [lang, setLang] = useState<'en' | 'ar'>('ar');
   const T = useMemo(() => COPY[lang as keyof typeof COPY], [lang]);
   useDir(lang);
 
-  // Sync with i18n language after component mounts (client-side only)
   useEffect(() => {
     if (i18n.language !== lang) {
       setLang(i18n.language as 'en' | 'ar');
@@ -49,19 +46,12 @@ export default function Home() {
     i18n.changeLanguage(newLang);
   };
 
-  // Prepare slider data with translations and images
-  const sliderData = [
-    { ...t('slider.0', { returnObjects: true }), img: IMG.hero1 },
-    { ...t('slider.1', { returnObjects: true }), img: IMG.hero2 },
-    { ...t('slider.2', { returnObjects: true }), img: IMG.hero3 },
-  ];
-
   return (
     <div id="home" className="min-h-screen bg-white text-neutral-900">
       <PromoBar text={t('promo')} lang={lang} onToggleLang={toggleLanguage} brand={BRAND} />
       <Header brand={BRAND} searchPlaceholder={t('search')} lang={lang} />
 
-      <HeroSlider slides={sliderData} brand={BRAND} />
+      <HeroSlider brand={BRAND} />
 
       {/* Trust hits early */}
       <BrandTrust brand={BRAND} lang={lang} />
