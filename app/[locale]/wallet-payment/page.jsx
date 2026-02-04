@@ -2,13 +2,13 @@
 
 import React, { useEffect, useMemo, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { BRAND } from "../../content/brand";
-import { COPY } from "../../content/copy";
-import PromoBar from "../../components/header/PromoBar";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import BottomTabs from "../../components/appchrome/BottomTabs";
-import FloatingCart from "../../components/appchrome/FloatingCart";
+import { BRAND } from "@/content/brand";
+import { COPY } from "@/content/copy";
+import PromoBar from "@/components/header/PromoBar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import BottomTabs from "@/components/appchrome/BottomTabs";
+import FloatingCart from "@/components/appchrome/FloatingCart";
 
 export default function WalletPaymentPage() {
   return (

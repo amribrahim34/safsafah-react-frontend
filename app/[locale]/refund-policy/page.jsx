@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useMemo, useState } from "react";
-import { BRAND } from "../../content/brand";
-import { COPY } from "../../content/copy";
-import { useDir } from "../../hooks/useDir";
+import { BRAND } from "@/content/brand";
+import { COPY } from "@/content/copy";
+import { useDir } from "@/hooks/useDir";
 
-import PromoBar from "../../components/header/PromoBar";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import BottomTabs from "../../components/appchrome/BottomTabs";
+import PromoBar from "@/components/header/PromoBar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import BottomTabs from "@/components/appchrome/BottomTabs";
 
 // ---- Return & Refund Policy Page ----
 // Default language is AR. No borders between blocks. Clean, consistent styling.

@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-
-
+import { LocaleSync } from "./LocaleSync";
 
 export const metadata: Metadata = {
   title: "Safsafah | صفصافه",
@@ -27,6 +26,7 @@ export default function RootLayout({
       <body
         className={``}
       >
+        <LocaleSync />
         <Providers>{children}</Providers>
       </body>
     </html>

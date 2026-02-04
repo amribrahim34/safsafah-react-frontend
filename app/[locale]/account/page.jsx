@@ -1,25 +1,25 @@
 'use client';
 
 import React, { useMemo, useState } from "react";
-import { BRAND } from "../../content/brand";
-import { COPY } from "../../content/copy";
-import { useDir } from "../../hooks/useDir";
+import { BRAND } from "@/content/brand";
+import { COPY } from "@/content/copy";
+import { useDir } from "@/hooks/useDir";
 import { useAppSelector } from "@/store/hooks";
 
-import PromoBar from "../../components/header/PromoBar";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import BottomTabs from "../../components/appchrome/BottomTabs";
+import PromoBar from "@/components/header/PromoBar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import BottomTabs from "@/components/appchrome/BottomTabs";
 
-import OverviewHeader from "../../components/profile/OverviewHeader";
-import OrdersList from "../../components/profile/OrdersList";
-import WishlistGrid from "../../components/profile/WishlistGrid";
-import RewardsWallet from "../../components/profile/RewardsWallet";
-import BeautyProfileCard from "../../components/profile/BeautyProfileCard";
-import AddressesPayments from "../../components/profile/AddressesPayments";
-import RecentlyViewedStrip from "../../components/profile/RecentlyViewedStrip";
-import SettingsPanel from "../../components/profile/SettingsPanel";
-import SupportLinks from "../../components/profile/SupportLinks";
+import OverviewHeader from "@/components/profile/OverviewHeader";
+import OrdersList from "@/components/profile/OrdersList";
+import WishlistGrid from "@/components/profile/WishlistGrid";
+import RewardsWallet from "@/components/profile/RewardsWallet";
+import BeautyProfileCard from "@/components/profile/BeautyProfileCard";
+import AddressesPayments from "@/components/profile/AddressesPayments";
+import RecentlyViewedStrip from "@/components/profile/RecentlyViewedStrip";
+import SettingsPanel from "@/components/profile/SettingsPanel";
+import SupportLinks from "@/components/profile/SupportLinks";
 
 export default function ProfilePage() {
   const [lang, setLang] = useState("ar");

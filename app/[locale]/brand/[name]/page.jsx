@@ -4,21 +4,21 @@
 import React, { useMemo, useState } from "react";
 import { usePathname, useParams } from "next/navigation";
 
-import { BRAND } from "../../../content/brand";
-import { COPY } from "../../../content/copy";
-import { PRODUCTS } from "../../../content/products";
-import { IMG } from "../../../content/images";
-import { useDir } from "../../../hooks/useDir";
+import { BRAND } from "@/content/brand";
+import { COPY } from "@/content/copy";
+import { PRODUCTS } from "@/content/products";
+import { IMG } from "@/content/images";
+import { useDir } from "@/hooks/useDir";
 
-import PromoBar from "../../../components/header/PromoBar";
-import Header from "../../../components/header/Header";
-import Footer from "../../../components/footer/Footer";
-import BottomTabs from "../../../components/appchrome/BottomTabs";
+import PromoBar from "@/components/header/PromoBar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import BottomTabs from "@/components/appchrome/BottomTabs";
 
 // Reuse your existing catalog UI for consistency
-import Filters from "../../../components/catalog/filters/Filters";            // uses FilterGroup inside
-import FilterPillBar from "../../../components/catalog/filters/FilterPillBar";
-import ProductGrid from "../../../components/products/ProductGrid";
+import Filters from "@/components/catalog/filters/Filters";            // uses FilterGroup inside
+import FilterPillBar from "@/components/catalog/filters/FilterPillBar";
+import ProductGrid from "@/components/products/ProductGrid";
 
 export default function BrandLanding() {
     const params = useParams();

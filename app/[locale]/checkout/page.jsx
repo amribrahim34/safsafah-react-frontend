@@ -1,28 +1,28 @@
 'use client';
 
 import React, { useMemo, useState, useRef, useEffect } from "react";
-import { BRAND } from "../../content/brand";
-import { COPY } from "../../content/copy";
-import { useDir } from "../../hooks/useDir";
-import { useCheckoutValidation } from "../../hooks/useCheckoutValidation";
+import { BRAND } from "@/content/brand";
+import { COPY } from "@/content/copy";
+import { useDir } from "@/hooks/useDir";
+import { useCheckoutValidation } from "@/hooks/useCheckoutValidation";
 import { useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchCart } from "../../store/slices/cartsSlice";
-import { createOrder } from "../../store/slices/ordersSlice";
-import { fetchUserProfile } from "../../store/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchCart } from "@/store/slices/cartsSlice";
+import { createOrder } from "@/store/slices/ordersSlice";
+import { fetchUserProfile } from "@/store/slices/authSlice";
 
-import PromoBar from "../../components/header/PromoBar";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import BottomTabs from "../../components/appchrome/BottomTabs";
-import FloatingCart from "../../components/appchrome/FloatingCart";
+import PromoBar from "@/components/header/PromoBar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import BottomTabs from "@/components/appchrome/BottomTabs";
+import FloatingCart from "@/components/appchrome/FloatingCart";
 
-import OrderSummary from "../../components/cart/OrderSummary";
-import PaymentMethods from "../../components/checkout/PaymentMethods";
-import CheckoutForm from "../../components/checkout/CheckoutForm";
-import MobileCheckoutButton from "../../components/checkout/MobileCheckoutButton";
-import SuccessToast from "../../components/notifications/SuccessToast";
-import ErrorToast from "../../components/notifications/ErrorToast";
+import OrderSummary from "@/components/cart/OrderSummary";
+import PaymentMethods from "@/components/checkout/PaymentMethods";
+import CheckoutForm from "@/components/checkout/CheckoutForm";
+import MobileCheckoutButton from "@/components/checkout/MobileCheckoutButton";
+import SuccessToast from "@/components/notifications/SuccessToast";
+import ErrorToast from "@/components/notifications/ErrorToast";
 
 export default function CheckoutQuickPage() {
   const [lang, setLang] = useState("ar");

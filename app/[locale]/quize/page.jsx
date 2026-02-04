@@ -6,17 +6,17 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { BRAND } from '../../content/brand';
-import { COPY } from '../../content/copy';
-import { useDir } from '../../hooks/useDir';
-import { useBeautyQuestionnaire, useBeautyProfileSubmit } from '../../hooks/useBeautyQuestionnaire';
+import { BRAND } from '@/content/brand';
+import { COPY } from '@/content/copy';
+import { useDir } from '@/hooks/useDir';
+import { useBeautyQuestionnaire, useBeautyProfileSubmit } from '@/hooks/useBeautyQuestionnaire';
 
 // Layout components
-import PromoBar from '../../components/header/PromoBar';
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer/Footer';
-import BottomTabs from '../../components/appchrome/BottomTabs';
-import FloatingCart from '../../components/appchrome/FloatingCart';
+import PromoBar from '@/components/header/PromoBar';
+import Header from '@/components/header/Header';
+import Footer from '@/components/footer/Footer';
+import BottomTabs from '@/components/appchrome/BottomTabs';
+import FloatingCart from '@/components/appchrome/FloatingCart';
 
 // Quiz components
 import {
@@ -27,7 +27,7 @@ import {
   IngredientsStep,
   QuizLoader,
   QuizError,
-} from '../../components/beauty-quiz';
+} from '@/components/beauty-quiz';
 
 const TOTAL_STEPS = 3;
 

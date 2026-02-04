@@ -2,9 +2,9 @@
 
 import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { BRAND } from '../../content/brand';
-import { useDir } from '../../hooks/useDir';
-import { IMG } from '../../content/images';
+import { BRAND } from '@/content/brand';
+import { useDir } from '@/hooks/useDir';
+import { IMG } from '@/content/images';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { login, clearError } from '@/store/slices/authSlice';
 import { fetchCart } from '@/store/slices/cartsSlice';

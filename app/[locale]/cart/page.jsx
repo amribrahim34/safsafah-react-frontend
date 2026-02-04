@@ -2,23 +2,23 @@
 
 import React, { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { BRAND } from "../../content/brand";
-import { COPY } from "../../content/copy";
-import { useDir } from "../../hooks/useDir";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchCart, updateCartItem, removeFromCart, applyPromoCode } from "../../store/slices/cartsSlice";
+import { BRAND } from "@/content/brand";
+import { COPY } from "@/content/copy";
+import { useDir } from "@/hooks/useDir";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchCart, updateCartItem, removeFromCart, applyPromoCode } from "@/store/slices/cartsSlice";
 
-import PromoBar from "../../components/header/PromoBar";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import BottomTabs from "../../components/appchrome/BottomTabs";
-import FloatingCart from "../../components/appchrome/FloatingCart";
+import PromoBar from "@/components/header/PromoBar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import BottomTabs from "@/components/appchrome/BottomTabs";
+import FloatingCart from "@/components/appchrome/FloatingCart";
 
-import CartItem from "../../components/cart/CartItem";
-import OrderSummary from "../../components/cart/OrderSummary";
-import FreeShippingBar from "../../components/cart/FreeShippingBar";
-import EmptyCart from "../../components/cart/EmptyCart";
-import PromoCode from "../../components/cart/PromoCode";
+import CartItem from "@/components/cart/CartItem";
+import OrderSummary from "@/components/cart/OrderSummary";
+import FreeShippingBar from "@/components/cart/FreeShippingBar";
+import EmptyCart from "@/components/cart/EmptyCart";
+import PromoCode from "@/components/cart/PromoCode";
 
 export default function CartPage() {
   const dispatch = useAppDispatch();

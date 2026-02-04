@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useMemo, useRef, useState } from "react";
-import { BRAND } from "../../content/brand";
-import { COPY } from "../../content/copy";
-import { useDir } from "../../hooks/useDir";
+import { BRAND } from "@/content/brand";
+import { COPY } from "@/content/copy";
+import { useDir } from "@/hooks/useDir";
 
-import PromoBar from "../../components/header/PromoBar";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import BottomTabs from "../../components/appchrome/BottomTabs";
+import PromoBar from "@/components/header/PromoBar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import BottomTabs from "@/components/appchrome/BottomTabs";
 
 // Reuse existing About blocks for consistency
-import QuickFAQ from "../../components/about/QuickFAQ";
+import QuickFAQ from "@/components/about/QuickFAQ";
 
 import { Mail, Phone, Send, Upload } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";

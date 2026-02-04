@@ -3,38 +3,38 @@
 
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
-import { BRAND } from "../../../content/brand";
-import { COPY } from "../../../content/copy";
-import { IMG } from "../../../content/images";
-import { useDir } from "../../../hooks/useDir";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { fetchProductById } from "../../../store/slices/productsSlice";
-import { fetchCart } from "../../../store/slices/cartsSlice";
-import { useProductCart } from "../../../hooks/useProductCart";
+import { BRAND } from "@/content/brand";
+import { COPY } from "@/content/copy";
+import { IMG } from "@/content/images";
+import { useDir } from "@/hooks/useDir";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchProductById } from "@/store/slices/productsSlice";
+import { fetchCart } from "@/store/slices/cartsSlice";
+import { useProductCart } from "@/hooks/useProductCart";
 
 // site chrome
-import PromoBar from "../../../components/header/PromoBar";
-import Header from "../../../components/header/Header";
-import Footer from "../../../components/footer/Footer";
-import BottomTabs from "../../../components/appchrome/BottomTabs";
-import FloatingCart from "../../../components/appchrome/FloatingCart";
-import ProductGrid from "../../../components/products/ProductGrid";
+import PromoBar from "@/components/header/PromoBar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import BottomTabs from "@/components/appchrome/BottomTabs";
+import FloatingCart from "@/components/appchrome/FloatingCart";
+import ProductGrid from "@/components/products/ProductGrid";
 
 // local product components
-import ImageGallery from "../../../components/product_details/ImageGallery";
-import VariantSelector from "../../../components/product_details/VariantSelector";
-import TrustBadges from "../../../components/product_details/TrustBadges";
-import RatingBreakdown from "../../../components/product_details/RatingBreakdown";
-import Reviews from "../../../components/product_details/Reviews";
-import DeliveryETA from "../../../components/product_details/DeliveryETA";
-import StickyATCBar from "../../../components/product_details/StickyATCBar";
-import BundleOffers from "../../../components/product_details/BundleOffers";
-import RecentlyViewed from "../../../components/product_details/RecentlyViewed";
-import MiniCart from "../../../components/product_details/MiniCart";
-import ExitIntentModal from "../../../components/product_details/ExitIntentModal";
-import AddToCartControls from "../../../components/product_details/AddToCartControls";
-import AddReview from "../../../components/product_details/AddReview";
-import Stars from "../../../components/ui/Stars";
+import ImageGallery from "@/components/product_details/ImageGallery";
+import VariantSelector from "@/components/product_details/VariantSelector";
+import TrustBadges from "@/components/product_details/TrustBadges";
+import RatingBreakdown from "@/components/product_details/RatingBreakdown";
+import Reviews from "@/components/product_details/Reviews";
+import DeliveryETA from "@/components/product_details/DeliveryETA";
+import StickyATCBar from "@/components/product_details/StickyATCBar";
+import BundleOffers from "@/components/product_details/BundleOffers";
+import RecentlyViewed from "@/components/product_details/RecentlyViewed";
+import MiniCart from "@/components/product_details/MiniCart";
+import ExitIntentModal from "@/components/product_details/ExitIntentModal";
+import AddToCartControls from "@/components/product_details/AddToCartControls";
+import AddReview from "@/components/product_details/AddReview";
+import Stars from "@/components/ui/Stars";
 
 // ---- Page ----
 export default function ProductPage() {

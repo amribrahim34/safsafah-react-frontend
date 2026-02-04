@@ -2,23 +2,23 @@
 
 import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { BRAND } from '../../content/brand';
-import { COPY } from '../../content/copy';
-import { useDir } from '../../hooks/useDir';
+import { BRAND } from '@/content/brand';
+import { COPY } from '@/content/copy';
+import { useDir } from '@/hooks/useDir';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchProducts, setFilters } from '@/store/slices/productsSlice';
 import type { Language, ProductFilters } from '@/types';
 
-import PromoBar from '../../components/header/PromoBar';
-import Header from '../../components/header/Header';
-import ProductGrid from '../../components/products/ProductGrid';
-import BottomTabs from '../../components/appchrome/BottomTabs';
-import FloatingCart from '../../components/appchrome/FloatingCart';
-import Footer from '../../components/footer/Footer';
-import Filters from '../../components/catalog/filters/Filters';
-import SortBar from '../../components/catalog/sortbar/SortBar';
-import ResultsMeta from '../../components/catalog/resultmeta/ResultsMeta';
-import FilterPillBar from '../../components/catalog/filters/FilterPillBar';
+import PromoBar from '@/components/header/PromoBar';
+import Header from '@/components/header/Header';
+import ProductGrid from '@/components/products/ProductGrid';
+import BottomTabs from '@/components/appchrome/BottomTabs';
+import FloatingCart from '@/components/appchrome/FloatingCart';
+import Footer from '@/components/footer/Footer';
+import Filters from '@/components/catalog/filters/Filters';
+import SortBar from '@/components/catalog/sortbar/SortBar';
+import ResultsMeta from '@/components/catalog/resultmeta/ResultsMeta';
+import FilterPillBar from '@/components/catalog/filters/FilterPillBar';
 
 // Wrapper to handle Suspense boundary requirement
 export default function CatalogPage() {

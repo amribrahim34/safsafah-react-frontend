@@ -16,16 +16,9 @@ type LayoutProps = {
 };
 
 export default async function LocaleLayout({ children, params }: LayoutProps) {
-  const { locale } = await params;
-  const dir = locale === 'ar' ? 'rtl' : 'ltr';
-  
-  return (
-    <html lang={locale} dir={dir}>
-      <body className={inter.className}>
-        {children}
-      </body>
-    </html>
-  );
+  // Locale layout should not have html/body tags
+  // Those belong only in the root layout
+  return <>{children}</>;
 }
 
 // Generate static params for known locales

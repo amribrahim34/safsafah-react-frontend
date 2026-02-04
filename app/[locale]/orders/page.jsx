@@ -1,19 +1,19 @@
 'use client';
 
 import React, { useMemo, useState, useEffect } from "react";
-import { BRAND } from "../../content/brand";
-import { COPY } from "../../content/copy";
-import { useDir } from "../../hooks/useDir";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchPaginatedOrders } from "../../store/slices/ordersSlice";
+import { BRAND } from "@/content/brand";
+import { COPY } from "@/content/copy";
+import { useDir } from "@/hooks/useDir";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchPaginatedOrders } from "@/store/slices/ordersSlice";
 
-import PromoBar from "../../components/header/PromoBar";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import BottomTabs from "../../components/appchrome/BottomTabs";
+import PromoBar from "@/components/header/PromoBar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import BottomTabs from "@/components/appchrome/BottomTabs";
 
-import OrdersTabs from "../../components/orders/OrdersTabs";
-import OrderCard from "../../components/orders/OrderCard";
+import OrdersTabs from "@/components/orders/OrdersTabs";
+import OrderCard from "@/components/orders/OrderCard";
 
 // Helper function to map API status to UI status
 const mapStatusToUI = (apiStatus) => {
