@@ -1,3 +1,5 @@
+'use client';
+
 import { useTranslation } from "react-i18next";
 import { Leaf, ShieldCheck } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +13,7 @@ export default function Footer({ brand, lang, copy }) {
         {/* Brand block */}
         <div>
           <div className="flex items-center gap-3">
-            <img src="/assets/safsafah-logo.png" alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
+            <img src="/safsafah-logo.png" alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
             <div className="font-extrabold text-xl tracking-tight">SAFSAFAH</div>
           </div>
           <p className="mt-4 text-neutral-600">{t('footer.about')}</p>

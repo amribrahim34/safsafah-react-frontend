@@ -14,7 +14,10 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 export default function HeroSlider({ brand }) {
-  const { t } = useTranslation('home');
+  const { t, i18n } = useTranslation('home');
+
+  // Determine if the current language is RTL
+  const isRTL = i18n.language === 'ar';
 
   // Prepare slider data with translations and images
   const slides = [
@@ -26,12 +29,15 @@ export default function HeroSlider({ brand }) {
   return (
     <div className="relative">
       <Swiper
+        key={i18n.language} // Force re-render when language changes
         modules={[Autoplay, Pagination, Navigation]}
         spaceBetween={0}
         slidesPerView={1}
+        dir={isRTL ? 'rtl' : 'ltr'} // Set direction based on language
         autoplay={{
           delay: 5500,
           disableOnInteraction: false,
+          reverseDirection: isRTL, // Reverse autoplay direction for RTL
         }}
         pagination={{
           clickable: true,

@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar">
+    <html suppressHydrationWarning>
       <head>
       <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
       <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png"></link>
