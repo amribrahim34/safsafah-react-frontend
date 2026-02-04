@@ -27,7 +27,7 @@ export default function CartPage() {
 
   const [lang, setLang] = useState("ar");
   const T = useMemo(() => COPY[lang], [lang]);
-  useDir(lang);
+  useDir();
 
   const [promo, setPromo] = useState("");
 

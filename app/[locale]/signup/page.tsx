@@ -17,7 +17,7 @@ export default function RegisterPage() {
   const { isLoading, error: authError, isAuthenticated } = useAppSelector((state) => state.auth);
 
   const [lang, setLang] = useState<Language>('ar');
-  useDir(lang);
+  useDir();
   const isRTL = lang === 'ar';
 
   // Form state

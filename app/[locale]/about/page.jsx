@@ -25,7 +25,7 @@ export default function About() {
   const [lang, setLang] = useState("ar");
   const T = useMemo(() => COPY[lang], [lang]);
   const isRTL = true; // هذه الصفحة عربية فصحى فقط
-  useDir("ar");
+  useDir();
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">

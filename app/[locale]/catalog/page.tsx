@@ -36,7 +36,7 @@ function CatalogPageContent() {
 
   const [lang, setLang] = useState<Language>('ar');
   const T = useMemo(() => COPY[lang], [lang]);
-  useDir(lang);
+  useDir();
 
   // Track if we're syncing from URL to prevent auto-apply loop
   const isSyncingFromUrl = useRef(false);
@@ -271,11 +271,9 @@ function CatalogPageContent() {
     <div className="min-h-screen bg-white text-neutral-900">
       <PromoBar
         text={T.promo}
-        lang={lang}
-        onToggleLang={() => setLang(lang === 'ar' ? 'en' : 'ar')}
         brand={BRAND}
       />
-      <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
+      <Header brand={BRAND} searchPlaceholder={T.search} />
 
       {/* Page title + sort */}
       <section className="max-w-7xl mx-auto px-4 pt-6">

@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRouter, usePathname } from 'next/navigation';
 import '../lib/i18n';
 import { useDir } from '../hooks/useDir';
+import { useLocale } from '@/lib/locale-navigation';
 import { BRAND } from '../content/brand';
 
 import PromoBar from './header/PromoBar';
@@ -14,15 +14,14 @@ import BottomTabs from './appchrome/BottomTabs';
 import FloatingCart from './appchrome/FloatingCart';
 
 interface ClientWrapperProps {
-  lang: 'en' | 'ar';
+  lang?: 'en' | 'ar'; // Keep for backward compatibility but make optional
   children: React.ReactNode;
 }
 
-export default function ClientWrapper({ lang, children }: ClientWrapperProps) {
+export default function ClientWrapper({ children }: ClientWrapperProps) {
   const { t, i18n } = useTranslation('home');
-  const router = useRouter();
-  const pathname = usePathname();
-  useDir(lang);
+  const lang = useLocale(); // Get locale from URL
+  useDir(); // Automatically syncs with URL
 
   useEffect(() => {
     // Sync i18n with the locale from URL
@@ -31,18 +30,10 @@ export default function ClientWrapper({ lang, children }: ClientWrapperProps) {
     }
   }, [lang, i18n]);
 
-  const toggleLanguage = () => {
-    const newLang = lang === "ar" ? "en" : "ar";
-    // Remove current locale from pathname and add new locale
-    const pathWithoutLocale = pathname.replace(/^\/(en|ar)/, '');
-    const newPath = `/${newLang}${pathWithoutLocale || ''}`;
-    router.push(newPath);
-  };
-
   return (
     <div id="home" className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={t('promo')} lang={lang} onToggleLang={toggleLanguage} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={t('search')} lang={lang} />
+      <PromoBar text={t('promo')} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={t('search')} />
       <HeroSlider brand={BRAND} />
       
       {/* Server-rendered content passed as children */}

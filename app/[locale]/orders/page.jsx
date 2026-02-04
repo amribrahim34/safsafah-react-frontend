@@ -79,7 +79,7 @@ const mapApiOrderToUI = (apiOrder, lang) => {
 export default function OrdersPage() {
   const [lang, setLang] = useState("ar");
   const t = useMemo(() => COPY[lang], [lang]);
-  useDir(lang);
+  useDir();
   const isRTL = lang === "ar";
   const dispatch = useAppDispatch();
 

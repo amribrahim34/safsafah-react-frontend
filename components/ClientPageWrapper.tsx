@@ -1,12 +1,13 @@
 'use client';
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "../lib/i18n";
 import { BRAND } from "../content/brand";
 import { IMG } from "../content/images";
 import { COPY } from "../content/copy";
 import { useDir } from "../hooks/useDir";
+import { useLocale } from "@/lib/locale-navigation";
 
 import PromoBar from "./header/PromoBar";
 import Header from "./header/Header";
@@ -28,26 +29,21 @@ interface ClientPageWrapperProps {
 
 export default function ClientPageWrapper({ children }: ClientPageWrapperProps) {
   const { t, i18n } = useTranslation('home');
-  const [lang, setLang] = useState<'en' | 'ar'>('ar');
+  const lang = useLocale(); // Get locale from URL
   const T = useMemo(() => COPY[lang as keyof typeof COPY], [lang]);
-  useDir(lang);
+  useDir(); // Automatically syncs with URL
 
   useEffect(() => {
+    // Sync i18n with the locale from URL
     if (i18n.language !== lang) {
-      setLang(i18n.language as 'en' | 'ar');
+      i18n.changeLanguage(lang);
     }
-  }, [i18n.language]);
-
-  const toggleLanguage = () => {
-    const newLang = lang === "ar" ? "en" : "ar";
-    setLang(newLang);
-    i18n.changeLanguage(newLang);
-  };
+  }, [lang, i18n]);
 
   return (
     <div id="home" className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={t('promo')} lang={lang} onToggleLang={toggleLanguage} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={t('search')} lang={lang} />
+      <PromoBar text={t('promo')} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={t('search')} />
 
       <HeroSlider brand={BRAND} />
 

@@ -21,7 +21,7 @@ export default function ContactUs() {
   const [lang, setLang] = useState("ar");
   const t = useMemo(() => COPY[lang] || {}, [lang]);
   const isRTL = lang === "ar";
-  useDir(lang);
+  useDir();
 
   // Contact data shown on UI
   const CONTACT = {

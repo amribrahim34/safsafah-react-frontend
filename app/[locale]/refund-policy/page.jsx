@@ -18,7 +18,7 @@ export default function RefundPolicy({ lastUpdated }) {
   const [lang, setLang] = useState("ar");
   const t = useMemo(() => COPY[lang] || {}, [lang]);
   const isRTL = lang === "ar";
-  useDir(lang);
+  useDir();
 
   const updated = useMemo(() => {
     const d = lastUpdated ? new Date(lastUpdated) : new Date();

@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
 import { removeFromCart } from "@/store/slices/cartsSlice";
+import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
 import logo from "../../assets/safsafah-logo.png";
 import { useState, useEffect } from "react";
 import { env } from "@/config";
@@ -17,13 +18,13 @@ interface HeaderProps {
     light: string;
   };
   searchPlaceholder: string;
-  lang?: string;
 }
 
-export default function Header({ brand, searchPlaceholder, lang = "ar" }: HeaderProps) {
+export default function Header({ brand, searchPlaceholder }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const lang = useLocale(); // Get locale from URL
 
   // Get auth state from Redux
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
@@ -50,6 +51,7 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isCartOpen, isProfileOpen]);
+  
   const navItems = [
     { label: isRTL ? "الرئيسية" : "Home", path: "/" },
     { label: isRTL ? "المتجر" : "Shop", path: "/catalog" },
@@ -61,11 +63,11 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
   const handleLogout = async () => {
     try {
       await dispatch(logout()).unwrap();
-      router.push('/login');
+      router.push(getLocalizedPath('/login', lang));
     } catch (error) {
       console.error('Logout failed:', error);
       // Even if logout fails, navigate to login
-      router.push('/login');
+      router.push(getLocalizedPath('/login', lang));
     }
   };
 
@@ -102,7 +104,7 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
     <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
         {/* Logo + name (don't shrink) */}
-        <Link href="/" className="flex items-center gap-3 shrink-0">
+        <Link href={getLocalizedPath('/', lang)} className="flex items-center gap-3 shrink-0">
           <img src={logo.src} alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
           <div className="font-extrabold text-xl tracking-tight whitespace-nowrap">SAFSAFAH</div>
         </Link>
@@ -112,9 +114,9 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
           {navItems.map((item) => (
             <Link
               key={item.path}
-              href={item.path}
+              href={getLocalizedPath(item.path, lang)}
               className="text-sm font-medium text-neutral-700 hover:text-neutral-900 transition-colors duration-200 whitespace-nowrap"
-              style={{ color: pathname === item.path ? brand.primary : undefined }}
+              style={{ color: pathname === getLocalizedPath(item.path, lang) ? brand.primary : undefined }}
             >
               {item.label}
             </Link>
@@ -155,7 +157,7 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
                 >
                   <div className="py-2">
                     <Link
-                      href="/account"
+                      href={getLocalizedPath('/account', lang)}
                       className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 transition-colors text-neutral-700"
                       onClick={() => setIsProfileOpen(false)}
                     >
@@ -246,7 +248,7 @@ export default function Header({ brand, searchPlaceholder, lang = "ar" }: Header
                         </span>
                       </div>
                       <Link
-                        href="/cart"
+                        href={getLocalizedPath('/cart', lang)}
                         className="block w-full text-center py-2.5 rounded-xl text-white font-semibold hover:opacity-90 transition-opacity"
                         style={{ background: brand.primary }}
                       >

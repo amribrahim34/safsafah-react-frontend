@@ -10,14 +10,15 @@ export const metadata: Metadata = {
 
 type LayoutProps = {
   children: React.ReactNode;
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
-export default async function LocaleLayout({ children, params }: LayoutProps) {
+export default function LocaleLayout({ children }: LayoutProps) {
   // Locale layout should not have html/body tags
   // Those belong only in the root layout
+  // Locale is read from URL by client components using useLocale hook
   return <>{children}</>;
 }
 

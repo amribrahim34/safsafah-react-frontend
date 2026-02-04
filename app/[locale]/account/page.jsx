@@ -24,7 +24,7 @@ import SupportLinks from "@/components/profile/SupportLinks";
 export default function ProfilePage() {
   const [lang, setLang] = useState("ar");
   const t = useMemo(() => COPY[lang], [lang]);
-  useDir(lang);
+  useDir();
 
   const user = useAppSelector((state) => state.auth.user);
   const isLoading = useAppSelector((state) => state.auth.isLoading);

@@ -45,7 +45,7 @@ export default function ProductPage() {
 
   const [lang, setLang] = useState("ar");
   const T = useMemo(() => COPY[lang], [lang]);
-  useDir(lang);
+  useDir();
 
   const [showReviews, setShowReviews] = useState(false);
   const [miniCartOpen, setMiniCartOpen] = useState(false);

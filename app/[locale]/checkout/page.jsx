@@ -27,7 +27,7 @@ import ErrorToast from "@/components/notifications/ErrorToast";
 export default function CheckoutQuickPage() {
   const [lang, setLang] = useState("ar");
   const T = useMemo(() => COPY[lang], [lang]);
-  useDir(lang);
+  useDir();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { cart } = useAppSelector((state) => state.cart);

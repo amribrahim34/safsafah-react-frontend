@@ -30,7 +30,7 @@ export default function BrandLanding() {
     const [lang, setLang] = useState("en");
     const t = useMemo(() => COPY[lang] || {}, [lang]);
     const isRTL = lang === "ar";
-    useDir(lang);
+    useDir();
 
     // ---------- Normalize your PRODUCTS so nothing is undefined ----------
     const normalized = useMemo(() => {

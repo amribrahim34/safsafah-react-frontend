@@ -35,7 +35,7 @@ export default function SkinCareQuize() {
   const router = useRouter();
   const [lang, setLang] = useState('ar');
   const T = useMemo(() => COPY[lang], [lang]);
-  useDir(lang);
+  useDir();
 
   // Fetch questionnaire options
   const { data: questionnaireData, loading, error } = useBeautyQuestionnaire();
