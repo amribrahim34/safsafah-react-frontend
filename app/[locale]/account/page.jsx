@@ -76,7 +76,7 @@ export default function ProfilePage() {
         </div>
       </main>
 
-      <Footer brand={BRAND} lang={lang} copy={t} />
+      <Footer brand={BRAND} />
       <BottomTabs labels={{
         home: lang === "ar" ? "الرئيسية" : "Home",
         cats: lang === "ar" ? "الفئات" : "Categories",

@@ -56,6 +56,7 @@ function CatalogPageContent() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedSkins, setSelectedSkins] = useState<string[]>([]);
   const [sortValue, setSortValue] = useState<string>('relevance');
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
 
   // Local filter state for API
   const [localFilters, setLocalFilters] = useState<ProductFilters>({
@@ -69,9 +70,28 @@ function CatalogPageContent() {
   useEffect(() => {
     const hasUrlPriceParams = searchParams.get('minPrice') || searchParams.get('maxPrice');
     if (!hasUrlPriceParams && facets.priceRange.min !== undefined && facets.priceRange.max !== undefined) {
-      setPriceRange([facets.priceRange.min, facets.priceRange.max]);
+      // Only set if values are valid numbers
+      const min = facets.priceRange.min || 0;
+      const max = facets.priceRange.max || 1000;
+      if (!isNaN(min) && !isNaN(max) && min <= max) {
+        setPriceRange([min, max]);
+      }
     }
   }, [facets.priceRange.min, facets.priceRange.max, searchParams]);
+
+  /**
+   * Prevent body scroll when filter drawer is open
+   */
+  useEffect(() => {
+    if (isFilterDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isFilterDrawerOpen]);
 
   /**
    * Initialize filters from URL parameters
@@ -132,33 +152,26 @@ function CatalogPageContent() {
   }, [dispatch, localFilters]);
 
   /**
-   * Auto-apply filters when UI state changes (debounced)
+   * Auto-apply filters removed - filters now apply only when user clicks Apply button
    */
-  useEffect(() => {
-    // Don't auto-apply if we're syncing from URL
-    if (isSyncingFromUrl.current) {
-      return;
-    }
+  // Removed auto-apply to improve UX - filters execute on button click only
 
-    const timeoutId = setTimeout(() => {
-      applyFilters();
-    }, 500); // 500ms debounce
-
-    return () => clearTimeout(timeoutId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, selectedBrands, priceRange]);
 
   /**
    * Apply filters - converts UI state to API filters and updates URL
    */
   const applyFilters = () => {
+    // Ensure price range values are valid numbers
+    const validMinPrice = !isNaN(priceRange[0]) && priceRange[0] >= 0 ? priceRange[0] : facets.priceRange.min || 0;
+    const validMaxPrice = !isNaN(priceRange[1]) && priceRange[1] >= 0 ? priceRange[1] : facets.priceRange.max || 1000;
+    
     const filters: ProductFilters = {
       page: 1, // Reset to page 1 when filters change
       limit: 10,
       searchQuery: searchQuery.trim() || undefined,
       brandId: selectedBrands.length > 0 ? selectedBrands[0] : undefined,
-      minPrice: priceRange[0] !== facets.priceRange.min ? priceRange[0] : undefined,
-      maxPrice: priceRange[1] !== facets.priceRange.max ? priceRange[1] : undefined,
+      minPrice: validMinPrice !== facets.priceRange.min ? validMinPrice : undefined,
+      maxPrice: validMaxPrice !== facets.priceRange.max ? validMaxPrice : undefined,
     };
 
     setLocalFilters(filters);
@@ -310,8 +323,107 @@ function CatalogPageContent() {
       </section>
 
       {/* Filters + Results */}
-      <section className="max-w-7xl mx-auto px-4 py-4 grid md:grid-cols-[280px,1fr] gap-6">
-        <aside>
+      <section className="max-w-7xl mx-auto px-4 py-4">
+        {/* Mobile Filter Button */}
+        <div className="md:hidden mb-4">
+          <button
+            onClick={() => setIsFilterDrawerOpen(true)}
+            className="w-full py-3 px-4 rounded-xl border-2 font-semibold transition-all hover:shadow-md flex items-center justify-center gap-2"
+            style={{ borderColor: BRAND.primary, color: BRAND.primary }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+            {lang === 'ar' ? 'الفلاتر' : 'Filters'}
+            {filterPills.length > 0 && ` (${filterPills.length})`}
+          </button>
+        </div>
+
+        {/* Mobile Filter Drawer Backdrop */}
+        {isFilterDrawerOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={() => setIsFilterDrawerOpen(false)}
+          />
+        )}
+
+        {/* Mobile Filter Drawer */}
+        <div
+          className={`fixed inset-x-0 bottom-0 bg-white z-50 md:hidden transform transition-transform duration-300 ease-in-out rounded-t-3xl ${
+            isFilterDrawerOpen ? 'translate-y-0' : 'translate-y-full'
+          }`}
+          style={{ maxHeight: '85vh' }}
+        >
+          <div className="flex flex-col h-full">
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between p-4 border-b border-neutral-200">
+              <h3 className="text-lg font-bold">{lang === 'ar' ? 'الفلاتر' : 'Filters'}</h3>
+              <button
+                onClick={() => setIsFilterDrawerOpen(false)}
+                className="p-2 hover:bg-neutral-100 rounded-xl transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Drawer Content - Scrollable */}
+            <div className="flex-1 overflow-y-auto p-4">
+              <Filters
+                lang={lang}
+                brandTokens={BRAND}
+                facets={{
+                  brands: facets.brands,
+                  categories: facets.categories,
+                  subsByCat: {},
+                  priceMin: facets.priceRange.min,
+                  priceMax: facets.priceRange.max,
+                  tags: facets.tags,
+                  skins: facets.skinTypes,
+                }}
+                state={{
+                  q: searchQuery,
+                  setQ: setSearchQuery,
+                  brand: selectedBrands.map(String),
+                  setBrand: (brands: string[]) => setSelectedBrands(brands.map(Number)),
+                  category: selectedCategory,
+                  setCategory: setSelectedCategory,
+                  sub: selectedSub,
+                  setSub: setSelectedSub,
+                  onSale: onSale,
+                  setOnSale: setOnSale,
+                  price: priceRange,
+                  setPrice: setPriceRange,
+                  tags: selectedTags,
+                  setTags: setSelectedTags,
+                  skins: selectedSkins,
+                  setSkins: setSelectedSkins,
+                }}
+              />
+            </div>
+
+            {/* Drawer Footer - Apply Button */}
+            <div className="p-4 border-t border-neutral-200 bg-white">
+              <button
+                onClick={() => {
+                  setIsFilterDrawerOpen(false);
+                  applyFilters();
+                }}
+                className="w-full py-3 px-4 rounded-xl text-white font-semibold transition-all hover:opacity-90"
+                style={{ backgroundColor: BRAND.primary }}
+              >
+                {lang === 'ar' ? 'تطبيق الفلاتر' : 'Apply Filters'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop & Mobile Grid */}
+        <div className="grid md:grid-cols-[280px,1fr] gap-6">
+          {/* Desktop Filters Sidebar */}
+          <aside className="hidden md:block">
           <Filters
             lang={lang}
             brandTokens={BRAND}
@@ -343,9 +455,18 @@ function CatalogPageContent() {
               setSkins: setSelectedSkins,
             }}
           />
-        </aside>
+          
+          {/* Apply Filters Button for Desktop */}
+          <button
+            onClick={applyFilters}
+            className="mt-4 w-full py-3 px-4 rounded-xl text-white font-semibold transition-all hover:opacity-90"
+            style={{ backgroundColor: BRAND.primary }}
+          >
+            {lang === 'ar' ? 'تطبيق الفلاتر' : 'Apply Filters'}
+          </button>
+          </aside>
 
-        <main>
+          <main>
           {/* Loading state */}
           {isLoading && (
             <div className="text-center py-10">
@@ -401,14 +522,15 @@ function CatalogPageContent() {
               )}
             </>
           )}
-        </main>
+          </main>
+        </div>
       </section>
 
       {/* Trust + Footer */}
       {/* <section className="max-w-7xl mx-auto px-4 pb-10">
         <USPGrid brand={BRAND} lang={lang} copy={T} />
       </section> */}
-      <Footer brand={BRAND} lang={lang} copy={T} />
+      <Footer brand={BRAND} />
 
       <FloatingCart brand={BRAND} />
       <BottomTabs

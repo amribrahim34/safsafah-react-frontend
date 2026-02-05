@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, User2, ShoppingBag, LogOut, X } from "lucide-react";
+import { Search, User2, ShoppingBag, LogOut, X, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -33,10 +33,11 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isRTL = lang === "ar";
 
-  // Close cart and profile when clicking outside
+  // Close cart, profile, and mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -46,11 +47,26 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
       if (isProfileOpen && !target.closest('.profile-dropdown-container')) {
         setIsProfileOpen(false);
       }
+      if (isMobileMenuOpen && !target.closest('.mobile-menu-container') && !target.closest('.mobile-menu-button')) {
+        setIsMobileMenuOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isCartOpen, isProfileOpen]);
+  }, [isCartOpen, isProfileOpen, isMobileMenuOpen]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
   
   const navItems = [
     { label: isRTL ? "الرئيسية" : "Home", path: "/" },
@@ -102,15 +118,99 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+      {/* Mobile Menu Backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[100] md:hidden transition-opacity duration-300"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile Menu Drawer */}
+      <div
+        className={`mobile-menu-container fixed top-0 ${isRTL ? 'left-0' : 'right-0'} h-full w-80 max-w-[85vw] bg-white shadow-2xl z-[101] md:hidden transform transition-transform duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'translate-x-0' : isRTL ? '-translate-x-full' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col h-full">
+          {/* Mobile Menu Header */}
+          <div className="flex items-center justify-between p-4 border-b border-neutral-200">
+            <div className="flex items-center gap-3">
+              <img src={logo.src} alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
+              <div className="font-extrabold text-xl tracking-tight">SAFSAFAH</div>
+            </div>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 hover:bg-neutral-100 rounded-xl transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Mobile Menu Navigation */}
+          <nav className="flex-1 overflow-y-auto p-4">
+            <div className="space-y-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  href={getLocalizedPath(item.path, lang)}
+                  className="block px-4 py-3 rounded-xl text-lg font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
+                  style={{
+                    backgroundColor: pathname === getLocalizedPath(item.path, lang) ? `${brand.primary}15` : undefined,
+                    color: pathname === getLocalizedPath(item.path, lang) ? brand.primary : undefined
+                  }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Account Section in Mobile Menu (only if authenticated) */}
+            {isAuthenticated && (
+              <div className="mt-6 pt-6 border-t border-neutral-200 space-y-2">
+                <Link
+                  href={getLocalizedPath('/account', lang)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-700 hover:bg-neutral-100 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <User2 className="w-5 h-5" />
+                  <span className="font-medium">{isRTL ? "حسابي" : "My Account"}</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-medium">{isRTL ? "تسجيل الخروج" : "Logout"}</span>
+                </button>
+              </div>
+            )}
+          </nav>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
         {/* Logo + name (don't shrink) */}
-        <Link href={getLocalizedPath('/', lang)} className="flex items-center gap-3 shrink-0">
+        <Link href={getLocalizedPath('/', lang)} className={`flex items-center gap-3 shrink-0 ${isRTL ? 'order-3' : 'order-1'}`}>
           <img src={logo.src} alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
           <div className="font-extrabold text-xl tracking-tight whitespace-nowrap">SAFSAFAH</div>
         </Link>
 
+        {/* Hamburger menu button for mobile */}
+        <button
+          onClick={() => setIsMobileMenuOpen(true)}
+          className={`mobile-menu-button md:hidden p-2 hover:bg-neutral-100 rounded-xl transition-colors ${isRTL ? 'order-4 mr-auto' : 'order-2'}`}
+          aria-label="Open menu"
+        >
+          <Menu className="w-6 h-6 text-neutral-800" />
+        </button>
+
         {/* Desktop nav — lighter spacing; don't push */}
-        <nav className="hidden md:flex items-center gap-4 mx-4 shrink-0">
+        <nav className={`hidden md:flex items-center gap-4 mx-4 shrink-0 ${isRTL ? 'order-1' : 'order-3'}`}>
           {navItems.map((item) => (
             <Link
               key={item.path}

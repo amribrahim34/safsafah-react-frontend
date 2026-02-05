@@ -56,7 +56,7 @@ export default async function Home({ params }: PageProps) {
 
       <Newsletter brand={BRAND} lang={lang} copy={COPY[lang as keyof typeof COPY]} />
 
-      <Footer brand={BRAND} lang={lang} copy={COPY[lang as keyof typeof COPY]} />
+      <Footer brand={BRAND} />
     </ClientWrapper>
   );
 }

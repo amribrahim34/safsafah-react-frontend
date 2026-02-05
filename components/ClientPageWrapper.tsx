@@ -77,7 +77,7 @@ export default function ClientPageWrapper({ children }: ClientPageWrapperProps) 
 
       <Newsletter brand={BRAND} lang={lang} copy={COPY[lang as keyof typeof COPY]} />
 
-      <Footer brand={BRAND} lang={lang} copy={COPY[lang as keyof typeof COPY]} />
+      <Footer brand={BRAND} />
 
       <FloatingCart brand={BRAND} />
       <BottomTabs labels={{

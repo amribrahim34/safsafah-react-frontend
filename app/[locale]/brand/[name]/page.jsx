@@ -352,7 +352,7 @@ export default function BrandLanding() {
                 </section>
             </main>
 
-            <Footer brand={BRAND} lang={lang} copy={t} />
+            <Footer brand={BRAND} />
             <BottomTabs
                 labels={{
                     home: isRTL ? "الرئيسية" : "Home",

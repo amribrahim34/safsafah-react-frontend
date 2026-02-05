@@ -84,7 +84,7 @@ export default function ProductPage() {
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <div className="text-xl">{lang === "ar" ? "جاري التحميل..." : "Loading..."}</div>
         </div>
-        <Footer brand={BRAND} lang={lang} copy={T} />
+        <Footer brand={BRAND} />
       </div>
     );
   }
@@ -99,7 +99,7 @@ export default function ProductPage() {
           <div className="text-xl text-red-600">{lang === "ar" ? "فشل تحميل المنتج" : "Failed to load product"}</div>
           {error && <div className="text-sm text-neutral-600 mt-2">{error}</div>}
         </div>
-        <Footer brand={BRAND} lang={lang} copy={T} />
+        <Footer brand={BRAND} />
       </div>
     );
   }
@@ -244,7 +244,7 @@ export default function ProductPage() {
         <RecentlyViewed brand={BRAND} lang={lang} />
       </section> */}
 
-      <Footer brand={BRAND} lang={lang} copy={T} />
+      <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
       <BottomTabs labels={{ home: lang === "ar" ? "الرئيسية" : "Home", cats: lang === "ar" ? "الفئات" : "Categories", cart: lang === "ar" ? "السلة" : "Bag", wish: lang === "ar" ? "المفضلة" : "Wishlist", account: lang === "ar" ? "حسابي" : "Account" }} />
 

@@ -111,7 +111,7 @@ function WalletPaymentContent() {
         </section>
       </main>
 
-      <Footer brand={BRAND} lang={lang} copy={T} />
+      <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
       <BottomTabs labels={{ home: lang === "ar" ? "الرئيسية" : "Home", cats: lang === "ar" ? "الفئات" : "Categories", cart: lang === "ar" ? "السلة" : "Bag", wish: lang === "ar" ? "المفضلة" : "Wishlist", account: lang === "ar" ? "حسابي" : "Account" }} />
     </div>

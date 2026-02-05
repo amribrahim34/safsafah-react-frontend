@@ -258,7 +258,7 @@ export default function SkinCareQuize() {
         </div>
       </section>
 
-      <Footer brand={BRAND} lang={lang} copy={T} />
+      <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
       <BottomTabs
         labels={{

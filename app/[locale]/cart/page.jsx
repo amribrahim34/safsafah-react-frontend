@@ -154,7 +154,7 @@ export default function CartPage() {
         )}
       </main>
 
-      <Footer brand={BRAND} lang={lang} copy={T} />
+      <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
       <BottomTabs
         labels={{
