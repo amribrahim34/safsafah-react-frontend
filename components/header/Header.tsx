@@ -117,8 +117,8 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
-      {/* Mobile Menu Backdrop */}
+    <>
+      {/* Mobile Menu Backdrop - Outside header for proper z-index */}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-[100] md:hidden transition-opacity duration-300"
@@ -126,7 +126,7 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
         />
       )}
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Menu Drawer - Outside header for proper z-index */}
       <div
         className={`mobile-menu-container fixed top-0 ${isRTL ? 'left-0' : 'right-0'} h-full w-80 max-w-[85vw] bg-white shadow-2xl z-[101] md:hidden transform transition-transform duration-300 ease-in-out ${
           isMobileMenuOpen ? 'translate-x-0' : isRTL ? '-translate-x-full' : 'translate-x-full'
@@ -193,6 +193,7 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
         </div>
       </div>
 
+      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
         {/* Logo + name (don't shrink) */}
         <Link href={getLocalizedPath('/', lang)} className={`flex items-center gap-3 shrink-0 ${isRTL ? 'order-3' : 'order-1'}`}>
@@ -383,5 +384,6 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
         </div>
       </div>
     </header>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import { Leaf, ShieldCheck } from "lucide-react";
+import { useState } from 'react';
+import { Leaf, ShieldCheck, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
 
@@ -27,6 +28,49 @@ interface FooterTranslations {
   ecoPackaging: string;
   secureCheckout: string;
   rights: string;
+}
+
+interface FooterSectionProps {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}
+
+/**
+ * FooterSection - Collapsible section for mobile, always open on desktop
+ */
+function FooterSection({ title, children, defaultOpen = false }: FooterSectionProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div>
+      {/* Mobile: Clickable header */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between font-semibold text-neutral-900 py-2 sm:hidden"
+        type="button"
+        aria-expanded={isOpen}
+      >
+        <span>{title}</span>
+        <ChevronDown 
+          className={`w-5 h-5 text-neutral-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+        />
+      </button>
+      
+      {/* Desktop: Static header */}
+      <div className="hidden sm:block font-semibold mb-3 text-neutral-900">
+        {title}
+      </div>
+      
+      {/* Content - Collapsible on mobile, always visible on desktop */}
+      <div className={`${isOpen ? 'block' : 'hidden'} sm:block`}>
+        {children}
+      </div>
+      
+      {/* Mobile divider */}
+      <div className="h-px bg-neutral-200 mt-3 sm:hidden" />
+    </div>
+  );
 }
 
 export default function Footer({ brand }: FooterProps) {
@@ -73,7 +117,7 @@ export default function Footer({ brand }: FooterProps) {
 
   return (
     <footer className="bg-neutral-100 border-t border-neutral-200">
-      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
         {/* Brand block */}
         <div>
           <div className="flex items-center gap-3">
@@ -83,9 +127,8 @@ export default function Footer({ brand }: FooterProps) {
           <p className="mt-4 text-neutral-600 text-sm leading-relaxed">{t.about}</p>
         </div>
 
-        {/* Quick links */}
-        <div>
-          <div className="font-semibold mb-3 text-neutral-900">{t.quickLinks}</div>
+        {/* Quick links - Collapsible on mobile */}
+        <FooterSection title={t.quickLinks}>
           <ul className="space-y-2 text-sm">
             <li>
               <Link 
@@ -142,11 +185,10 @@ export default function Footer({ brand }: FooterProps) {
               </Link>
             </li>
           </ul>
-        </div>
+        </FooterSection>
 
-        {/* Help & Account */}
-        <div>
-          <div className="font-semibold mb-3 text-neutral-900">{t.helpAccount}</div>
+        {/* Help & Account - Collapsible on mobile */}
+        <FooterSection title={t.helpAccount}>
           <ul className="space-y-2 text-sm">
             <li>
               <Link 
@@ -194,7 +236,7 @@ export default function Footer({ brand }: FooterProps) {
               </Link>
             </li>
           </ul>
-        </div>
+        </FooterSection>
 
         {/* Trust badges */}
         <div className="flex flex-col gap-3">

@@ -28,9 +28,14 @@ export interface ProductsState {
       max: number;
     };
   };
+  catalogFilters: {
+    categories: any[];
+    brands: any[];
+  };
   filters: ProductFilters;
   isLoading: boolean;
   isLoadingProduct: boolean;
+  isLoadingCatalogFilters: boolean;
   error: string | null;
 }
 
@@ -50,12 +55,17 @@ const initialState: ProductsState = {
     skinTypes: [],
     priceRange: { min: 0, max: 0 },
   },
+  catalogFilters: {
+    categories: [],
+    brands: [],
+  },
   filters: {
     page: 1,
     limit: 10,
   },
   isLoading: false,
   isLoadingProduct: false,
+  isLoadingCatalogFilters: false,
   error: null,
 };
 
@@ -88,6 +98,22 @@ export const fetchProductById = createAsyncThunk<
     return response;
   } catch (error) {
     return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch product');
+  }
+});
+
+/**
+ * Async thunk for fetching catalog filter options
+ */
+export const fetchCatalogFilters = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>('products/fetchCatalogFilters', async (_, { rejectWithValue }) => {
+  try {
+    const response = await productsService.getCatalogFilters();
+    return response;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch catalog filters');
   }
 });
 
@@ -171,6 +197,25 @@ const productsSlice = createSlice({
       .addCase(fetchProductById.rejected, (state, action) => {
         state.isLoadingProduct = false;
         state.error = action.payload || 'Failed to fetch product';
+      });
+
+    // Fetch catalog filters
+    builder
+      .addCase(fetchCatalogFilters.pending, (state) => {
+        state.isLoadingCatalogFilters = true;
+        state.error = null;
+      })
+      .addCase(fetchCatalogFilters.fulfilled, (state, action) => {
+        state.isLoadingCatalogFilters = false;
+        state.catalogFilters = {
+          categories: action.payload.categories || [],
+          brands: action.payload.brands || [],
+        };
+        state.error = null;
+      })
+      .addCase(fetchCatalogFilters.rejected, (state, action) => {
+        state.isLoadingCatalogFilters = false;
+        state.error = action.payload || 'Failed to fetch catalog filters';
       });
   },
 });

@@ -14,6 +14,7 @@ import type {
   WishlistItem,
   RecentlyViewedProduct,
   ApiResponse,
+  CatalogFiltersResponse,
 } from '@/types';
 
 export const productsService = {
@@ -200,5 +201,15 @@ export const productsService = {
   ): Promise<Product[]> {
     const response = await get<Product[]>(`/products/${type}`, { limit });
     return response.data;
+  },
+
+  /**
+   * Fetches catalog filter options (categories and brands)
+   * @returns Available filter options for the catalog
+   * @note Backend returns CatalogFiltersResponse directly (not wrapped in ApiResponse)
+   */
+  async getCatalogFilters(): Promise<CatalogFiltersResponse> {
+    const response = await get<any>('/catalog-filters');
+    return response as unknown as CatalogFiltersResponse;
   },
 };
