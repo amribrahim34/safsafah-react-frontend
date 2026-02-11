@@ -94,16 +94,6 @@ export interface ProductSearchResult {
   total: number;
   page: number;
   limit: number;
-  facets: {
-    brands: string[];
-    categories: string[];
-    tags: string[];
-    skinTypes: string[];
-    priceRange: {
-      min: number;
-      max: number;
-    };
-  };
 }
 
 export interface RecentlyViewedProduct {

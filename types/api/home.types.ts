@@ -8,12 +8,16 @@ export interface HomeProduct {
   id: number;
   nameAr: string;
   nameEn: string;
-  image: string | null;
+  image: string;
   price: number;
-  brandNameAr: string | null;
-  brandNameEn: string | null;
-  categoryNameAr: string | null;
-  categoryNameEn: string | null;
+  brand: {
+    name_ar: string;
+    name_en: string;
+  };
+  category: {
+    name_ar: string;
+    name_en: string;
+  };
   rating: number;
   ratingCount: number;
 }
@@ -25,7 +29,7 @@ export interface HomeCategory {
   id: number;
   nameAr: string;
   nameEn: string;
-  image: string | null;
+  image: string;
 }
 
 /**
@@ -35,5 +39,5 @@ export interface HomeBrand {
   id: number;
   nameAr: string;
   nameEn: string;
-  logo: string | null;
+  logo: string;
 }

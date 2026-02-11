@@ -42,7 +42,7 @@ function CatalogPageContent() {
   const isSyncingFromUrl = useRef(false);
 
   // Redux state
-  const { products, total, page, limit, facets, catalogFilters, isLoading, isLoadingCatalogFilters, error } = useAppSelector(
+  const { products, total, page, limit, catalogFilters, isLoading, isLoadingCatalogFilters, error } = useAppSelector(
     (state) => state.products
   );
 
@@ -60,25 +60,20 @@ function CatalogPageContent() {
   // Local filter state for API
   const [localFilters, setLocalFilters] = useState<ProductFilters>({
     page: 1,
-    limit: 10,
+    limit: 12,
   });
 
 
 
   /**
-   * Initialize price range from facets (only when no URL price params)
+   * Initialize price range from hardcoded defaults (only when no URL price params)
    */
   useEffect(() => {
     const hasUrlPriceParams = searchParams.get('minPrice') || searchParams.get('maxPrice');
-    if (!hasUrlPriceParams && facets.priceRange.min !== undefined && facets.priceRange.max !== undefined) {
-      // Only set if values are valid numbers
-      const min = facets.priceRange.min || 0;
-      const max = facets.priceRange.max || 1000;
-      if (!isNaN(min) && !isNaN(max) && min <= max) {
-        setPriceRange([min, max]);
-      }
+    if (!hasUrlPriceParams) {
+      setPriceRange([0, 5000]);
     }
-  }, [facets.priceRange.min, facets.priceRange.max, searchParams]);
+  }, [searchParams]);
 
   /**
    * Fetch catalog filters on mount
@@ -188,23 +183,23 @@ function CatalogPageContent() {
     console.log('selectedCategoryIds:', selectedCategoryIds);
     
     // Ensure price range values are valid numbers
-    const validMinPrice = !isNaN(priceRange[0]) && priceRange[0] >= 0 ? priceRange[0] : facets.priceRange.min || 0;
-    const validMaxPrice = !isNaN(priceRange[1]) && priceRange[1] >= 0 ? priceRange[1] : facets.priceRange.max || 1000;
-    
+    const validMinPrice = !isNaN(priceRange[0]) && priceRange[0] >= 0 ? priceRange[0] : 0;
+    const validMaxPrice = !isNaN(priceRange[1]) && priceRange[1] >= 0 ? priceRange[1] : 5000;
+
     // Use first category ID if multiple selected (backend currently supports single categoryId)
     const categoryId = selectedCategoryIds.length > 0 ? selectedCategoryIds[0] : undefined;
-    
+
     // Use first brand ID if multiple selected (backend currently supports single brandId)
     const brandId = selectedBrandIds.length > 0 ? selectedBrandIds[0] : undefined;
 
-    // Check if user has modified price from the default facets range
-    const hasPriceChanged = 
-      validMinPrice !== facets.priceRange.min || 
-      validMaxPrice !== facets.priceRange.max;
+    // Check if user has modified price from the default range
+    const hasPriceChanged =
+      validMinPrice !== 0 ||
+      validMaxPrice !== 5000;
 
     const filters: ProductFilters = {
       page: 1, // Reset to page 1 when filters change
-      limit: 10,
+      limit: 12,
       searchQuery: searchQuery.trim() || undefined,
       brandId: brandId,
       categoryId: categoryId,
@@ -247,7 +242,7 @@ function CatalogPageContent() {
    * Clear all filters
    */
   const clearAllFilters = () => {
-    const resetFilters: ProductFilters = { page: 1, limit: 10 };
+    const resetFilters: ProductFilters = { page: 1, limit: 12 };
     setLocalFilters(resetFilters);
     router.push('/catalog');
   };
@@ -316,8 +311,8 @@ function CatalogPageContent() {
     }
 
     if (localFilters.minPrice || localFilters.maxPrice) {
-      const min = localFilters.minPrice || facets.priceRange.min;
-      const max = localFilters.maxPrice || facets.priceRange.max;
+      const min = localFilters.minPrice || 0;
+      const max = localFilters.maxPrice || 5000;
       pills.push({
         key: 'price',
         label: `${min}–${max} ${isRTL ? 'ج.م' : 'EGP'}`,
@@ -326,7 +321,7 @@ function CatalogPageContent() {
     }
 
     return pills;
-  }, [localFilters, facets, catalogFilters, lang]);
+  }, [localFilters, catalogFilters, lang]);
 
   /**
    * Handle pill removal
@@ -438,12 +433,8 @@ function CatalogPageContent() {
               <Filters
                 lang={lang}
                 brandTokens={BRAND}
-                facets={{
-                  priceMin: facets.priceRange.min,
-                  priceMax: facets.priceRange.max,
-                  tags: facets.tags,
-                  skins: facets.skinTypes,
-                }}
+                priceMin={0}
+                priceMax={5000}
                 catalogFilters={{
                   categories: catalogFilters.categories,
                   brands: catalogFilters.brands,
@@ -493,12 +484,8 @@ function CatalogPageContent() {
                 <Filters
                   lang={lang}
                   brandTokens={BRAND}
-                  facets={{
-                    priceMin: facets.priceRange.min,
-                    priceMax: facets.priceRange.max,
-                    tags: facets.tags,
-                    skins: facets.skinTypes,
-                  }}
+                  priceMin={0}
+                  priceMax={5000}
                   catalogFilters={{
                     categories: catalogFilters.categories,
                     brands: catalogFilters.brands,

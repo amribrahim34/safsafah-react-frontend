@@ -18,16 +18,6 @@ export interface ProductsState {
   total: number;
   page: number;
   limit: number;
-  facets: {
-    brands: string[];
-    categories: string[];
-    tags: string[];
-    skinTypes: string[];
-    priceRange: {
-      min: number;
-      max: number;
-    };
-  };
   catalogFilters: {
     categories: any[];
     brands: any[];
@@ -47,21 +37,14 @@ const initialState: ProductsState = {
   currentProduct: null,
   total: 0,
   page: 1,
-  limit: 10,
-  facets: {
-    brands: [],
-    categories: [],
-    tags: [],
-    skinTypes: [],
-    priceRange: { min: 0, max: 0 },
-  },
+  limit: 12,
   catalogFilters: {
     categories: [],
     brands: [],
   },
   filters: {
     page: 1,
-    limit: 10,
+    limit: 12,
   },
   isLoading: false,
   isLoadingProduct: false,
@@ -167,15 +150,6 @@ const productsSlice = createSlice({
         state.total = action.payload.total;
         state.page = action.payload.page;
         state.limit = action.payload.limit;
-        // Transform price range from API format to expected format
-        const apiPriceRange = action.payload.facets.priceRange as any;
-        state.facets = {
-          ...action.payload.facets,
-          priceRange: {
-            min: typeof apiPriceRange.min === 'object' ? apiPriceRange.min.parsedValue : apiPriceRange.min || 0,
-            max: typeof apiPriceRange.max === 'object' ? apiPriceRange.max.parsedValue : apiPriceRange.max || 0,
-          },
-        };
         state.error = null;
       })
       .addCase(fetchProducts.rejected, (state, action) => {

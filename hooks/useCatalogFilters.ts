@@ -40,7 +40,6 @@ interface UseCatalogFiltersReturn {
   total: number;
   page: number;
   limit: number;
-  facets: any;
   catalogFilters: any;
   isLoading: boolean;
   isLoadingCatalogFilters: boolean;
@@ -85,7 +84,6 @@ export function useCatalogFilters(lang: string): UseCatalogFiltersReturn {
     total,
     page,
     limit,
-    facets,
     catalogFilters,
     isLoading,
     isLoadingCatalogFilters,
@@ -110,18 +108,14 @@ export function useCatalogFilters(lang: string): UseCatalogFiltersReturn {
   });
 
   /**
-   * Initialize price range from facets (only when no URL price params)
+   * Initialize price range from hardcoded defaults (only when no URL price params)
    */
   useEffect(() => {
     const hasUrlPriceParams = searchParams.get('minPrice') || searchParams.get('maxPrice');
-    if (!hasUrlPriceParams && facets.priceRange.min !== undefined && facets.priceRange.max !== undefined) {
-      const min = facets.priceRange.min || 0;
-      const max = facets.priceRange.max || 1000;
-      if (!isNaN(min) && !isNaN(max) && min <= max) {
-        setPriceRange([min, max]);
-      }
+    if (!hasUrlPriceParams) {
+      setPriceRange([0, 5000]);
     }
-  }, [facets.priceRange.min, facets.priceRange.max, searchParams]);
+  }, [searchParams]);
 
   /**
    * Fetch catalog filters on mount
@@ -219,19 +213,19 @@ export function useCatalogFilters(lang: string): UseCatalogFiltersReturn {
    */
   const applyFilters = useCallback(() => {
     // Ensure price range values are valid numbers
-    const validMinPrice = !isNaN(priceRange[0]) && priceRange[0] >= 0 ? priceRange[0] : facets.priceRange.min || 0;
-    const validMaxPrice = !isNaN(priceRange[1]) && priceRange[1] >= 0 ? priceRange[1] : facets.priceRange.max || 1000;
+    const validMinPrice = !isNaN(priceRange[0]) && priceRange[0] >= 0 ? priceRange[0] : 0;
+    const validMaxPrice = !isNaN(priceRange[1]) && priceRange[1] >= 0 ? priceRange[1] : 5000;
 
     // Use first category/brand ID if multiple selected (backend currently supports single)
     const categoryId = selectedCategoryIds.length > 0 ? selectedCategoryIds[0] : undefined;
     const brandId = selectedBrandIds.length > 0 ? selectedBrandIds[0] : undefined;
 
-    // Check if user has modified price from the default facets range
-    const hasPriceChanged = validMinPrice !== facets.priceRange.min || validMaxPrice !== facets.priceRange.max;
+    // Check if user has modified price from the default range
+    const hasPriceChanged = validMinPrice !== 0 || validMaxPrice !== 5000;
 
     const filters: ProductFilters = {
       page: 1,
-      limit: 10,
+      limit: 12,
       searchQuery: searchQuery.trim() || undefined,
       brandId: brandId,
       categoryId: categoryId,
@@ -253,8 +247,6 @@ export function useCatalogFilters(lang: string): UseCatalogFiltersReturn {
     router.push(newUrl);
   }, [
     priceRange,
-    facets.priceRange.min,
-    facets.priceRange.max,
     selectedCategoryIds,
     selectedBrandIds,
     searchQuery,
@@ -377,8 +369,8 @@ export function useCatalogFilters(lang: string): UseCatalogFiltersReturn {
     }
 
     if (localFilters.minPrice || localFilters.maxPrice) {
-      const min = localFilters.minPrice || facets.priceRange.min;
-      const max = localFilters.maxPrice || facets.priceRange.max;
+      const min = localFilters.minPrice || 0;
+      const max = localFilters.maxPrice || 5000;
       pills.push({
         key: 'price',
         label: `${min}–${max} ${isRTL ? 'ج.م' : 'EGP'}`,
@@ -427,7 +419,6 @@ export function useCatalogFilters(lang: string): UseCatalogFiltersReturn {
     total,
     page,
     limit,
-    facets,
     catalogFilters,
     isLoading,
     isLoadingCatalogFilters,

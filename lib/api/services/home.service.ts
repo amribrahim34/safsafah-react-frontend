@@ -12,40 +12,36 @@ export const homeService = {
   /**
    * Fetches new arrival products for the home page
    * @returns List of new arrival products
-   * @note Backend returns array directly (not wrapped in ApiResponse)
    */
   async getNewArrivals(): Promise<HomeProduct[]> {
-    const response = await get<any>('/home/new-arrival-products');
-    return response as unknown as HomeProduct[];
+    const response = await get<HomeProduct[]>('/home/new-arrival-products');
+    return response.data;
   },
 
   /**
    * Fetches best seller products for the home page
    * @returns List of best seller products
-   * @note Backend returns array directly (not wrapped in ApiResponse)
    */
   async getBestSellers(): Promise<HomeProduct[]> {
-    const response = await get<any>('/home/best-seller-products');
-    return response as unknown as HomeProduct[];
+    const response = await get<HomeProduct[]>('/home/best-seller-products');
+    return response.data;
   },
 
   /**
    * Fetches featured categories for the home page
    * @returns List of featured categories
-   * @note Backend returns array directly (not wrapped in ApiResponse)
    */
   async getCategories(): Promise<HomeCategory[]> {
-    const response = await get<any>('/home/categories');
-    return response as unknown as HomeCategory[];
+    const response = await get<HomeCategory[]>('/home/categories');
+    return response.data;
   },
 
   /**
    * Fetches featured brands for the home page
    * @returns List of featured brands
-   * @note Backend returns array directly (not wrapped in ApiResponse)
    */
   async getBrands(): Promise<HomeBrand[]> {
-    const response = await get<any>('/home/brands');
-    return response as unknown as HomeBrand[];
+    const response = await get<HomeBrand[]>('/home/brands');
+    return response.data;
   },
 };

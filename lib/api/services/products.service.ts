@@ -22,11 +22,23 @@ export const productsService = {
    * Fetches a list of products with optional filters
    * @param filters - Product filtering and pagination options
    * @returns Paginated product search results
-   * @note Backend returns ProductSearchResult directly (not wrapped in ApiResponse)
    */
   async getProducts(filters?: ProductFilters): Promise<ProductSearchResult> {
-    const response = await get<any>('/products', filters as Record<string, unknown>);
-    return response as unknown as ProductSearchResult;
+    const response = await get<{
+      data: Product[];
+      meta: {
+        current_page: number;
+        per_page: number;
+        total: number;
+      };
+    }>('/products', filters as Record<string, unknown>);
+
+    return {
+      products: response.data.data,
+      total: response.data.meta.total,
+      page: response.data.meta.current_page,
+      limit: response.data.meta.per_page,
+    };
   },
 
   /**

@@ -34,13 +34,6 @@ interface FilterState {
   setSkins: (skins: string[]) => void;
 }
 
-interface FilterFacets {
-  priceMin: number;
-  priceMax: number;
-  tags: string[];
-  skins: string[];
-}
-
 interface CatalogFilters {
   categories: CatalogCategory[];
   brands: CatalogBrand[];
@@ -55,12 +48,13 @@ interface BrandTokens {
 interface FiltersProps {
   lang: string;
   brandTokens: BrandTokens;
-  facets: FilterFacets;
+  priceMin: number;
+  priceMax: number;
   catalogFilters: CatalogFilters;
   state: FilterState;
 }
 
-export default function Filters({ lang, brandTokens, facets, catalogFilters, state }: FiltersProps) {
+export default function Filters({ lang, brandTokens, priceMin, priceMax, catalogFilters, state }: FiltersProps) {
   const {
     q, setQ,
     brandIds, setBrandIds,
@@ -178,8 +172,8 @@ export default function Filters({ lang, brandTokens, facets, catalogFilters, sta
       <FilterGroup title={t.price} open={open.price} onToggle={() => toggle("price")}>
         <PriceRangeSlider
           value={price}
-          min={facets.priceMin}
-          max={facets.priceMax}
+          min={priceMin}
+          max={priceMax}
           brandTokens={brandTokens}
           lang={lang}
           onChange={setPrice}
@@ -199,50 +193,6 @@ export default function Filters({ lang, brandTokens, facets, catalogFilters, sta
           <span className="text-sm">{lang === "ar" ? "خصومات فقط" : "Only discounted"}</span>
         </label>
       </FilterGroup>
-
-      {/* Attributes */}
-      {facets.tags.length > 0 && (
-        <FilterGroup title={t.tags} open={open.tags} onToggle={() => toggle("tags")}>
-          <div className="flex flex-wrap gap-2">
-            {facets.tags.map(tag => (
-              <button
-                key={tag}
-                onClick={() => addOrRemoveString(tags, tag, setTags)}
-                className={`px-3 py-1.5 rounded-full border text-sm font-medium transition-all ${tags.includes(tag) ? "text-white" : "text-neutral-700"}`}
-                style={{
-                  background: tags.includes(tag) ? brandTokens.primary : "white",
-                  borderColor: tags.includes(tag) ? brandTokens.primary : "#e5e7eb"
-                }}
-                type="button"
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        </FilterGroup>
-      )}
-
-      {/* Skin types */}
-      {facets.skins.length > 0 && (
-        <FilterGroup title={t.skin} open={open.skin} onToggle={() => toggle("skin")}>
-          <div className="flex flex-wrap gap-2">
-            {facets.skins.map(sk => (
-              <button
-                key={sk}
-                onClick={() => addOrRemoveString(skins, sk, setSkins)}
-                className={`px-3 py-1.5 rounded-full border text-sm font-medium transition-all ${skins.includes(sk) ? "text-white" : "text-neutral-700"}`}
-                style={{
-                  background: skins.includes(sk) ? brandTokens.primary : "white",
-                  borderColor: skins.includes(sk) ? brandTokens.primary : "#e5e7eb"
-                }}
-                type="button"
-              >
-                {sk}
-              </button>
-            ))}
-          </div>
-        </FilterGroup>
-      )}
     </div>
   );
 }
