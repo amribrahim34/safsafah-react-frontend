@@ -150,20 +150,20 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        // Map API response to user object
+        const { user, token } = action.payload;
         state.user = {
-          id: action.payload.id.toString(),
-          name: action.payload.name,
-          email: action.payload.email,
-          phone: '',
+          id: user.id.toString(),
+          name: user.name,
+          email: user.email,
+          phone: user.mobile,
           tier: 'Bronze',
+          points: user.points,
+          addresses: user.addresses,
         };
-        state.token = action.payload.token;
+        state.token = token;
         state.isAuthenticated = true;
         state.error = null;
-
-        // Store token in localStorage
-        tokenManager.setToken(action.payload.token);
+        tokenManager.setToken(token);
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -179,20 +179,20 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
-        // Map API response to user object
+        const { user, token } = action.payload;
         state.user = {
-          id: action.payload.id.toString(),
-          name: action.payload.name,
-          email: action.payload.email,
-          phone: '',
+          id: user.id.toString(),
+          name: user.name,
+          email: user.email,
+          phone: user.mobile,
           tier: 'Bronze',
+          points: user.points,
+          addresses: user.addresses,
         };
-        state.token = action.payload.token;
+        state.token = token;
         state.isAuthenticated = true;
         state.error = null;
-
-        // Store token in localStorage
-        tokenManager.setToken(action.payload.token);
+        tokenManager.setToken(token);
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;

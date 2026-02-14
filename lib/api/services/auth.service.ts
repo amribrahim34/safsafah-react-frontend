@@ -5,7 +5,7 @@
  * password reset, and token management.
  */
 
-import { post } from '../client';
+import { apiClient, post } from '../client';
 import { tokenManager } from '../client';
 import type {
   LoginRequest,
@@ -25,8 +25,8 @@ export const authService = {
    * @note Backend returns AuthResponse directly (not wrapped in ApiResponse)
    */
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await post<any, LoginRequest>('/auth/login', credentials);
-    return response as unknown as AuthResponse;
+    const { data } = await apiClient.post<AuthResponse>('/auth/login', credentials);
+    return data;
   },
 
   /**
@@ -37,8 +37,8 @@ export const authService = {
    * @note Backend returns AuthResponse directly (not wrapped in ApiResponse)
    */
   async register(userData: RegisterRequest): Promise<AuthResponse> {
-    const response = await post<any, RegisterRequest>('/auth/register', userData);
-    return response as unknown as AuthResponse;
+    const { data } = await apiClient.post<AuthResponse>('/auth/register', userData);
+    return data;
   },
 
   /**

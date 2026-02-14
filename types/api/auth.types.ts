@@ -4,6 +4,8 @@
  * Type definitions for authentication-related API requests and responses.
  */
 
+import type { AddressResponse } from '../models/common';
+
 /**
  * Login request payload
  * Supports login via email or mobile number
@@ -30,11 +32,15 @@ export interface RegisterRequest {
  * Matches the actual backend API response
  */
 export interface AuthResponse {
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    mobile: string;
+    points: number;
+    addresses: AddressResponse[];
+  };
   token: string;
-  id: number;
-  email: string;
-  name: string;
-  type: string; // e.g., "Bearer"
 }
 
 /**

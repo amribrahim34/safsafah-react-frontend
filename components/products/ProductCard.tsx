@@ -34,7 +34,7 @@ export default function ProductCard({
   const isLoading = useAppSelector((state) => state.cart.isLoading);
 
   // Check if product is already in cart
-  const cartItem = cart?.items.find((item: any) => item.productId === id);
+  const cartItem = cart?.items?.find((item: any) => item.productId === id);
   const [localQuantity, setLocalQuantity] = useState(cartItem?.quantity || 1);
 
   // Sync localQuantity with cartItem quantity when cart updates
