@@ -8,7 +8,7 @@ import { useDir } from '@/hooks/useDir';
 import { BRAND } from '@/content/brand';
 import { IMG } from '@/content/images';
 
-import AuthHeroPanel from './_components/AuthHeroPanel';
+import AuthHeroPanel from '@/components/auth/AuthHeroPanel';
 import LoginModePills from './_components/LoginModePills';
 import PasswordInput from './_components/PasswordInput';
 import { useLoginForm } from './_hooks/useLoginForm';
