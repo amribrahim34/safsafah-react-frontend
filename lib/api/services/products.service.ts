@@ -25,15 +25,15 @@ export const productsService = {
    */
   async getProducts(filters?: ProductFilters): Promise<ProductSearchResult> {
     // Laravel API returns: {data: Product[], links: {}, meta: {current_page, per_page, total}}
-    // The get() function returns this directly, NOT wrapped in ApiResponse
-    const response = await get<{
+    // Using type assertion to match the actual Laravel paginated response structure
+    const response = await get<Product[]>('/products', filters as Record<string, unknown>) as any as {
       data: Product[];
       meta: {
         current_page: number;
         per_page: number;
         total: number;
       };
-    }>('/products', filters as Record<string, unknown>);
+    };
 
     return {
       products: response.data,
