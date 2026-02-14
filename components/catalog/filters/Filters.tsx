@@ -17,7 +17,7 @@ interface CatalogCategory {
   children: CatalogCategory[];
 }
 
-interface FilterState {
+export interface FilterState {
   q: string;
   setQ: (query: string) => void;
   brandIds: number[];

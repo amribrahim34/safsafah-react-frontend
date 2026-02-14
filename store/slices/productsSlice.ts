@@ -254,6 +254,10 @@ const productsSlice = createSlice({
         state.categories = action.payload.categories || [];
         state.skinConcerns = action.payload.skinConcerns || [];
         state.skinTypes = action.payload.skinTypes || [];
+        state.catalogFilters = {
+          categories: action.payload.categories || [],
+          brands: action.payload.brands || [],
+        };
         state.error = null;
       })
       .addCase(fetchAllFilters.rejected, (state, action) => {
