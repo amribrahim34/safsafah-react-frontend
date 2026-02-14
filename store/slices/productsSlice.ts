@@ -22,10 +22,17 @@ export interface ProductsState {
     categories: any[];
     brands: any[];
   };
+  // Individual filter lists
+  categories: any[];
+  brands: any[];
+  skinTypes: any[];
+  skinConcerns: any[];
+  activeIngredients: any[];
   filters: ProductFilters;
   isLoading: boolean;
   isLoadingProduct: boolean;
   isLoadingCatalogFilters: boolean;
+  isLoadingFilters: boolean;
   error: string | null;
 }
 
@@ -42,6 +49,11 @@ const initialState: ProductsState = {
     categories: [],
     brands: [],
   },
+  categories: [],
+  brands: [],
+  skinTypes: [],
+  skinConcerns: [],
+  activeIngredients: [],
   filters: {
     page: 1,
     limit: 12,
@@ -49,6 +61,7 @@ const initialState: ProductsState = {
   isLoading: false,
   isLoadingProduct: false,
   isLoadingCatalogFilters: false,
+  isLoadingFilters: false,
   error: null,
 };
 
@@ -99,6 +112,42 @@ export const fetchCatalogFilters = createAsyncThunk<
     return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch catalog filters');
   }
 });
+
+/**
+ * Async thunk for fetching all filter options
+ */
+export const fetchAllFilters = createAsyncThunk<
+  {
+    activeIngredients: any[];
+    brands: any[];
+    categories: any[];
+    skinConcerns: any[];
+    skinTypes: any[];
+  },
+  void,
+  { rejectValue: string }
+>('products/fetchAllFilters', async (_, { rejectWithValue }) => {
+  try {
+    const [activeIngredients, brands, categories, skinConcerns, skinTypes] = await Promise.all([
+      productsService.getActiveIngredients(),
+      productsService.getBrands(),
+      productsService.getCategories(),
+      productsService.getSkinConcerns(),
+      productsService.getSkinTypes(),
+    ]);
+    
+    return {
+      activeIngredients,
+      brands,
+      categories,
+      skinConcerns,
+      skinTypes,
+    };
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch filters');
+  }
+});
+
 
 /**
  * Products slice
@@ -190,6 +239,26 @@ const productsSlice = createSlice({
       .addCase(fetchCatalogFilters.rejected, (state, action) => {
         state.isLoadingCatalogFilters = false;
         state.error = action.payload || 'Failed to fetch catalog filters';
+      });
+
+    // Fetch all filters
+    builder
+      .addCase(fetchAllFilters.pending, (state) => {
+        state.isLoadingFilters = true;
+        state.error = null;
+      })
+      .addCase(fetchAllFilters.fulfilled, (state, action) => {
+        state.isLoadingFilters = false;
+        state.activeIngredients = action.payload.activeIngredients || [];
+        state.brands = action.payload.brands || [];
+        state.categories = action.payload.categories || [];
+        state.skinConcerns = action.payload.skinConcerns || [];
+        state.skinTypes = action.payload.skinTypes || [];
+        state.error = null;
+      })
+      .addCase(fetchAllFilters.rejected, (state, action) => {
+        state.isLoadingFilters = false;
+        state.error = action.payload || 'Failed to fetch filters';
       });
   },
 });

@@ -6,7 +6,7 @@ import { BRAND } from '@/content/brand';
 import { COPY } from '@/content/copy';
 import { useDir } from '@/hooks/useDir';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { fetchProducts, setFilters, fetchCatalogFilters } from '@/store/slices/productsSlice';
+import { fetchProducts, setFilters, fetchCatalogFilters, fetchAllFilters } from '@/store/slices/productsSlice';
 import type { Language, ProductFilters } from '@/types';
 
 import PromoBar from '@/components/header/PromoBar';
@@ -79,7 +79,7 @@ function CatalogPageContent() {
    * Fetch catalog filters on mount
    */
   useEffect(() => {
-    dispatch(fetchCatalogFilters());
+    dispatch(fetchAllFilters());
   }, [dispatch]);
 
   /**

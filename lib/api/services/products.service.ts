@@ -24,6 +24,8 @@ export const productsService = {
    * @returns Paginated product search results
    */
   async getProducts(filters?: ProductFilters): Promise<ProductSearchResult> {
+    // Laravel API returns: {data: Product[], links: {}, meta: {current_page, per_page, total}}
+    // The get() function returns this directly, NOT wrapped in ApiResponse
     const response = await get<{
       data: Product[];
       meta: {
@@ -34,10 +36,10 @@ export const productsService = {
     }>('/products', filters as Record<string, unknown>);
 
     return {
-      products: response.data.data,
-      total: response.data.meta.total,
-      page: response.data.meta.current_page,
-      limit: response.data.meta.per_page,
+      products: response.data,
+      total: response.meta.total,
+      page: response.meta.current_page,
+      limit: response.meta.per_page,
     };
   },
 
@@ -223,5 +225,50 @@ export const productsService = {
   async getCatalogFilters(): Promise<CatalogFiltersResponse> {
     const response = await get<any>('/catalog-filters');
     return response as unknown as CatalogFiltersResponse;
+  },
+
+  /**
+   * Fetches active ingredients for filter
+   * @returns List of active ingredients
+   */
+  async getActiveIngredients(): Promise<any[]> {
+    const response = await get<any>('/filters/active-ingredients');
+    return response.data || response;
+  },
+
+  /**
+   * Fetches brands for filter
+   * @returns List of brands
+   */
+  async getBrands(): Promise<any[]> {
+    const response = await get<any>('/filters/brands');
+    return response.data || response;
+  },
+
+  /**
+   * Fetches categories for filter
+   * @returns List of categories
+   */
+  async getCategories(): Promise<any[]> {
+    const response = await get<any>('/filters/categories');
+    return response.data || response;
+  },
+
+  /**
+   * Fetches skin concerns for filter
+   * @returns List of skin concerns
+   */
+  async getSkinConcerns(): Promise<any[]> {
+    const response = await get<any>('/filters/skin-concerns');
+    return response.data || response;
+  },
+
+  /**
+   * Fetches skin types for filter
+   * @returns List of skin types
+   */
+  async getSkinTypes(): Promise<any[]> {
+    const response = await get<any>('/filters/skin-types');
+    return response.data || response;
   },
 };
