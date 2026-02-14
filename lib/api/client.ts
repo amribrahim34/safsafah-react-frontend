@@ -9,6 +9,7 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 import { env } from '@/config';
 import type { ApiResponse, ApiError } from '@/types';
 
+
 /**
  * Custom error class for API errors
  */
@@ -94,6 +95,7 @@ function createApiClient(): AxiosInstance {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      'Accept-Language': 'ar',
     },
   });
 
@@ -116,6 +118,12 @@ function createApiClient(): AxiosInstance {
       }
       if (!config.headers['Accept']) {
         config.headers['Accept'] = 'application/json';
+      }
+
+      // Set Accept-Language from the locale in the URL path (e.g., /ar/... or /en/...)
+      if (typeof window !== 'undefined') {
+        const locale = window.location.pathname.split('/')[1] || 'ar';
+        config.headers['Accept-Language'] = locale;
       }
 
       // Add authentication token if available

@@ -6,9 +6,11 @@
 
 /**
  * Login request payload
+ * Supports login via email or mobile number
  */
 export interface LoginRequest {
-  email: string;
+  email?: string;
+  mobile?: string;
   password: string;
 }
 
