@@ -48,28 +48,63 @@ export default function PriceRangeSlider({
     }
   };
 
+  const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMin = parseInt(e.target.value) || min;
+    if (newMin >= min && newMin < value[1]) {
+      onChange([newMin, value[1]]);
+    }
+  };
+
+  const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMax = parseInt(e.target.value) || max;
+    if (newMax <= max && newMax > value[0]) {
+      onChange([value[0], newMax]);
+    }
+  };
+
   // Don't render if min >= max (invalid range)
   if (min >= max) {
     return null;
   }
 
-  // In RTL mode, we display max on left and min on right
-  // to match the visual layout where the slider is reversed
-  const leftLabel = isRTL ? value[1] : value[0];
-  const rightLabel = isRTL ? value[0] : value[1];
-  const leftBound = isRTL ? max : min;
-  const rightBound = isRTL ? min : max;
+  const minLabel = lang === 'ar' ? 'الحد الأدنى' : 'Min';
+  const maxLabel = lang === 'ar' ? 'الحد الأقصى' : 'Max';
 
   return (
     <div className="px-2 pt-2 pb-4">
-      {/* Current price display - swapped in RTL */}
-      <div className="flex justify-between text-sm text-neutral-600 mb-6">
-        <span className="bg-neutral-100 px-2 py-1 rounded">
-          {leftLabel} {currency}
-        </span>
-        <span className="bg-neutral-100 px-2 py-1 rounded">
-          {rightLabel} {currency}
-        </span>
+      {/* Manual number inputs */}
+      <div className="flex gap-3 mb-6">
+        <div className="flex-1">
+          <label className="block text-xs text-neutral-600 mb-1.5">{minLabel}</label>
+          <div className="relative">
+            <input
+              type="number"
+              value={value[0]}
+              onChange={handleMinInputChange}
+              min={min}
+              max={value[1] - 1}
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              style={{ outlineColor: brandTokens.primary }}
+            />
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 pointer-events-none"
+                  style={{ [isRTL ? 'right' : 'left']: '0.75rem' }}>
+            </span>
+          </div>
+        </div>
+        <div className="flex-1">
+          <label className="block text-xs text-neutral-600 mb-1.5">{maxLabel}</label>
+          <div className="relative">
+            <input
+              type="number"
+              value={value[1]}
+              onChange={handleMaxInputChange}
+              min={value[0] + 1}
+              max={max}
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              style={{ outlineColor: brandTokens.primary }}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Range slider - reversed in RTL mode */}
@@ -96,11 +131,11 @@ export default function PriceRangeSlider({
         }}
       />
 
-      {/* Min/Max bounds display - swapped in RTL */}
-      <div className="flex justify-between text-xs text-neutral-400 mt-4">
-        <span>{leftBound} {currency}</span>
-        <span>{rightBound} {currency}</span>
-      </div>
+      {/* Min/Max bounds display */}
+      {/* <div className="flex justify-between text-xs text-neutral-400 mt-4">
+        <span>{min} {currency}</span>
+        <span>{max} {currency}</span>
+      </div> */}
     </div>
   );
 }
