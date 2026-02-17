@@ -196,7 +196,7 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
       <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
         {/* Logo + name (don't shrink) */}
-        <Link href={getLocalizedPath('/', lang)} className={`flex items-center gap-3 shrink-0 ${isRTL ? 'order-3' : 'order-1'}`}>
+        <Link href={getLocalizedPath('/', lang)} className="flex items-center gap-3 shrink-0 order-1">
           <img src={logo.src} alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
           <div className="font-extrabold text-xl tracking-tight whitespace-nowrap">SAFSAFAH</div>
         </Link>
@@ -204,14 +204,14 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
         {/* Hamburger menu button for mobile */}
         <button
           onClick={() => setIsMobileMenuOpen(true)}
-          className={`mobile-menu-button md:hidden p-2 hover:bg-neutral-100 rounded-xl transition-colors ${isRTL ? 'order-4 mr-auto' : 'order-2'}`}
+          className={`mobile-menu-button md:hidden p-2 hover:bg-neutral-100 rounded-xl transition-colors order-5 ${isRTL ? 'mr-auto' : 'ml-auto'}`}
           aria-label="Open menu"
         >
           <Menu className="w-6 h-6 text-neutral-800" />
         </button>
 
         {/* Desktop nav — lighter spacing; don't push */}
-        <nav className={`hidden md:flex items-center gap-4 mx-4 shrink-0 ${isRTL ? 'order-1' : 'order-3'}`}>
+        <nav className="hidden md:flex items-center gap-4 mx-4 shrink-0 order-2">
           {navItems.map((item) => (
             <Link
               key={item.path}
@@ -225,7 +225,7 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
         </nav>
 
         {/* Fluid search: grows but capped; min width guard */}
-        <div className="flex-1 max-w-[760px] min-w-[260px] hidden md:block">
+        <div className="flex-1 max-w-[760px] min-w-[260px] hidden md:block order-3">
           <div className="relative">
             <Search
               className={`w-4 h-4 absolute top-1/2 -translate-y-1/2 opacity-60 ${isRTL ? "right-3" : "left-3"}`}
@@ -240,7 +240,7 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
         </div>
 
         {/* Actions (account/cart) — don't shrink, keep tight */}
-        <div className="flex items-center gap-2 md:gap-3 shrink-0">
+        <div className="flex items-center gap-2 md:gap-3 shrink-0 order-4">
           {/* Account icon with click dropdown - Only show if authenticated */}
           {isAuthenticated && (
             <div className="relative profile-dropdown-container">
