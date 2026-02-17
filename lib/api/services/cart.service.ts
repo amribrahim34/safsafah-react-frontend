@@ -21,8 +21,7 @@ export const cartService = {
    */
   async getCart(): Promise<CartResponse> {
     const response = await get<CartResponse>('/cart');
-    // Backend returns cart data directly, not wrapped in ApiResponse
-    return response as any;
+    return response.data;
   },
 
   /**
@@ -32,8 +31,7 @@ export const cartService = {
    */
   async addToCart(item: AddToCartRequest): Promise<CartResponse> {
     const response = await post<CartResponse, AddToCartRequest>('/cart/items', item);
-    // Backend returns cart data directly, not wrapped in ApiResponse
-    return response as any;
+    return response.data;
   },
 
   /**
@@ -46,7 +44,7 @@ export const cartService = {
     const response = await put<CartResponse, UpdateCartItemRequest>(`/cart/items/${itemId}`, {
       quantity,
     });
-    return response as any;
+    return response.data;
   },
 
   /**
@@ -56,7 +54,7 @@ export const cartService = {
    */
   async removeFromCart(itemId: string): Promise<CartResponse> {
     const response = await del<CartResponse>(`/cart/items/${itemId}`);
-    return response as any;
+    return response.data;
   },
 
   /**
@@ -65,7 +63,7 @@ export const cartService = {
    */
   async clearCart(): Promise<CartResponse> {
     const response = await del<CartResponse>('/cart');
-    return response as any;
+    return response.data;
   },
 
   /**
@@ -77,7 +75,7 @@ export const cartService = {
     const response = await post<CartResponse, ApplyPromoCodeRequest>('/cart/promo-code', {
       code,
     });
-    return response as any;
+    return response.data;
   },
 
   /**
@@ -86,7 +84,7 @@ export const cartService = {
    */
   async removePromoCode(): Promise<CartResponse> {
     const response = await del<CartResponse>('/cart/promo-code');
-    return response as any;
+    return response.data;
   },
 
   /**
@@ -95,7 +93,7 @@ export const cartService = {
    */
   async validateCart(): Promise<CartValidationResponse> {
     const response = await get<CartValidationResponse>('/cart/validate');
-    return response as any;
+    return response.data;
   },
 
   /**
@@ -107,6 +105,6 @@ export const cartService = {
     const response = await post<CartResponse, { items: AddToCartRequest[] }>('/cart/sync', {
       items: localItems,
     });
-    return response as any;
+    return response.data;
   },
 };

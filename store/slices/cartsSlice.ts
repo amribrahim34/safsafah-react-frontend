@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { cartService } from '@/lib/api';
 import type { CartResponse, AddToCartRequest } from '@/types';
+import { logout } from './authSlice';
 
 /**
  * Cart state interface
@@ -213,6 +214,12 @@ const cartsSlice = createSlice({
           .addCase(removePromoCode.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload as string || 'Failed to remove promo code';
+          })
+          // Clear cart on logout
+          .addCase(logout.fulfilled, (state) => {
+            state.cart = null;
+            state.isLoading = false;
+            state.error = null;
           });
       },
 
