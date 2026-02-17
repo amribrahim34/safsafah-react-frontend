@@ -4,7 +4,7 @@ import type { FilterState } from '@/components/catalog/filters/Filters';
 interface DesktopFilterSidebarProps {
   lang: string;
   brand: { primary: string; dark: string; light: string };
-  catalogFilters: { categories: any[]; brands: any[] };
+  catalogFilters: { categories: any[]; brands: any[]; skinTypes: any[]; skinConcerns: any[] };
   filterState: FilterState;
   onApply: () => void;
 }

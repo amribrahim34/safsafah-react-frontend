@@ -21,6 +21,8 @@ export interface ProductsState {
   catalogFilters: {
     categories: any[];
     brands: any[];
+    skinTypes: any[];
+    skinConcerns: any[];
   };
   // Individual filter lists
   categories: any[];
@@ -48,6 +50,8 @@ const initialState: ProductsState = {
   catalogFilters: {
     categories: [],
     brands: [],
+    skinTypes: [],
+    skinConcerns: [],
   },
   categories: [],
   brands: [],
@@ -233,6 +237,8 @@ const productsSlice = createSlice({
         state.catalogFilters = {
           categories: action.payload.categories || [],
           brands: action.payload.brands || [],
+          skinTypes: [],
+          skinConcerns: [],
         };
         state.error = null;
       })
@@ -257,6 +263,8 @@ const productsSlice = createSlice({
         state.catalogFilters = {
           categories: action.payload.categories || [],
           brands: action.payload.brands || [],
+          skinTypes: action.payload.skinTypes || [],
+          skinConcerns: action.payload.skinConcerns || [],
         };
         state.error = null;
       })

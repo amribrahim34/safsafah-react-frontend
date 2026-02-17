@@ -81,7 +81,8 @@ export interface ProductFilters {
   limit?: number;
   categoryIds?: number[];
   brandIds?: number[];
-  skinTypeId?: number;
+  skinTypeIds?: number[];
+  skinConcernIds?: number[];
   searchQuery?: string;
   minPrice?: number;
   maxPrice?: number;

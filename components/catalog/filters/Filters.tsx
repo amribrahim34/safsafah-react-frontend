@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import FilterGroup from "./FilterGroup";
 import PriceRangeSlider from "./PriceRangeSlider";
+import SkinTypeFilter from "./SkinTypeFilter";
+import SkinConcernFilter from "./SkinConcernFilter";
 
 interface CatalogBrand {
   id: number;
@@ -15,6 +17,22 @@ interface CatalogCategory {
   nameAr: string;
   nameEn: string;
   children: CatalogCategory[];
+}
+
+interface CatalogSkinType {
+  id: number;
+  nameAr?: string;
+  nameEn?: string;
+  name_ar?: string;  // Laravel API snake_case
+  name_en?: string;  // Laravel API snake_case
+}
+
+interface CatalogSkinConcern {
+  id: number;
+  nameAr?: string;
+  nameEn?: string;
+  name_ar?: string;  // Laravel API snake_case
+  name_en?: string;  // Laravel API snake_case
 }
 
 export interface FilterState {
@@ -30,13 +48,17 @@ export interface FilterState {
   setPrice: (price: [number, number]) => void;
   tags: string[];
   setTags: (tags: string[]) => void;
-  skins: string[];
-  setSkins: (skins: string[]) => void;
+  skinTypeIds: number[];
+  setSkinTypeIds: (skinTypeIds: number[]) => void;
+  skinConcernIds: number[];
+  setSkinConcernIds: (skinConcernIds: number[]) => void;
 }
 
 interface CatalogFilters {
   categories: CatalogCategory[];
   brands: CatalogBrand[];
+  skinTypes: CatalogSkinType[];
+  skinConcerns: CatalogSkinConcern[];
 }
 
 interface BrandTokens {
@@ -62,11 +84,12 @@ export default function Filters({ lang, brandTokens, priceMin, priceMax, catalog
     onSale, setOnSale,
     price, setPrice,
     tags, setTags,
-    skins, setSkins,
+    skinTypeIds, setSkinTypeIds,
+    skinConcernIds, setSkinConcernIds,
   } = state;
 
   const [open, setOpen] = useState({
-    brand: true, category: true, price: true, sale: true, tags: false, skin: false
+    brand: true, category: true, price: true, sale: true, tags: false, skinType: false, skinConcern: false
   });
   const toggle = (k: keyof typeof open) => setOpen(o => ({ ...o, [k]: !o[k] }));
 
@@ -79,7 +102,8 @@ export default function Filters({ lang, brandTokens, priceMin, priceMax, catalog
     price: lang === "ar" ? "السعر" : "Price",
     sale: lang === "ar" ? "عروض" : "On sale",
     tags: lang === "ar" ? "خصائص" : "Attributes",
-    skin: lang === "ar" ? "نوع البشرة" : "Skin type",
+    skinType: lang === "ar" ? "نوع البشرة" : "Skin Type",
+    skinConcern: lang === "ar" ? "مشاكل البشرة" : "Skin Concern",
     min: lang === "ar" ? "الحد الأدنى" : "Min",
     max: lang === "ar" ? "الحد الأقصى" : "Max",
   };
@@ -193,6 +217,32 @@ export default function Filters({ lang, brandTokens, priceMin, priceMax, catalog
           <span className="text-sm">{lang === "ar" ? "خصومات فقط" : "Only discounted"}</span>
         </label>
       </FilterGroup>
+
+      {/* Skin Type */}
+      {catalogFilters.skinTypes && catalogFilters.skinTypes.length > 0 && (
+        <FilterGroup title={t.skinType} open={open.skinType} onToggle={() => toggle("skinType")}>
+          <SkinTypeFilter
+            skinTypes={catalogFilters.skinTypes}
+            selectedIds={skinTypeIds}
+            onSelectionChange={setSkinTypeIds}
+            lang={lang}
+            brandTokens={brandTokens}
+          />
+        </FilterGroup>
+      )}
+
+      {/* Skin Concern */}
+      {catalogFilters.skinConcerns && catalogFilters.skinConcerns.length > 0 && (
+        <FilterGroup title={t.skinConcern} open={open.skinConcern} onToggle={() => toggle("skinConcern")}>
+          <SkinConcernFilter
+            skinConcerns={catalogFilters.skinConcerns}
+            selectedIds={skinConcernIds}
+            onSelectionChange={setSkinConcernIds}
+            lang={lang}
+            brandTokens={brandTokens}
+          />
+        </FilterGroup>
+      )}
     </div>
   );
 }

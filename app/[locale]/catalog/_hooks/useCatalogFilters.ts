@@ -38,7 +38,8 @@ export function useCatalogFilters(lang: Locale) {
   const [onSale, setOnSale] = useState<boolean>(false);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedSkins, setSelectedSkins] = useState<string[]>([]);
+  const [selectedSkinTypeIds, setSelectedSkinTypeIds] = useState<number[]>([]);
+  const [selectedSkinConcernIds, setSelectedSkinConcernIds] = useState<number[]>([]);
   const [sortValue, setSortValue] = useState<string>('relevance');
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
 
@@ -74,6 +75,8 @@ export function useCatalogFilters(lang: Locale) {
     const searchQueryParam = searchParams.get('searchQuery');
     const brandIdsParam = searchParams.get('brandIds');
     const categoryIdsParam = searchParams.get('categoryIds');
+    const skinTypeIdsParam = searchParams.get('skinTypeIds');
+    const skinConcernIdsParam = searchParams.get('skinConcernIds');
     const minPriceParam = searchParams.get('minPrice');
     const maxPriceParam = searchParams.get('maxPrice');
     const sortByParam = searchParams.get('sortBy');
@@ -95,6 +98,20 @@ export function useCatalogFilters(lang: Locale) {
       setSelectedCategoryIds([]);
     }
 
+    if (skinTypeIdsParam) {
+      const skinTypeIds = skinTypeIdsParam.split(',').map((id) => Number(id.trim()));
+      setSelectedSkinTypeIds(skinTypeIds);
+    } else {
+      setSelectedSkinTypeIds([]);
+    }
+
+    if (skinConcernIdsParam) {
+      const skinConcernIds = skinConcernIdsParam.split(',').map((id) => Number(id.trim()));
+      setSelectedSkinConcernIds(skinConcernIds);
+    } else {
+      setSelectedSkinConcernIds([]);
+    }
+
     if (sortByParam) setSortValue(sortByParam);
     else setSortValue('relevance');
 
@@ -109,7 +126,8 @@ export function useCatalogFilters(lang: Locale) {
       limit: Number(searchParams.get('limit')) || 12,
       categoryIds: categoryIdsParam ? categoryIdsParam.split(',').map(id => Number(id.trim())) : undefined,
       brandIds: brandIdsParam ? brandIdsParam.split(',').map(id => Number(id.trim())) : undefined,
-      skinTypeId: searchParams.get('skinTypeId') ? Number(searchParams.get('skinTypeId')) : undefined,
+      skinTypeIds: skinTypeIdsParam ? skinTypeIdsParam.split(',').map(id => Number(id.trim())) : undefined,
+      skinConcernIds: skinConcernIdsParam ? skinConcernIdsParam.split(',').map(id => Number(id.trim())) : undefined,
       searchQuery: searchQueryParam || undefined,
       minPrice: minPriceParam ? Number(minPriceParam) : undefined,
       maxPrice: maxPriceParam ? Number(maxPriceParam) : undefined,
@@ -141,6 +159,8 @@ export function useCatalogFilters(lang: Locale) {
 
     const categoryIds = selectedCategoryIds.length > 0 ? selectedCategoryIds : undefined;
     const brandIds = selectedBrandIds.length > 0 ? selectedBrandIds : undefined;
+    const skinTypeIds = selectedSkinTypeIds.length > 0 ? selectedSkinTypeIds : undefined;
+    const skinConcernIds = selectedSkinConcernIds.length > 0 ? selectedSkinConcernIds : undefined;
 
     const hasPriceChanged = validMinPrice !== 0 || validMaxPrice !== 5000;
 
@@ -150,6 +170,8 @@ export function useCatalogFilters(lang: Locale) {
       searchQuery: searchQuery.trim() || undefined,
       brandIds,
       categoryIds,
+      skinTypeIds,
+      skinConcernIds,
       minPrice: hasPriceChanged ? validMinPrice : undefined,
       maxPrice: hasPriceChanged ? validMaxPrice : undefined,
     };
@@ -169,7 +191,7 @@ export function useCatalogFilters(lang: Locale) {
     });
 
     router.push(`/catalog?${params.toString()}`);
-  }, [priceRange, selectedCategoryIds, selectedBrandIds, searchQuery, router]);
+  }, [priceRange, selectedCategoryIds, selectedBrandIds, selectedSkinTypeIds, selectedSkinConcernIds, searchQuery, router]);
 
   /**
    * Handle page change
@@ -295,6 +317,40 @@ export function useCatalogFilters(lang: Locale) {
       });
     }
 
+    if (localFilters.skinTypeIds && localFilters.skinTypeIds.length > 0) {
+      const skinTypeNames = localFilters.skinTypeIds
+        .map(id => {
+          const skinType = catalogFilters.skinTypes?.find((st: any) => st.id === id);
+          return skinType ? (isRTL ? (skinType.nameAr || skinType.name_ar) : (skinType.nameEn || skinType.name_en)) : null;
+        })
+        .filter(Boolean);
+      
+      pills.push({
+        key: 'skinTypeIds',
+        label: skinTypeNames.length > 0
+          ? `${isRTL ? 'نوع البشرة' : 'Skin Type'}: ${skinTypeNames.join(', ')}`
+          : `${isRTL ? 'نوع البشرة' : 'Skin Type'}: ${localFilters.skinTypeIds.join(', ')}`,
+        value: localFilters.skinTypeIds,
+      });
+    }
+
+    if (localFilters.skinConcernIds && localFilters.skinConcernIds.length > 0) {
+      const skinConcernNames = localFilters.skinConcernIds
+        .map(id => {
+          const skinConcern = catalogFilters.skinConcerns?.find((sc: any) => sc.id === id);
+          return skinConcern ? (isRTL ? (skinConcern.nameAr || skinConcern.name_ar) : (skinConcern.nameEn || skinConcern.name_en)) : null;
+        })
+        .filter(Boolean);
+      
+      pills.push({
+        key: 'skinConcernIds',
+        label: skinConcernNames.length > 0
+          ? `${isRTL ? 'مشاكل البشرة' : 'Skin Concern'}: ${skinConcernNames.join(', ')}`
+          : `${isRTL ? 'مشاكل البشرة' : 'Skin Concern'}: ${localFilters.skinConcernIds.join(', ')}`,
+        value: localFilters.skinConcernIds,
+      });
+    }
+
     if (localFilters.minPrice || localFilters.maxPrice) {
       const min = localFilters.minPrice || 0;
       const max = localFilters.maxPrice || 5000;
@@ -340,10 +396,12 @@ export function useCatalogFilters(lang: Locale) {
       setPrice: setPriceRange,
       tags: selectedTags,
       setTags: setSelectedTags,
-      skins: selectedSkins,
-      setSkins: setSelectedSkins,
+      skinTypeIds: selectedSkinTypeIds,
+      setSkinTypeIds: setSelectedSkinTypeIds,
+      skinConcernIds: selectedSkinConcernIds,
+      setSkinConcernIds: setSelectedSkinConcernIds,
     }),
-    [searchQuery, selectedBrandIds, selectedCategoryIds, onSale, priceRange, selectedTags, selectedSkins],
+    [searchQuery, selectedBrandIds, selectedCategoryIds, onSale, priceRange, selectedTags, selectedSkinTypeIds, selectedSkinConcernIds],
   );
 
   return {
