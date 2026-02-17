@@ -328,7 +328,7 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
                             </div>
                           </div>
                           <button
-                            onClick={() => handleRemoveFromCart(item.productId)}
+                            onClick={() => handleRemoveFromCart(item.id)}
                             disabled={isCartLoading}
                             className="p-1 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                           >

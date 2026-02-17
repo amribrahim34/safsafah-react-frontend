@@ -73,7 +73,7 @@ export default function ProductCard({
     const newQuantity = (cartItem.quantity || 0) + 1;
     try {
       await dispatch(updateCartItem({
-        itemId: id, // Use product ID, not cart item ID
+        itemId: cartItem.id, // Use cart item ID, not product ID
         quantity: newQuantity
       })).unwrap();
       setLocalQuantity(newQuantity);
@@ -99,7 +99,7 @@ export default function ProductCard({
     const newQuantity = currentQty - 1;
     try {
       await dispatch(updateCartItem({
-        itemId: id, // Use product ID, not cart item ID
+        itemId: cartItem.id, // Use cart item ID, not product ID
         quantity: newQuantity
       })).unwrap();
       setLocalQuantity(newQuantity);
@@ -115,7 +115,7 @@ export default function ProductCard({
     if (!cartItem) return;
 
     try {
-      await dispatch(removeFromCart(id)).unwrap();
+      await dispatch(removeFromCart(cartItem.id)).unwrap();
       setLocalQuantity(1);
     } catch (error) {
       console.error('Failed to remove from cart:', error);
@@ -145,7 +145,7 @@ export default function ProductCard({
 
     try {
       await dispatch(updateCartItem({
-        itemId: id, // Use product ID, not cart item ID
+        itemId: cartItem.id, // Use cart item ID, not product ID
         quantity: value
       })).unwrap();
     } catch (error) {
