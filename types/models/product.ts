@@ -79,8 +79,8 @@ export interface ProductReview {
 export interface ProductFilters {
   page?: number;
   limit?: number;
-  categoryId?: number;
-  brandId?: number;
+  categoryIds?: number[];
+  brandIds?: number[];
   skinTypeId?: number;
   searchQuery?: string;
   minPrice?: number;
