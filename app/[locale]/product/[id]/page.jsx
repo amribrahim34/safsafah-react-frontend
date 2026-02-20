@@ -107,8 +107,8 @@ export default function ProductPage() {
   // Build product data for display
   const productTitle = lang === "ar" ? product.nameAr : product.nameEn;
   const productDescription = lang === "ar" ? product.descriptionAr : product.descriptionEn;
-  const brandName = lang === "ar" ? product.brand.nameAr : product.brand.nameEn;
-  const categoryName = lang === "ar" ? product.category.nameAr : product.category.nameEn;
+  const brandName = lang === "ar" ? product.brand?.nameAr : product.brand?.nameEn;
+  const categoryName = lang === "ar" ? product.category?.nameAr : product?.category?.nameEn;
   const rating = product.averageRating?.parsedValue || product.averageRating || 0;
   const reviewCount = product.reviews?.length || 0;
   const productPrice = product.price?.parsedValue || product.price || 0;

@@ -1,11 +1,11 @@
 'use client';
 
-import { Search, User2, ShoppingBag, LogOut, X, Menu } from "lucide-react";
+import { Search, User2, ShoppingBag, LogOut, X, Menu, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
-import { removeFromCart } from "@/store/slices/cartsSlice";
+import { removeFromCart, updateCartItem } from "@/store/slices/cartsSlice";
 import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
 import logo from "../../assets/safsafah-logo.png";
 import { useState, useEffect } from "react";
@@ -31,9 +31,12 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
   const cart = useAppSelector((state) => state.cart.cart);
   const isCartLoading = useAppSelector((state) => state.cart.isLoading);
 
+  const [mounted, setMounted] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const isRTL = lang === "ar";
 
@@ -92,6 +95,18 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
       await dispatch(removeFromCart(itemId)).unwrap();
     } catch (error) {
       console.error('Failed to remove item from cart:', error);
+    }
+  };
+
+  const handleUpdateQty = async (itemId: number, quantity: number) => {
+    if (quantity < 1) {
+      await handleRemoveFromCart(itemId);
+      return;
+    }
+    try {
+      await dispatch(updateCartItem({ itemId, quantity })).unwrap();
+    } catch (error) {
+      console.error('Failed to update cart item quantity:', error);
     }
   };
 
@@ -167,7 +182,7 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
             </div>
 
             {/* Account Section in Mobile Menu (only if authenticated) */}
-            {isAuthenticated && (
+            {mounted && isAuthenticated && (
               <div className="mt-6 pt-6 border-t border-neutral-200 space-y-2">
                 <Link
                   href={getLocalizedPath('/account', lang)}
@@ -242,7 +257,7 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
         {/* Actions (account/cart) — don't shrink, keep tight */}
         <div className="flex items-center gap-2 md:gap-3 shrink-0 order-4">
           {/* Account icon with click dropdown - Only show if authenticated */}
-          {isAuthenticated && (
+          {mounted && isAuthenticated && (
             <div className="relative profile-dropdown-container">
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -311,29 +326,61 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
                             <img
                               src={getImageUrl(item.productImage)}
                               alt={lang === "ar" ? item.productNameAr : item.productNameEn}
-                              className="w-16 h-16 object-cover rounded-lg"
+                              className="hidden md:block w-14 h-14 object-cover rounded-lg flex-shrink-0"
                             />
                           )}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-semibold text-sm truncate">
+
+                          {/* Left: name */}
+                          <div className="flex-1 min-w-0 flex items-start">
+                            <h4 className="font-semibold text-sm truncate leading-snug">
                               {lang === "ar" ? item.productNameAr : item.productNameEn}
                             </h4>
-                            <div className="flex items-center justify-between mt-1">
-                              <span className="text-xs text-neutral-600">
-                                {lang === "ar" ? "الكمية" : "Qty"}: {item.quantity}
+                          </div>
+
+                          {/* Right: price then controls, stacked */}
+                          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                            <span className="font-bold text-sm whitespace-nowrap" style={{ color: brand.primary }}>
+                              {formatPrice(item.subtotal)}
+                            </span>
+
+                            <div className="flex items-center gap-1">
+                              <button
+                                type="button"
+                                disabled={isCartLoading}
+                                onClick={() =>
+                                  item.quantity <= 1
+                                    ? handleRemoveFromCart(item.id)
+                                    : handleUpdateQty(item.id, item.quantity - 1)
+                                }
+                                aria-label={item.quantity <= 1
+                                  ? (lang === "ar" ? "إزالة" : "Remove")
+                                  : (lang === "ar" ? "تقليل" : "Decrease")
+                                }
+                                className="w-7 h-7 rounded-md flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                style={{ backgroundColor: "#fee2e2", color: "#dc2626" }}
+                              >
+                                {item.quantity <= 1
+                                  ? <Trash2 size={12} strokeWidth={2.5} />
+                                  : <span className="text-sm font-bold leading-none select-none">−</span>
+                                }
+                              </button>
+
+                              <span className="w-7 text-center text-sm font-bold tabular-nums select-none">
+                                {item.quantity}
                               </span>
-                              <span className="font-bold text-sm" style={{ color: brand.primary }}>
-                                {formatPrice(item.subtotal)}
-                              </span>
+
+                              <button
+                                type="button"
+                                disabled={isCartLoading}
+                                onClick={() => handleUpdateQty(item.id, item.quantity + 1)}
+                                aria-label={lang === "ar" ? "زيادة" : "Increase"}
+                                className="w-7 h-7 rounded-md flex items-center justify-center text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                style={{ backgroundColor: brand.primary }}
+                              >
+                                <span className="text-sm font-bold leading-none select-none">+</span>
+                              </button>
                             </div>
                           </div>
-                          <button
-                            onClick={() => handleRemoveFromCart(item.id)}
-                            disabled={isCartLoading}
-                            className="p-1 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                          >
-                            <X className="w-4 h-4 text-red-500" />
-                          </button>
                         </div>
                       ))}
                     </div>
