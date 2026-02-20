@@ -86,7 +86,7 @@ export const fetchProducts = createAsyncThunk<
 });
 
 /**
- * Async thunk for fetching a single product by ID
+ * Async thunk for fetching a single product by ID (triggers loading state)
  */
 export const fetchProductById = createAsyncThunk<
   Product,
@@ -98,6 +98,24 @@ export const fetchProductById = createAsyncThunk<
     return response;
   } catch (error) {
     return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch product');
+  }
+});
+
+/**
+ * Async thunk for silently refreshing a product in the background.
+ * Updates currentProduct WITHOUT setting isLoadingProduct, so the page
+ * never flashes back to the loading skeleton (used after wishlist toggle).
+ */
+export const silentFetchProductById = createAsyncThunk<
+  Product,
+  string | number,
+  { rejectValue: string }
+>('products/silentFetchProductById', async (productId, { rejectWithValue }) => {
+  try {
+    const response = await productsService.getProduct(productId);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to refresh product');
   }
 });
 
@@ -189,6 +207,17 @@ const productsSlice = createSlice({
       state.total = 0;
       state.page = 1;
     },
+
+    /**
+     * Optimistically patch isInWishlist on currentProduct.
+     * Called before the API request so the UI updates instantly.
+     * Roll back by dispatching the previous value if the request fails.
+     */
+    setCurrentProductWishlistStatus: (state, action: PayloadAction<boolean>) => {
+      if (state.currentProduct) {
+        state.currentProduct.isInWishlist = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     // Fetch products
@@ -210,7 +239,7 @@ const productsSlice = createSlice({
         state.error = action.payload || 'Failed to fetch products';
       });
 
-    // Fetch single product
+    // Fetch single product (with loading state)
     builder
       .addCase(fetchProductById.pending, (state) => {
         state.isLoadingProduct = true;
@@ -224,6 +253,12 @@ const productsSlice = createSlice({
       .addCase(fetchProductById.rejected, (state, action) => {
         state.isLoadingProduct = false;
         state.error = action.payload || 'Failed to fetch product';
+      });
+
+    // Silent background refresh — never touches isLoadingProduct
+    builder
+      .addCase(silentFetchProductById.fulfilled, (state, action) => {
+        state.currentProduct = action.payload;
       });
 
     // Fetch catalog filters
@@ -278,7 +313,7 @@ const productsSlice = createSlice({
 /**
  * Export actions
  */
-export const { clearError, setFilters, resetFilters, clearProducts } = productsSlice.actions;
+export const { clearError, setFilters, resetFilters, clearProducts, setCurrentProductWishlistStatus } = productsSlice.actions;
 
 /**
  * Export reducer

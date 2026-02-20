@@ -41,6 +41,7 @@ export interface Product {
   onSale?: boolean;
   inStock?: boolean;
   stock?: number;
+  isInWishlist?: boolean;
   usage?: LocalizedText;
   ingredients?: string[];
   createdAt?: string;

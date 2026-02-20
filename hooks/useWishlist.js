@@ -1,92 +1,72 @@
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { addToWishlist, removeFromWishlist } from "../store/slices/wishlistSlice";
-import { fetchProductById } from "../store/slices/productsSlice";
+import {
+  setCurrentProductWishlistStatus,
+  silentFetchProductById,
+} from "../store/slices/productsSlice";
 
 /**
- * Custom hook for managing wishlist operations
- * @param {Object} product - The product object (must have inWishList field)
- * @returns {Object} Wishlist state and handlers
+ * useWishlist
+ *
+ * Manages wishlist state for a single product.
+ *
+ * Strategy:
+ *  1. Optimistic update  — flip `isInWishlist` in Redux immediately so the
+ *     button re-renders without waiting for the network.
+ *  2. API call           — add / remove on the backend.
+ *  3. Silent re-fetch    — pull fresh product data (including the authoritative
+ *     `isInWishlist` value) without triggering the page loading skeleton.
+ *  4. Rollback on error  — if the API call fails, restore the previous value.
+ *
+ * @param {Object} product - Product object (must have `id` and `isInWishlist`)
  */
 export function useWishlist(product) {
   const dispatch = useAppDispatch();
   const { loadingProductId } = useAppSelector((state) => state.wishlist);
 
-  // Check if product is in wishlist using the backend-provided field
-  const isInWishlist = product?.inWishList ?? false;
+  // Read backend-supplied field from currentProduct
+  const isInWishlist = product?.isInWishlist ?? false;
 
-  // Check if this specific product is being loaded
-  const isLoadingThisProduct = loadingProductId === product?.id;
+  // True only while this specific product's API call is in-flight
+  const isLoading = loadingProductId === product?.id;
 
   /**
-   * Toggle wishlist - add if not in wishlist, remove if already in wishlist
+   * Toggle wishlist membership.
+   * Updates the UI immediately and syncs with the server in the background.
+   *
+   * @param {Function} [onSuccess] - Optional callback receiving 'added' | 'removed'
    */
   const handleToggleWishlist = async (onSuccess) => {
-    if (!product) return;
+    if (!product || isLoading) return;
+
+    const previousValue = isInWishlist;
+    const nextValue = !isInWishlist;
+
+    // 1. Optimistic update
+    dispatch(setCurrentProductWishlistStatus(nextValue));
 
     try {
-      if (isInWishlist) {
+      // 2. API call
+      if (previousValue) {
         await dispatch(removeFromWishlist(product.id)).unwrap();
       } else {
         await dispatch(addToWishlist(product.id)).unwrap();
       }
 
-      // Refresh product data to get updated inWishList status
-      await dispatch(fetchProductById(product.id));
+      // 3. Silent background re-fetch for authoritative server state
+      dispatch(silentFetchProductById(product.id));
 
-      // Callback for success (e.g., show toast notification)
-      if (onSuccess) {
-        onSuccess(isInWishlist ? 'removed' : 'added');
-      }
+      onSuccess?.(previousValue ? "removed" : "added");
     } catch (error) {
-      console.error('Failed to toggle wishlist:', error);
-    }
-  };
-
-  /**
-   * Add to wishlist
-   */
-  const handleAddToWishlist = async (onSuccess) => {
-    if (!product || isInWishlist) return;
-
-    try {
-      await dispatch(addToWishlist(product.id)).unwrap();
-
-      // Refresh product data to get updated inWishList status
-      await dispatch(fetchProductById(product.id));
-
-      if (onSuccess) {
-        onSuccess();
-      }
-    } catch (error) {
-      console.error('Failed to add to wishlist:', error);
-    }
-  };
-
-  /**
-   * Remove from wishlist
-   */
-  const handleRemoveFromWishlist = async (onSuccess) => {
-    if (!product || !isInWishlist) return;
-
-    try {
-      await dispatch(removeFromWishlist(product.id)).unwrap();
-
-      // Refresh product data to get updated inWishList status
-      await dispatch(fetchProductById(product.id));
-
-      if (onSuccess) {
-        onSuccess();
-      }
-    } catch (error) {
-      console.error('Failed to remove from wishlist:', error);
+      console.error("Failed to toggle wishlist:", error);
+      // 4. Rollback on failure
+      dispatch(setCurrentProductWishlistStatus(previousValue));
     }
   };
 
   return {
     isInWishlist,
-    isLoading: isLoadingThisProduct,
+    isLoading,
     handleToggleWishlist,
-    handleAddToWishlist,
-    handleRemoveFromWishlist,
   };
 }

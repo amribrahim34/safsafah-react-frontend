@@ -51,8 +51,8 @@ export const productsService = {
    */
   async getProduct(productId: string | number): Promise<Product> {
     const response = await get<any>(`/products/${productId}`);
-    // API returns product directly, not wrapped
-    return response as unknown as Product;
+    // API returns { data: Product } — unwrap it
+    return (response.data ?? response) as unknown as Product;
   },
 
   /**
