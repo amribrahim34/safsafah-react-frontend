@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cairo } from "next/font/google";
+
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  variable: "--font-cairo",
+});
 import "./globals.css";
 import { Providers } from "./providers";
 import { LocaleSync } from "./LocaleSync";
@@ -24,7 +29,7 @@ export default function RootLayout({
       <link rel="manifest" href="/favicons/site.webmanifest"></link>
       </head>
       <body
-        className={``}
+        className={`${cairo.variable} font-sans`}
       >
         <LocaleSync />
         <Providers>{children}</Providers>

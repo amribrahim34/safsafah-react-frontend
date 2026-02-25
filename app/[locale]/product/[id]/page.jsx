@@ -81,7 +81,7 @@ export default function ProductPage() {
   // Fetch product + cart on mount / id change
   useEffect(() => {
     if (id) dispatch(fetchProductById(id));
-    dispatch(fetchCart());
+    // dispatch(fetchCart());
   }, [id, dispatch]);
 
   // Find authenticated user's existing review

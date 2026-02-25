@@ -1,8 +1,9 @@
 import { Star } from "lucide-react";
 
-export default function Stars({ rating, size = "sm" }) {
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 !== 0;
+export default function Stars({ rating = 0, size = "sm" }) {
+  const safeRating = Number(rating) || 0;
+  const fullStars = Math.floor(safeRating);
+  const hasHalfStar = safeRating % 1 !== 0;
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   const sizeClasses = {

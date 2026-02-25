@@ -26,23 +26,27 @@ function ProductMeta({ product, lang, priceFmt, brand, onShowReviews }) {
         {brandName} {categoryName ? `· ${categoryName}` : ""}
       </div>
 
-      {/* Title */}
+      {/* Title */} 
       <h1 className="text-2xl md:text-3xl font-extrabold">{title}</h1>
 
       {/* Rating */}
-      {rating > 0 && (
-        <div className="mt-3 flex items-center gap-2 flex-wrap">
-          <Stars rating={rating} />
+      <div className="mt-3 flex items-center gap-2 flex-wrap">
+        <Stars rating={rating} />
+        {rating > 0 ? (
           <span className="text-sm text-neutral-600">
             {rating.toFixed(1)} · {reviewCount} {lang === "ar" ? "تقييم" : "ratings"}
           </span>
-          {reviewCount > 0 && (
-            <button className="text-sm underline" onClick={onShowReviews}>
-              {lang === "ar" ? "قراءة المراجعات" : "Read reviews"}
-            </button>
-          )}
-        </div>
-      )}
+        ) : (
+          <span className="text-sm text-neutral-400">
+            {lang === "ar" ? "لا توجد تقييمات بعد" : "No ratings yet"}
+          </span>
+        )}
+        {reviewCount > 0 && (
+          <button className="text-sm underline" onClick={onShowReviews}>
+            {lang === "ar" ? "قراءة المراجعات" : "Read reviews"}
+          </button>
+        )}
+      </div>
 
       {/* Price */}
       <div className="mt-4 flex items-center gap-3 flex-wrap">

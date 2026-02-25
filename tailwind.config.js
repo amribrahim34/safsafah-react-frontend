@@ -13,7 +13,10 @@ export default {
           light: "#34b0a6",
           accent: "#28a69e",
         },
-      }
+      },
+      fontFamily: {
+        sans: ["var(--font-cairo)", "sans-serif"],
+      },
     },
   },
   plugins: [],
