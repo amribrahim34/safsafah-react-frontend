@@ -1,5 +1,5 @@
 import React from "react";
-import { IMG } from "../../content/images";
+import { IMG } from "@/content/images";
 
 const RV = [
   { id:11, name:{en:"Barrier Cream", ar:"كريم الحاجز"}, price:760, img:IMG.cream },

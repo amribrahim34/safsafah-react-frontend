@@ -11,15 +11,15 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import BottomTabs from "@/components/appchrome/BottomTabs";
 
-import OverviewHeader from "@/components/profile/OverviewHeader";
-import OrdersList from "@/components/profile/OrdersList";
-import WishlistGrid from "@/components/profile/WishlistGrid";
-import RewardsWallet from "@/components/profile/RewardsWallet";
-import BeautyProfileCard from "@/components/profile/BeautyProfileCard";
-import AddressesPayments from "@/components/profile/AddressesPayments";
-import RecentlyViewedStrip from "@/components/profile/RecentlyViewedStrip";
-import SettingsPanel from "@/components/profile/SettingsPanel";
-import SupportLinks from "@/components/profile/SupportLinks";
+import OverviewHeader from "./_components/OverviewHeader";
+import OrdersList from "./_components/OrdersList";
+import WishlistGrid from "./_components/WishlistGrid";
+import RewardsWallet from "./_components/RewardsWallet";
+import BeautyProfileCard from "./_components/BeautyProfileCard";
+import AddressesPayments from "./_components/AddressesPayments";
+import RecentlyViewedStrip from "./_components/RecentlyViewedStrip";
+import SettingsPanel from "./_components/SettingsPanel";
+import SupportLinks from "./_components/SupportLinks";
 
 export default function ProfilePage() {
   const [lang, setLang] = useState("ar");

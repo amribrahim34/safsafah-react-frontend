@@ -1,5 +1,5 @@
 import React from "react";
-import { IMG } from "../../content/images";
+import { IMG } from "@/content/images";
 
 const WISHLIST = [
   { id:1, name:{en:"Niacinamide 10% Serum", ar:"سيروم نيايسيناميد 10%"}, price:520, img:IMG.serum },

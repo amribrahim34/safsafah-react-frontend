@@ -4,7 +4,7 @@ import { Gift, Coins } from "lucide-react";
 export default function RewardsWallet({ brand, lang="ar", user }) {
   const isRTL = lang==="ar";
   const rate = 1; // 1 point = 1 EGP
-  const balance = user?.points * rate;
+  const balance = Number(user?.points * rate) || 0;
   // const toNext = Math.max(0, user?.nextTierAt - user?.points);
   const toNext = 0;
 
@@ -16,8 +16,8 @@ export default function RewardsWallet({ brand, lang="ar", user }) {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <Card title={isRTL?"نقاطك":"Your points"} value={`${user?.points} ⭐`} />
-        <Card title={isRTL?"رصيد المحفظة (تقريبي)":"Wallet balance (approx.)"} value={`${balance} EGP`} />
+        <Card title={isRTL?"نقاطك":"Your points"} value={`${user?.points ?? 0 } ⭐`} />
+        <Card title={isRTL?"رصيد المحفظة (تقريبي)":"Wallet balance (approx.)"} value={`${balance ?? 0} EGP`} />
       </div>
 
       <div className="mt-3 text-sm">

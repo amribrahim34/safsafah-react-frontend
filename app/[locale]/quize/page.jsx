@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { BRAND } from '@/content/brand';
 import { COPY } from '@/content/copy';
 import { useDir } from '@/hooks/useDir';
-import { useBeautyQuestionnaire, useBeautyProfileSubmit } from '@/hooks/useBeautyQuestionnaire';
+import { useBeautyQuestionnaire, useBeautyProfileSubmit } from './_hooks/useBeautyQuestionnaire';
 
 // Layout components
 import PromoBar from '@/components/header/PromoBar';
@@ -109,7 +109,7 @@ export default function SkinCareQuize() {
 
       // Redirect to profile or home page after 1 second
       setTimeout(() => {
-        router.push('/profile');
+        router.push('/account');
       }, 1000);
     } catch (err) {
       console.error('Failed to submit beauty profile:', err);
