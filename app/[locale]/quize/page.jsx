@@ -27,7 +27,7 @@ import {
   IngredientsStep,
   QuizLoader,
   QuizError,
-} from '@/components/beauty-quiz';
+} from './_components';
 
 const TOTAL_STEPS = 3;
 
