@@ -63,14 +63,14 @@ export default function ProfilePage() {
             <OrdersList brand={BRAND} lang={lang} />
             <WishlistGrid brand={BRAND} lang={lang} />
             <BeautyProfileCard brand={BRAND} lang={lang} />
-            <RecentlyViewedStrip brand={BRAND} lang={lang} />
+            {/* <RecentlyViewedStrip brand={BRAND} lang={lang} /> */}
           </div>
 
           {/* RIGHT: account tools */}
           <aside className="space-y-6 lg:sticky lg:top-24">
             <RewardsWallet brand={BRAND} lang={lang} user={user} />
             <AddressesPayments brand={BRAND} lang={lang} />
-            <SettingsPanel brand={BRAND} lang={lang} user={user} />
+            {/* <SettingsPanel brand={BRAND} lang={lang} user={user} /> */}
             <SupportLinks brand={BRAND} lang={lang} />
           </aside>
         </div>

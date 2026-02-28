@@ -30,14 +30,14 @@ export interface PaginatedOrderItem {
   updatedAt: string;
   address: {
     id: number;
-    userId: number;
+    user_id: number;
     name: string | null;
     latitude: number;
     longitude: number;
     details: string;
     notes: string | null;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
   };
   items: Array<{
     id: number;
@@ -65,20 +65,25 @@ export interface PaginatedOrderItem {
 }
 
 /**
- * Paginated orders response
+ * Paginated orders response (Laravel paginator format)
  */
 export interface PaginatedOrdersResponse {
-  status: string;
-  orders: PaginatedOrderItem[];
-  pagination: {
-    currentPage: number;
-    pageSize: number;
-    totalElements: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrevious: boolean;
+  data: PaginatedOrderItem[];
+  links: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
   };
-  message: string;
+  meta: {
+    current_page: number;
+    from: number | null;
+    last_page: number;
+    path: string;
+    per_page: number;
+    to: number | null;
+    total: number;
+  };
 }
 
 /**
@@ -96,9 +101,9 @@ export interface OrdersState {
   paginatedOrders: PaginatedOrderItem[];
   pagination: {
     currentPage: number;
-    pageSize: number;
-    totalElements: number;
-    totalPages: number;
+    lastPage: number;
+    perPage: number;
+    total: number;
     hasNext: boolean;
     hasPrevious: boolean;
   } | null;
@@ -310,8 +315,16 @@ const ordersSlice = createSlice({
       })
       .addCase(fetchPaginatedOrders.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.paginatedOrders = action.payload.orders;
-        state.pagination = action.payload.pagination;
+        state.paginatedOrders = action.payload.data;
+        const { meta, links } = action.payload;
+        state.pagination = {
+          currentPage: meta.current_page,
+          lastPage: meta.last_page,
+          perPage: meta.per_page,
+          total: meta.total,
+          hasNext: links.next !== null,
+          hasPrevious: links.prev !== null,
+        };
         state.error = null;
       })
       .addCase(fetchPaginatedOrders.rejected, (state, action) => {

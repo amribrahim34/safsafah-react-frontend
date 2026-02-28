@@ -10,12 +10,12 @@ export default function SettingsPanel({ brand, lang="ar", user }) {
       <div className="text-lg font-extrabold mb-2">{isRTL?"الإعدادات":"Settings"}</div>
 
       <div className="grid gap-3">
-        <Row label={isRTL?"اللغة":"Language"}>
+        {/* <Row label={isRTL?"اللغة":"Language"}>
           <select value={language} onChange={(e)=>setLanguage(e.target.value)} className="rounded-xl border px-2 py-1.5">
             <option value="ar">العربية</option>
             <option value="en">English</option>
           </select>
-        </Row>
+        </Row> */}
 
         <Row label={isRTL?"الإشعارات":"Notifications"}>
           <label className="text-sm flex items-center gap-2"><input type="checkbox" checked={notif.sms} onChange={e=>setNotif({...notif,sms:e.target.checked})} /> SMS</label>
@@ -25,7 +25,7 @@ export default function SettingsPanel({ brand, lang="ar", user }) {
 
         <div className="flex gap-2">
           <button className="px-3 py-2 rounded-xl border text-sm">{isRTL?"تعديل البيانات":"Edit info"}</button>
-          <button className="px-3 py-2 rounded-xl border text-sm">{isRTL?"حذف الحساب":"Delete account"}</button>
+          {/* <button className="px-3 py-2 rounded-xl border text-sm">{isRTL?"حذف الحساب":"Delete account"}</button> */}
           <a href="/logout" className="px-3 py-2 rounded-xl text-white text-sm" style={{background:brand.primary}}>
             {isRTL?"تسجيل الخروج":"Logout"}
           </a>

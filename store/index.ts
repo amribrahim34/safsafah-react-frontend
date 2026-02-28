@@ -12,6 +12,7 @@ import cartReducer from './slices/cartsSlice';
 import ordersReducer from './slices/ordersSlice';
 import addressesReducer from './slices/addressesSlice';
 import wishlistReducer from './slices/wishlistSlice';
+import beautyProfileReducer from './slices/beautyProfileSlice';
 
 /**
  * Configure and create the Redux store
@@ -24,6 +25,7 @@ export const store = configureStore({
     orders: ordersReducer,
     addresses: addressesReducer,
     wishlist: wishlistReducer,
+    beautyProfile: beautyProfileReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
