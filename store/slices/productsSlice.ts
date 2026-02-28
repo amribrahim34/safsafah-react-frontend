@@ -102,6 +102,22 @@ export const fetchProductById = createAsyncThunk<
 });
 
 /**
+ * Async thunk for fetching a single product by slug (triggers loading state)
+ */
+export const fetchProductBySlug = createAsyncThunk<
+  Product,
+  string,
+  { rejectValue: string }
+>('products/fetchProductBySlug', async (slug, { rejectWithValue }) => {
+  try {
+    const response = await productsService.getProductBySlug(slug);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch product');
+  }
+});
+
+/**
  * Async thunk for silently refreshing a product in the background.
  * Updates currentProduct WITHOUT setting isLoadingProduct, so the page
  * never flashes back to the loading skeleton (used after wishlist toggle).
@@ -251,6 +267,22 @@ const productsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchProductById.rejected, (state, action) => {
+        state.isLoadingProduct = false;
+        state.error = action.payload || 'Failed to fetch product';
+      });
+
+    // Fetch single product by slug (with loading state)
+    builder
+      .addCase(fetchProductBySlug.pending, (state) => {
+        state.isLoadingProduct = true;
+        state.error = null;
+      })
+      .addCase(fetchProductBySlug.fulfilled, (state, action) => {
+        state.isLoadingProduct = false;
+        state.currentProduct = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchProductBySlug.rejected, (state, action) => {
         state.isLoadingProduct = false;
         state.error = action.payload || 'Failed to fetch product';
       });

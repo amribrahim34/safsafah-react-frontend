@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { BRAND } from "@/content/brand";
 import { COPY } from "@/content/copy";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchProductById } from "@/store/slices/productsSlice";
+import { fetchProductBySlug } from "@/store/slices/productsSlice";
 import { fetchCart } from "@/store/slices/cartsSlice";
 import { useProductCart } from "@/hooks/useProductCart";
 
@@ -59,7 +59,7 @@ function ErrorState({ lang, T, error }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ProductPage() {
-  const { id, locale } = useParams();
+  const { slug, locale } = useParams();
 
   // Derive lang from the locale URL segment, defaulting to "ar"
   const lang = locale === "en" ? "en" : "ar";
@@ -78,11 +78,11 @@ export default function ProductPage() {
   const { cartItem, isLoading: isCartLoading, handleAddToCart, handleIncrement, handleDecrement } =
     useProductCart(product);
 
-  // Fetch product + cart on mount / id change
+  // Fetch product + cart on mount / slug change
   useEffect(() => {
-    if (id) dispatch(fetchProductById(id));
+    if (slug) dispatch(fetchProductBySlug(slug));
     // dispatch(fetchCart());
-  }, [id, dispatch]);
+  }, [slug, dispatch]);
 
   // Find authenticated user's existing review
   const userReview = useMemo(() => {
@@ -119,7 +119,7 @@ export default function ProductPage() {
         userReview={userReview}
         onMiniCartOpen={() => setMiniCartOpen(true)}
         onShowReviews={() => setShowReviews(true)}
-        onReviewSuccess={() => dispatch(fetchProductById(id))}
+        onReviewSuccess={() => dispatch(fetchProductBySlug(slug))}
       />
 
       {/* Customer reviews panel */}

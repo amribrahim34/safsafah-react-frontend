@@ -2,9 +2,9 @@ import React from "react";
 import { IMG } from "@/content/images";
 
 const RV = [
-  { id:11, name:{en:"Barrier Cream", ar:"كريم الحاجز"}, price:760, img:IMG.cream },
-  { id:12, name:{en:"Vitamin C 15%", ar:"فيتامين سي 15%"}, price:830, img:IMG.bannerTall },
-  { id:13, name:{en:"SPF 50", ar:"واقي شمس 50"}, price:430, img:IMG.hero1 },
+  { id:11, slug:"barrier-cream", name:{en:"Barrier Cream", ar:"كريم الحاجز"}, price:760, img:IMG.cream },
+  { id:12, slug:"vitamin-c-15", name:{en:"Vitamin C 15%", ar:"فيتامين سي 15%"}, price:830, img:IMG.bannerTall },
+  { id:13, slug:"spf-50-sunscreen", name:{en:"SPF 50", ar:"واقي شمس 50"}, price:430, img:IMG.hero1 },
 ];
 
 export default function RecentlyViewedStrip({ brand, lang="ar" }) {
@@ -16,7 +16,7 @@ export default function RecentlyViewedStrip({ brand, lang="ar" }) {
       <div className="relative -mx-4 md:mx-0">
         <div className="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4">
           {RV.map(p=>(
-            <a key={p.id} href={`/product/${p.id}`}
+            <a key={p.id} href={`/product/${p.slug}`}
                className="snap-center min-w-[75%] max-w-[260px] md:min-w-[220px] rounded-2xl border border-neutral-200 overflow-hidden">
               <div className="h-36 overflow-hidden">
                 <img src={p.img} alt={isRTL?p.name.ar:p.name.en} className="w-full h-full object-cover" />

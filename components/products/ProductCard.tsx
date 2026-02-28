@@ -6,6 +6,8 @@ import { addToCart, updateCartItem, removeFromCart } from "@/store/slices/cartsS
 
 interface ProductCardProps {
   id: number;
+  slugAr?: string;
+  slugEn?: string;
   nameAr: string;
   nameEn: string;
   price: number;
@@ -21,6 +23,8 @@ interface ProductCardProps {
 
 export default function ProductCard({
   id,
+  slugAr,
+  slugEn,
   nameAr,
   nameEn,
   price,
@@ -156,7 +160,7 @@ export default function ProductCard({
 
   return (
     <Link
-      href={`/product/${id}`}
+      href={`/product/${lang === 'ar' ? (slugAr ?? id) : (slugEn ?? id)}`}
       className="block rounded-2xl bg-white border border-neutral-200 overflow-hidden hover:shadow-lg transition-shadow duration-200"
     >
       <img src={image} alt="product" className="w-full h-56 object-cover" loading="lazy" />

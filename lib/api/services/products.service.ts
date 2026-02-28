@@ -56,6 +56,16 @@ export const productsService = {
   },
 
   /**
+   * Fetches a single product by slug
+   * @param slug - The product slug
+   * @returns Product details
+   */
+  async getProductBySlug(slug: string): Promise<Product> {
+    const response = await get<any>(`/products/${slug}`);
+    return (response.data ?? response) as unknown as Product;
+  },
+
+  /**
    * Fetches products by brand
    * @param brandSlug - Brand identifier
    * @param filters - Additional filtering options

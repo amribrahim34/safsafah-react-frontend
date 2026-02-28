@@ -22,6 +22,8 @@ export interface ProductCategory {
 
 export interface Product {
   id: number;
+  slugAr?: string;
+  slugEn?: string;
   nameAr: string;
   nameEn: string;
   descriptionAr?: string;
