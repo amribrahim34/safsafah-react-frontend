@@ -43,7 +43,7 @@ export function useProductCart(product) {
 
     try {
       await dispatch(updateCartItem({
-        itemId: cartItem.productId,
+        itemId: cartItem.id,
         quantity: newQuantity
       })).unwrap();
     } catch (error) {
@@ -59,7 +59,7 @@ export function useProductCart(product) {
     // If quantity is 1, remove the item instead of decrementing
     if (currentQty <= 1) {
       try {
-        await dispatch(removeFromCart(cartItem.productId)).unwrap();
+        await dispatch(removeFromCart(cartItem.id)).unwrap();
       } catch (error) {
         console.error('Failed to remove from cart:', error);
       }
@@ -69,7 +69,7 @@ export function useProductCart(product) {
     const newQuantity = currentQty - 1;
     try {
       await dispatch(updateCartItem({
-        itemId: cartItem.productId,
+        itemId: cartItem.id,
         quantity: newQuantity
       })).unwrap();
     } catch (error) {
