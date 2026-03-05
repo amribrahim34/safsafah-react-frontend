@@ -7,7 +7,12 @@ interface MobileFilterDrawerProps {
   onClose: () => void;
   lang: string;
   brand: { primary: string; dark: string; light: string };
-  catalogFilters: { categories: any[]; brands: any[] };
+  catalogFilters: {
+    categories: any[];
+    brands: any[];
+    skinTypes: any[];
+    skinConcerns: any[];
+  };
   filterState: FilterState;
   onApply: () => void;
 }

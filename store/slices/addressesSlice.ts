@@ -78,7 +78,7 @@ const addressesSlice = createSlice({
       })
       .addCase(fetchAddresses.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.addresses = action.payload.data;
+        state.addresses = action.payload;
         state.error = null;
       })
       .addCase(fetchAddresses.rejected, (state, action) => {
