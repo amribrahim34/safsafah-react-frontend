@@ -138,7 +138,7 @@ export const productsService = {
     comment: string
   ): Promise<any> {
     const response = await post<any>('/reviews', {
-      productId,
+      product_id: productId,
       rating,
       comment,
     });

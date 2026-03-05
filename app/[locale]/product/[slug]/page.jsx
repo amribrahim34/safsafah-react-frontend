@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchProductBySlug } from "@/store/slices/productsSlice";
 import { fetchCart } from "@/store/slices/cartsSlice";
 import { useProductCart } from "@/hooks/useProductCart";
+import { productsService } from "@/lib/api/services/products.service";
 
 // Shared site chrome
 import PromoBar from "@/components/header/PromoBar";
@@ -73,22 +74,40 @@ export default function ProductPage() {
 
   const [showReviews, setShowReviews] = useState(false);
   const [miniCartOpen, setMiniCartOpen] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(false);
 
   // Cart operations for the sticky ATC bar
   const { cartItem, isLoading: isCartLoading, handleAddToCart, handleIncrement, handleDecrement } =
     useProductCart(product);
 
-  // Fetch product + cart on mount / slug change
+  // Fetch product on mount / slug change
   useEffect(() => {
     if (slug) dispatch(fetchProductBySlug(slug));
-    // dispatch(fetchCart());
   }, [slug, dispatch]);
 
+  // Fetch reviews whenever the product ID becomes available
+  useEffect(() => {
+    if (!product?.id) return;
+    setIsLoadingReviews(true);
+    productsService
+      .getProductReviews(product.id)
+      .then((res) => {
+        // API may return { data: [...] } or a plain array
+        setReviews(Array.isArray(res) ? res : res.data ?? []);
+      })
+      .catch(() => setReviews([]))
+      .finally(() => setIsLoadingReviews(false));
+  }, [product?.id]);
+
   // Find authenticated user's existing review
+  // The API may return userId (camelCase) or user_id (snake_case)
   const userReview = useMemo(() => {
-    if (!user || !product?.reviews) return null;
-    return product.reviews.find((r) => r.userId === user.id) ?? null;
-  }, [user, product?.reviews]);
+    if (!user || !reviews.length) return null;
+    return reviews.find(
+      (r) => r.userId === user.id || r.user_id?.toString() === user.id
+    ) ?? null;
+  }, [user, reviews]);
 
   // ─── States ───────────────────────────────────────────────────────────────
   if (isLoadingProduct) return <LoadingState lang={lang} T={T} />;
@@ -127,6 +146,8 @@ export default function ProductPage() {
         brand={BRAND}
         lang={lang}
         product={product}
+        reviews={reviews}
+        isLoadingReviews={isLoadingReviews}
         defaultOpen={showReviews}
       />
 

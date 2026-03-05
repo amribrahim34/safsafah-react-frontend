@@ -35,6 +35,7 @@ export interface Product {
   sku: string;
   canAddRating?: boolean;
   averageRating?: number;
+  ratingCount?: number;
   reviews?: ProductReview[];
   tags?: string[];
   images?: string[];

@@ -35,8 +35,9 @@ export default function AddReview({ product, brand, lang, userReview, onSuccess 
     }
   }, [userReview]);
 
-  // Only render for purchasers who can rate
-  if (!product?.canAddRating) return null;
+  // Show unless the backend explicitly says the user cannot rate (e.g. not a buyer)
+  // canAddRating === undefined means the flag wasn't returned — still allow it
+  if (product?.canAddRating === false) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
