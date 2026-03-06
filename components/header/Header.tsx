@@ -10,6 +10,7 @@ import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
 import logo from "../../assets/safsafah-logo.png";
 import { useState, useEffect } from "react";
 import { env } from "@/config";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 interface HeaderProps {
   brand: {
@@ -223,6 +224,11 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
                 </button>
               </div>
             )}
+
+            {/* Language switcher */}
+            <div className="mt-6 pt-6 border-t border-neutral-200">
+              <LanguageSwitcher className="w-full px-4 py-3 text-lg justify-center" />
+            </div>
           </nav>
         </div>
       </div>
@@ -282,6 +288,11 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
 
         {/* Actions (account/cart) — don't shrink, keep tight */}
         <div className="flex items-center gap-2 md:gap-3 shrink-0 order-4">
+          {/* Language switcher — desktop only */}
+          <div className="hidden md:flex">
+            <LanguageSwitcher />
+          </div>
+
           {/* Account icon with click dropdown - Only show if authenticated */}
           {mounted && isAuthenticated && (
             <div className="relative profile-dropdown-container">
