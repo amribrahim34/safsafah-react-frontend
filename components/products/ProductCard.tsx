@@ -10,6 +10,8 @@ interface ProductCardProps {
   slugEn?: string;
   nameAr: string;
   nameEn: string;
+  brandNameAr?: string;
+  brandNameEn?: string;
   price: number;
   rating?: number;
   image: string;
@@ -27,6 +29,8 @@ export default function ProductCard({
   slugEn,
   nameAr,
   nameEn,
+  brandNameAr,
+  brandNameEn,
   price,
   rating = 0,
   image,
@@ -165,7 +169,14 @@ export default function ProductCard({
     >
       <img src={image} alt="product" className="w-full h-56 object-cover" loading="lazy" />
       <div className="p-3">
-        <div className="font-semibold min-h-[3rem]">{lang === "ar" ? nameAr : nameEn}</div>
+        {/* Brand name */}
+        {(brandNameAr || brandNameEn) && (
+          <div className="text-xs text-neutral-400 mb-0.5">
+            {lang === "ar" ? brandNameAr : brandNameEn}
+          </div>
+        )}
+
+        <div className="font-semibold">{lang === "ar" ? nameAr : nameEn}</div>
         <div className="mt-1 flex items-center gap-1 text-amber-500">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
@@ -175,23 +186,25 @@ export default function ProductCard({
           ))}
           <span className="ms-1 text-xs text-neutral-600">{rating}</span>
         </div>
-        <div className="mt-2 flex items-center justify-between">
-          <div className="font-extrabold">{priceFmt}</div>
+        {/* Price row */}
+        <div className="mt-2 font-extrabold">{priceFmt}</div>
 
-          {/* Show Add button if not in cart */}
+        {/* Cart controls — full width on mobile, inline from md */}
+        <div className="mt-2">
           {!cartItem ? (
+            /* Add to cart button */
             <button
               onClick={handleAddToCart}
               disabled={isLoading}
-              className="rounded-xl text-white text-sm px-3 py-2 hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="w-full rounded-xl text-white text-sm px-3 py-2 hover:opacity-90 transition-opacity disabled:opacity-50"
               style={{ background: brand.primary }}
             >
-              {isLoading ? (lang === "ar" ? "..." : "...") : (lang === "ar" ? "أضف" : "Add")}
+              {isLoading ? "..." : (lang === "ar" ? "أضف للسلة" : "Add to cart")}
             </button>
           ) : (
-            /* Show quantity controls if in cart */
+            /* Quantity controls */
             <div
-              className="flex items-center gap-2 border rounded-xl overflow-hidden"
+              className="flex items-center gap-2 border rounded-xl overflow-hidden w-full justify-between"
               style={{ borderColor: brand.primary }}
               onClick={(e) => e.preventDefault()}
             >
