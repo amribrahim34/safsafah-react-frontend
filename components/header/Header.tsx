@@ -2,7 +2,7 @@
 
 import { Search, User2, ShoppingBag, LogOut, X, Menu, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
 import { removeFromCart, updateCartItem } from "@/store/slices/cartsSlice";
@@ -23,6 +23,7 @@ interface HeaderProps {
 export default function Header({ brand, searchPlaceholder }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const lang = useLocale(); // Get locale from URL
 
@@ -35,7 +36,12 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('searchQuery') ?? '');
+
+  // Keep the input in sync with the URL param (e.g. on back/forward navigation)
+  useEffect(() => {
+    setSearchQuery(searchParams.get('searchQuery') ?? '');
+  }, [searchParams]);
 
   useEffect(() => { setMounted(true); }, []);
 
