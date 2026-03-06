@@ -35,6 +35,7 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -78,6 +79,18 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
     { label: isRTL ? "من نحن" : "About", path: "/about" },
     { label: isRTL ? "تواصل معنا" : "Contact", path: "/contact" }
   ];
+
+  const handleSearch = () => {
+    const trimmed = searchQuery.trim();
+    const path = trimmed
+      ? `/catalog?searchQuery=${encodeURIComponent(trimmed)}`
+      : '/catalog';
+    router.push(getLocalizedPath(path, lang));
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') handleSearch();
+  };
 
   const handleLogout = async () => {
     try {
@@ -241,16 +254,23 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
 
         {/* Fluid search: grows but capped; min width guard */}
         <div className="flex-1 max-w-[760px] min-w-[260px] hidden md:block order-3">
-          <div className="relative">
-            <Search
-              className={`w-4 h-4 absolute top-1/2 -translate-y-1/2 opacity-60 ${isRTL ? "right-3" : "left-3"}`}
-            />
+          <div className={`flex overflow-hidden rounded-2xl border border-neutral-200 bg-white/80 focus-within:ring-2`}
+               style={{ '--tw-ring-color': brand.primary } as React.CSSProperties}>
             <input
-              className={`w-full rounded-2xl border border-neutral-200 bg-white/80 px-4 py-2
-                          focus:outline-none focus:ring-2 ${isRTL ? "pr-9" : "pl-9"}`}
-              style={{ outlineColor: brand.primary }}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              className="flex-1 bg-transparent px-4 py-2 focus:outline-none text-sm"
               placeholder={searchPlaceholder}
             />
+            <button
+              onClick={handleSearch}
+              aria-label={isRTL ? 'بحث' : 'Search'}
+              className="flex items-center justify-center w-10 shrink-0 text-white transition-opacity hover:opacity-90"
+              style={{ background: brand.primary }}
+            >
+              <Search className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
@@ -420,14 +440,23 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
 
       {/* Mobile search — RTL-aware icon/padding */}
       <div className="md:hidden px-4 pb-3">
-        <div className="relative">
-          <Search className={`w-5 h-5 absolute top-1/2 -translate-y-1/2 opacity-60 ${isRTL ? "right-3" : "left-3"}`} />
+        <div className={`flex overflow-hidden rounded-2xl border border-neutral-200 bg-white focus-within:ring-2 ${isRTL ? 'flex-row-reverse' : ''}`}
+             style={{ '--tw-ring-color': brand.primary } as React.CSSProperties}>
           <input
-            className={`w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3
-                        focus:outline-none focus:ring-2 ${isRTL ? "pr-10" : "pl-10"}`}
-            style={{ outlineColor: brand.primary }}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
+            className="flex-1 bg-transparent px-4 py-3 focus:outline-none text-sm"
             placeholder={searchPlaceholder}
           />
+          <button
+            onClick={handleSearch}
+            aria-label={isRTL ? 'بحث' : 'Search'}
+            className="flex items-center justify-center w-12 shrink-0 text-white transition-opacity hover:opacity-90"
+            style={{ background: brand.primary }}
+          >
+            <Search className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </header>
