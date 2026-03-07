@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Star, Plus, Minus, Trash2 } from "lucide-react";
+import { Star, Plus, Minus, Trash2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart, updateCartItem, removeFromCart } from "@/store/slices/cartsSlice";
@@ -16,6 +16,7 @@ interface ProductCardProps {
   rating?: number;
   image: string;
   lang: string;
+  isRecommended?: boolean;
   brand: {
     primary: string;
     dark: string;
@@ -35,6 +36,7 @@ export default function ProductCard({
   rating = 0,
   image,
   lang,
+  isRecommended = false,
   brand
 }: ProductCardProps) {
   const dispatch = useAppDispatch();
@@ -165,9 +167,25 @@ export default function ProductCard({
   return (
     <Link
       href={`/product/${lang === 'ar' ? (slugAr ?? id) : (slugEn ?? id)}`}
-      className="flex flex-col rounded-2xl bg-white border border-neutral-200 overflow-hidden hover:shadow-lg transition-shadow duration-200"
+      className="flex flex-col rounded-2xl bg-white overflow-hidden hover:shadow-lg transition-shadow duration-200"
+      style={{
+        border: isRecommended ? `2px solid ${brand.primary}` : "1px solid #e5e7eb",
+      }}
     >
-      <img src={image} alt="product" className="w-full h-36 sm:h-56 object-cover" loading="lazy" />
+      {/* Product image with optional recommended badge */}
+      <div className="relative">
+        <img src={image} alt="product" className="w-full h-36 sm:h-56 object-cover" loading="lazy" />
+
+        {isRecommended && (
+          <div
+            className="absolute top-2 end-2 flex items-center gap-1 text-white text-xs font-bold px-2 py-1 rounded-full shadow"
+            style={{ backgroundColor: brand.primary }}
+          >
+            <Sparkles className="w-3 h-3" />
+            <span>{lang === "ar" ? "موصى به" : "Recommended"}</span>
+          </div>
+        )}
+      </div>
       <div className="p-2 sm:p-3 flex flex-col flex-1">
         {/* Brand name */}
         {(brandNameAr || brandNameEn) && (
