@@ -1,6 +1,7 @@
 'use client';
 
 import Stars from "@/components/ui/Stars";
+import ProductBadges from "./ProductBadges";
 import type { Product } from '@/types/models/product';
 import type { BrandColors } from '../types';
 
@@ -81,6 +82,9 @@ export default function ProductMeta({ product, brand, lang, priceFmt, onShowRevi
       <div className="mt-2 text-xs text-neutral-500">
         {lang === "ar" ? "رمز المنتج: " : "SKU: "}{product.sku}
       </div>
+
+      {/* Active ingredients & skin type badges */}
+      <ProductBadges product={product} lang={lang} />
     </div>
   );
 }

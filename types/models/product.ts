@@ -39,6 +39,7 @@ export interface Product {
   reviews?: ProductReview[];
   tags?: string[];
   images?: string[];
+  activeIngredients?: { id: number; nameAr: string; nameEn: string }[];
   skinTypes?: string[];
   skinConcerns?: string[];
   onSale?: boolean;
