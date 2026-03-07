@@ -165,10 +165,10 @@ export default function ProductCard({
   return (
     <Link
       href={`/product/${lang === 'ar' ? (slugAr ?? id) : (slugEn ?? id)}`}
-      className="block rounded-2xl bg-white border border-neutral-200 overflow-hidden hover:shadow-lg transition-shadow duration-200"
+      className="flex flex-col rounded-2xl bg-white border border-neutral-200 overflow-hidden hover:shadow-lg transition-shadow duration-200"
     >
-      <img src={image} alt="product" className="w-full h-56 object-cover" loading="lazy" />
-      <div className="p-3">
+      <img src={image} alt="product" className="w-full h-36 sm:h-56 object-cover" loading="lazy" />
+      <div className="p-2 sm:p-3 flex flex-col flex-1">
         {/* Brand name */}
         {(brandNameAr || brandNameEn) && (
           <div className="text-xs text-neutral-400 mb-0.5">
@@ -176,21 +176,27 @@ export default function ProductCard({
           </div>
         )}
 
-        <div className="font-semibold">{lang === "ar" ? nameAr : nameEn}</div>
-        <div className="mt-1 flex items-center gap-1 text-amber-500">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star
-              key={i}
-              className={`w-4 h-4 ${i < Math.round(rating) ? "fill-current" : "opacity-30"}`}
-            />
-          ))}
-          <span className="ms-1 text-xs text-neutral-600">{rating}</span>
+        {/* Name — grows to fill available space, pushing everything below down */}
+        <div className="flex-1">
+          <div className="font-semibold">{lang === "ar" ? nameAr : nameEn}</div>
         </div>
-        {/* Price row */}
-        <div className="mt-2 font-extrabold">{priceFmt}</div>
 
-        {/* Cart controls — full width on mobile, inline from md */}
-        <div className="mt-2">
+        {/* Stars + price + cart — always pinned to the bottom */}
+        <div className="mt-auto pt-2">
+          {/* Stars */}
+          <div className="flex items-center gap-1 text-amber-500 mb-1">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                className={`w-4 h-4 ${i < Math.round(rating) ? "fill-current" : "opacity-30"}`}
+              />
+            ))}
+            <span className="ms-1 text-xs text-neutral-600">{rating}</span>
+          </div>
+
+          {/* Price */}
+          <div className="font-extrabold mb-2">{priceFmt}</div>
+
           {!cartItem ? (
             /* Add to cart button */
             <button
@@ -199,7 +205,7 @@ export default function ProductCard({
               className="w-full rounded-xl text-white text-sm px-3 py-2 hover:opacity-90 transition-opacity disabled:opacity-50"
               style={{ background: brand.primary }}
             >
-              {isLoading ? "..." : (lang === "ar" ? "أضف للسلة" : "Add to cart")}
+              {isLoading ? "..." : (lang === "ar" ? "أضف" : <><span className="sm:hidden">Add</span><span className="hidden sm:inline">Add to cart</span></>)}
             </button>
           ) : (
             /* Quantity controls */
