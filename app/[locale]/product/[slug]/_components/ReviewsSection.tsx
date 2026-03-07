@@ -3,22 +3,33 @@
 import React, { useState } from "react";
 import RatingBreakdown from "./RatingBreakdown";
 import Reviews from "./Reviews";
+import type { Product } from '@/types/models/product';
+import type { BrandColors, LocalReview } from '../types';
+
+interface ReviewsSectionProps {
+  brand: BrandColors;
+  lang: string;
+  product: Product;
+  reviews?: LocalReview[];
+  isLoadingReviews?: boolean;
+  defaultOpen?: boolean;
+}
 
 /**
  * ReviewsSection
  * Collapsible "Customer reviews" panel showing rating breakdown + review cards.
- *
- * @param {Object}  brand
- * @param {string}  lang            - "ar" | "en"
- * @param {Object}  product
- * @param {Array}   reviews         - fetched from /products/{id}/reviews
- * @param {boolean} isLoadingReviews
- * @param {boolean} defaultOpen     - whether the section is open on mount
  */
-export default function ReviewsSection({ brand, lang, product, reviews = [], isLoadingReviews = false, defaultOpen = false }) {
+export default function ReviewsSection({
+  brand,
+  lang,
+  product,
+  reviews = [],
+  isLoadingReviews = false,
+  defaultOpen = false,
+}: ReviewsSectionProps) {
   const [open, setOpen] = useState(defaultOpen);
 
-  const rating = product.averageRating?.parsedValue ?? product.averageRating ?? 0;
+  const rating = product.averageRating ?? 0;
   const reviewCount = reviews.length || product.ratingCount || 0;
 
   // Hide the section only if we know for certain there are no reviews
@@ -53,7 +64,7 @@ export default function ReviewsSection({ brand, lang, product, reviews = [], isL
                 lang={lang}
                 rating={rating}
                 count={reviewCount}
-                ratingDistribution={product.ratingDistribution}
+                ratingDistribution={undefined}
               />
             </div>
             <div className="md:col-span-2">

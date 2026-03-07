@@ -1,22 +1,30 @@
 'use client';
 
 import React, { useRef, useState } from "react";
+import type { BrandColors } from '../types';
+
+interface GalleryImage {
+  src: string;
+  alt: string;
+}
+
+interface ImageGalleryProps {
+  images: GalleryImage[];
+  brand: BrandColors;
+}
 
 /**
  * ImageGallery
  * Renders a horizontally-scrollable snap gallery with thumbnail navigation.
- *
- * @param {Array<{src: string, alt: string}>} images
- * @param {Object} brand
  */
-export default function ImageGallery({ images, brand }) {
-  const scroller = useRef(null);
+export default function ImageGallery({ images, brand: _brand }: ImageGalleryProps) {
+  const scroller = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
-  const goTo = (index) => {
+  const goTo = (index: number) => {
     setActive(index);
     scroller.current?.scrollTo({
-      left: index * scroller.current.clientWidth,
+      left: index * (scroller.current?.clientWidth ?? 0),
       behavior: "smooth",
     });
   };

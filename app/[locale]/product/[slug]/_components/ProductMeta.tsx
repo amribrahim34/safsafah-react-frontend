@@ -1,26 +1,30 @@
 'use client';
 
 import Stars from "@/components/ui/Stars";
+import type { Product } from '@/types/models/product';
+import type { BrandColors } from '../types';
+
+interface ProductMetaProps {
+  product: Product;
+  brand: BrandColors;
+  lang: string;
+  priceFmt: (value: number) => string;
+  onShowReviews: () => void;
+}
 
 /**
  * ProductMeta
  * Displays brand / rating / price / SKU for a product.
- *
- * @param {Object}   product
- * @param {Object}   brand         - site brand config (used for primary color)
- * @param {string}   lang          - "ar" | "en"
- * @param {Function} priceFmt      - Intl.NumberFormat.format
- * @param {Function} onShowReviews - scrolls / opens the reviews section
  */
-export default function ProductMeta({ product, brand, lang, priceFmt, onShowReviews }) {
+export default function ProductMeta({ product, brand, lang, priceFmt, onShowReviews }: ProductMetaProps) {
   const title     = lang === "ar" ? product.nameAr     : product.nameEn;
   const brandName = lang === "ar" ? product.brand?.nameAr : product.brand?.nameEn;
-  const price     = product.price?.parsedValue ?? product.price ?? 0;
+  const price     = typeof product.price === "number" ? product.price : 0;
 
   // The API returns `rating` as a numeric string (e.g. "3.0000").
   // Fall back through common field names so the component is resilient to
   // both the raw API shape and any future normalisation layer.
-  const rating      = Number(product.rating ?? product.averageRating?.parsedValue ?? product.averageRating ?? 0);
+  const rating      = Number(product.averageRating ?? 0);
   const reviewCount = product.ratingCount ?? product.reviews?.length ?? 0;
 
   return (

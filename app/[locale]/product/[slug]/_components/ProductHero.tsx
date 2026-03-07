@@ -5,19 +5,23 @@ import ImageGallery from "./ImageGallery";
 import AddToCartControls from "./AddToCartControls";
 import AddReview from "./AddReview";
 import ProductMeta from "./ProductMeta";
+import type { Product } from '@/types/models/product';
+import type { BrandColors, LocalReview } from '../types';
+
+interface ProductHeroProps {
+  product: Product;
+  brand: BrandColors;
+  lang: string;
+  isAuthenticated: boolean;
+  userReview?: LocalReview | null;
+  onMiniCartOpen: () => void;
+  onShowReviews: () => void;
+  onReviewSuccess: () => void;
+}
 
 /**
  * ProductHero
  * Two-column section: image gallery on the left, product info on the right.
- *
- * @param {Object}   product
- * @param {Object}   brand
- * @param {string}   lang            - "ar" | "en"
- * @param {boolean}  isAuthenticated
- * @param {Object}   userReview      - existing user review (or null)
- * @param {Function} onMiniCartOpen
- * @param {Function} onShowReviews
- * @param {Function} onReviewSuccess
  */
 export default function ProductHero({
   product,
@@ -28,7 +32,7 @@ export default function ProductHero({
   onMiniCartOpen,
   onShowReviews,
   onReviewSuccess,
-}) {
+}: ProductHeroProps) {
   const priceFmt = new Intl.NumberFormat(
     lang === "ar" ? "ar-EG" : "en-EG",
     { style: "currency", currency: "EGP", maximumFractionDigits: 0 }
@@ -37,7 +41,7 @@ export default function ProductHero({
   const title = lang === "ar" ? product.nameAr : product.nameEn;
   const description = lang === "ar" ? product.descriptionAr : product.descriptionEn;
   const images = product.image
-    ? [{ src: product.image, alt: title }]
+    ? [{ src: product.image, alt: title ?? "" }]
     : [];
 
   return (

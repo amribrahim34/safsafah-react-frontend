@@ -2,23 +2,27 @@
 
 import React, { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
+import type { BrandColors } from '../types';
+import type { CartItem } from '@/types/models/cart';
 
 const SCROLL_THRESHOLD = 500;
+
+interface StickyATCBarProps {
+  brand: BrandColors;
+  lang: string;
+  title: string;
+  price: number;
+  onAdd: () => void;
+  cartItem?: CartItem;
+  onIncrement: () => void;
+  onDecrement: () => void;
+  isLoading: boolean;
+}
 
 /**
  * StickyATCBar
  * Fixed bottom bar that appears after the user scrolls past the main ATC button.
  * Shows product title + price, and either an ATC button or a quantity stepper.
- *
- * @param {Object}   brand
- * @param {string}   lang       - "ar" | "en"
- * @param {string}   title      - Localised product title
- * @param {number}   price      - Numeric price
- * @param {Function} onAdd
- * @param {Object}   cartItem   - Current cart item (or undefined)
- * @param {Function} onIncrement
- * @param {Function} onDecrement
- * @param {boolean}  isLoading
  */
 export default function StickyATCBar({
   brand,
@@ -30,7 +34,7 @@ export default function StickyATCBar({
   onIncrement,
   onDecrement,
   isLoading,
-}) {
+}: StickyATCBarProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

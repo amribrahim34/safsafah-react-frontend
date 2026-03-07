@@ -4,34 +4,50 @@ import React from "react";
 import { Trash2, Heart } from "lucide-react";
 import { useProductCart } from "@/hooks/useProductCart";
 import { useWishlist } from "@/hooks/useWishlist";
+import type { Product } from '@/types/models/product';
+import type { BrandColors } from '../types';
+
+interface AddToCartControlsProps {
+  product: Product;
+  brand: BrandColors;
+  lang: string;
+  onSuccess?: () => void;
+}
 
 /**
  * AddToCartControls
  * Shows an "Add to cart" button (or quantity stepper when already in cart)
  * alongside a wishlist toggle button.
- *
- * @param {Object} product
- * @param {Object} brand
- * @param {string} lang - "ar" | "en"
- * @param {Function} onSuccess - called after item is added to cart
  */
-export default function AddToCartControls({ product, brand, lang, onSuccess }) {
+export default function AddToCartControls({ product, brand, lang, onSuccess }: AddToCartControlsProps) {
   const {
     cartItem,
     isLoading,
     handleAddToCart,
     handleIncrement,
     handleDecrement,
-  } = useProductCart(product);
+  } = useProductCart(product) as {
+    cartItem: { id: string; quantity: number } | undefined;
+    isLoading: boolean;
+    handleAddToCart: (cb?: () => void) => void;
+    handleIncrement: () => void;
+    handleDecrement: () => void;
+  };
 
   const {
     isInWishlist,
     isLoading: isWishlistLoading,
     handleToggleWishlist,
-  } = useWishlist(product);
+  } = useWishlist(product) as {
+    isInWishlist: boolean;
+    isLoading: boolean;
+    handleToggleWishlist: () => void;
+  };
 
   const isOutOfStock = product.stock != null && product.stock < 1;
-  const atStockLimit = Boolean(product.stock && cartItem?.quantity >= product.stock);
+  const atStockLimit = Boolean(
+    product.stock && cartItem && cartItem.quantity >= product.stock
+  );
 
   return (
     <div className="mt-5">

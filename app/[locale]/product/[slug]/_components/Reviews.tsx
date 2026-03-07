@@ -2,11 +2,16 @@
 
 import React, { useState } from "react";
 import { Star, User } from "lucide-react";
+import type { BrandColors, LocalReview } from '../types';
+
+interface StarRowProps {
+  rating: number;
+}
 
 /**
  * StarRow – a row of ★ icons for a given rating.
  */
-function StarRow({ rating }) {
+function StarRow({ rating }: StarRowProps) {
   return (
     <div className="flex items-center gap-1 text-amber-500">
       {Array.from({ length: 5 }).map((_, i) => (
@@ -19,16 +24,21 @@ function StarRow({ rating }) {
   );
 }
 
+interface ReviewCardProps {
+  review: LocalReview;
+  lang: string;
+}
+
 /**
  * ReviewCard – a single review item.
  */
-function ReviewCard({ review, lang }) {
+function ReviewCard({ review, lang }: ReviewCardProps) {
   const [expanded, setExpanded] = useState(false);
   const date = new Date(review.createdAt).toLocaleDateString(
     lang === "ar" ? "ar-EG" : "en-EG",
     { day: "2-digit", month: "short", year: "numeric" }
   );
-  const isLong = review.comment?.length > 120;
+  const isLong = (review.comment?.length ?? 0) > 120;
 
   return (
     <article className="snap-center flex-shrink-0 w-[85%] max-w-sm md:max-w-none md:min-w-[260px] rounded-2xl border border-neutral-200 p-3 bg-white">
@@ -64,15 +74,17 @@ function ReviewCard({ review, lang }) {
   );
 }
 
+interface ReviewsProps {
+  brand: BrandColors;
+  lang: string;
+  reviews?: LocalReview[];
+}
+
 /**
  * Reviews
  * Horizontally-scrollable list of customer reviews.
- *
- * @param {Object} brand
- * @param {string} lang     - "ar" | "en"
- * @param {Array}  reviews
  */
-export default function Reviews({ brand, lang, reviews = [] }) {
+export default function Reviews({ lang, reviews = [] }: ReviewsProps) {
   if (!reviews.length) {
     return (
       <div className="text-center py-8 text-neutral-500">

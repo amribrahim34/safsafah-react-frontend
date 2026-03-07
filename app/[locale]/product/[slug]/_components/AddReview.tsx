@@ -3,25 +3,35 @@
 import React, { useState, useEffect } from "react";
 import { Star } from "lucide-react";
 import { productsService } from "@/lib/api/services/products.service";
+import type { Product } from '@/types/models/product';
+import type { BrandColors } from '../types';
+
+interface UserReview {
+  id: string | number;
+  rating?: number;
+  comment?: string;
+}
+
+interface AddReviewProps {
+  product: Product;
+  brand: BrandColors;
+  lang: string;
+  userReview?: UserReview | null;
+  onSuccess?: () => void;
+}
 
 /**
  * AddReview
  * Lets an authenticated user write or edit a review for the product.
  * Only renders if `product.canAddRating` is true (set by the backend).
- *
- * @param {Object}   product
- * @param {Object}   brand
- * @param {string}   lang        - "ar" | "en"
- * @param {Object}   userReview  - existing review (if any)
- * @param {Function} onSuccess   - called after successful submit/update
  */
-export default function AddReview({ product, brand, lang, userReview, onSuccess }) {
+export default function AddReview({ product, brand, lang, userReview, onSuccess }: AddReviewProps) {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
 
   const isEditing = Boolean(userReview);
@@ -36,10 +46,9 @@ export default function AddReview({ product, brand, lang, userReview, onSuccess 
   }, [userReview]);
 
   // Show unless the backend explicitly says the user cannot rate (e.g. not a buyer)
-  // canAddRating === undefined means the flag wasn't returned — still allow it
   if (product?.canAddRating === false) return null;
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);

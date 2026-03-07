@@ -2,11 +2,19 @@
 
 import React from "react";
 import { Star } from "lucide-react";
+import type { BrandColors } from '../types';
+
+interface RatingBarProps {
+  label: number;
+  count: number;
+  total: number;
+  brand: BrandColors;
+}
 
 /**
  * RatingBar – a single labelled progress bar in the breakdown.
  */
-function RatingBar({ label, count, total, brand }) {
+function RatingBar({ label, count, total, brand }: RatingBarProps) {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   return (
     <div className="flex items-center gap-2 text-sm">
@@ -23,17 +31,25 @@ function RatingBar({ label, count, total, brand }) {
   );
 }
 
+interface RatingBreakdownProps {
+  brand: BrandColors;
+  lang: string;
+  rating: number;
+  count: number;
+  ratingDistribution?: Record<number, number>;
+}
+
 /**
  * RatingBreakdown
  * Shows the average score + star distribution bars.
- *
- * @param {Object} brand
- * @param {string} lang       - "ar" | "en"
- * @param {number} rating     - Average rating (0–5)
- * @param {number} count      - Total number of reviews
- * @param {Object} ratingDistribution - e.g. { 5: 10, 4: 3, … }
  */
-export default function RatingBreakdown({ brand, lang, rating, count, ratingDistribution = {} }) {
+export default function RatingBreakdown({
+  brand,
+  lang,
+  rating,
+  count,
+  ratingDistribution = {},
+}: RatingBreakdownProps) {
   return (
     <div>
       {/* Big number + stars */}
