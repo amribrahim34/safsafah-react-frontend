@@ -49,6 +49,7 @@ export default function ProductHero({
       <div>
         <ProductMeta
           product={product}
+          brand={brand}
           lang={lang}
           priceFmt={priceFmt}
           onShowReviews={onShowReviews}

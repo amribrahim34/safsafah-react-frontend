@@ -4,18 +4,18 @@ import Stars from "@/components/ui/Stars";
 
 /**
  * ProductMeta
- * Displays brand / category / rating / price / SKU for a product.
+ * Displays brand / rating / price / SKU for a product.
  *
  * @param {Object}   product
+ * @param {Object}   brand         - site brand config (used for primary color)
  * @param {string}   lang          - "ar" | "en"
  * @param {Function} priceFmt      - Intl.NumberFormat.format
  * @param {Function} onShowReviews - scrolls / opens the reviews section
  */
-export default function ProductMeta({ product, lang, priceFmt, onShowReviews }) {
-  const title        = lang === "ar" ? product.nameAr       : product.nameEn;
-  const brandName    = lang === "ar" ? product.brand?.nameAr   : product.brand?.nameEn;
-  const categoryName = lang === "ar" ? product.category?.name_ar : product.category?.name_en;
-  const price        = product.price?.parsedValue ?? product.price ?? 0;
+export default function ProductMeta({ product, brand, lang, priceFmt, onShowReviews }) {
+  const title     = lang === "ar" ? product.nameAr     : product.nameEn;
+  const brandName = lang === "ar" ? product.brand?.nameAr : product.brand?.nameEn;
+  const price     = product.price?.parsedValue ?? product.price ?? 0;
 
   // The API returns `rating` as a numeric string (e.g. "3.0000").
   // Fall back through common field names so the component is resilient to
@@ -25,10 +25,15 @@ export default function ProductMeta({ product, lang, priceFmt, onShowReviews }) 
 
   return (
     <div>
-      {/* Brand · Category */}
-      <div className="text-sm text-neutral-600 mb-1">
-        {brandName} {categoryName ? `· ${categoryName}` : ""}
-      </div>
+      {/* Brand */}
+      {brandName && (
+        <div
+          className="text-sm font-bold mb-1"
+          style={{ color: brand?.primary }}
+        >
+          {brandName}
+        </div>
+      )}
 
       {/* Title */}
       <h1 className="text-2xl md:text-3xl font-extrabold">{title}</h1>
