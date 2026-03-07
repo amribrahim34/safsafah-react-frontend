@@ -1,16 +1,19 @@
 'use client';
 
-import { Search, User2, ShoppingBag, LogOut, X, Menu, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { logout } from "@/store/slices/authSlice";
-import { removeFromCart, updateCartItem } from "@/store/slices/cartsSlice";
-import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
-import logo from "../../assets/safsafah-logo.png";
-import { useState, useEffect, Suspense } from "react";
-import { env } from "@/config";
-import LanguageSwitcher from "./LanguageSwitcher";
+import { Menu } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { logout } from '@/store/slices/authSlice';
+import { useLocale, getLocalizedPath } from '@/lib/locale-navigation';
+import logo from '../../assets/safsafah-logo.png';
+import { useState, useEffect, Suspense } from 'react';
+import LanguageSwitcher from './LanguageSwitcher';
+import DesktopNav from './DesktopNav';
+import SearchBar from './SearchBar';
+import ProfileDropdown from './ProfileDropdown';
+import CartDropdown from './CartDropdown';
+import MobileMenuDrawer from './MobileMenuDrawer';
 
 interface HeaderProps {
   brand: {
@@ -22,16 +25,12 @@ interface HeaderProps {
 }
 
 function HeaderContent({ brand, searchPlaceholder }: HeaderProps) {
-  const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
-  const lang = useLocale(); // Get locale from URL
+  const lang = useLocale();
 
-  // Get auth state from Redux
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-  const cart = useAppSelector((state) => state.cart.cart);
-  const isCartLoading = useAppSelector((state) => state.cart.isLoading);
 
   const [mounted, setMounted] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -39,444 +38,144 @@ function HeaderContent({ brand, searchPlaceholder }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('searchQuery') ?? '');
 
-  // Keep the input in sync with the URL param (e.g. on back/forward navigation)
+  const isRTL = lang === 'ar';
+
+  // Keep search input in sync with URL params (e.g. on back/forward navigation)
   useEffect(() => {
     setSearchQuery(searchParams.get('searchQuery') ?? '');
   }, [searchParams]);
 
   useEffect(() => { setMounted(true); }, []);
 
-  const isRTL = lang === "ar";
-
-  // Close cart, profile, and mobile menu when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (isCartOpen && !target.closest('.cart-dropdown-container')) {
-        setIsCartOpen(false);
-      }
-      if (isProfileOpen && !target.closest('.profile-dropdown-container')) {
-        setIsProfileOpen(false);
-      }
+      if (isCartOpen && !target.closest('.cart-dropdown-container')) setIsCartOpen(false);
+      if (isProfileOpen && !target.closest('.profile-dropdown-container')) setIsProfileOpen(false);
       if (isMobileMenuOpen && !target.closest('.mobile-menu-container') && !target.closest('.mobile-menu-button')) {
         setIsMobileMenuOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isCartOpen, isProfileOpen, isMobileMenuOpen]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
   }, [isMobileMenuOpen]);
-  
+
   const navItems = [
-    { label: isRTL ? "الرئيسية" : "Home", path: "/" },
-    { label: isRTL ? "المتجر" : "Shop", path: "/catalog" },
-    { label: isRTL ? "اختبار البشرة" : "Skin Quiz", path: "/quize" },
-    { label: isRTL ? "من نحن" : "About", path: "/about" },
-    { label: isRTL ? "تواصل معنا" : "Contact", path: "/contact" }
+    { label: isRTL ? 'الرئيسية' : 'Home', path: '/' },
+    { label: isRTL ? 'المتجر' : 'Shop', path: '/catalog' },
+    { label: isRTL ? 'اختبار البشرة' : 'Skin Quiz', path: '/quize' },
+    { label: isRTL ? 'من نحن' : 'About', path: '/about' },
+    { label: isRTL ? 'تواصل معنا' : 'Contact', path: '/contact' },
   ];
 
   const handleSearch = () => {
     const trimmed = searchQuery.trim();
-    const path = trimmed
-      ? `/catalog?searchQuery=${encodeURIComponent(trimmed)}`
-      : '/catalog';
+    const path = trimmed ? `/catalog?searchQuery=${encodeURIComponent(trimmed)}` : '/catalog';
     router.push(getLocalizedPath(path, lang));
-  };
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleSearch();
   };
 
   const handleLogout = async () => {
     try {
       await dispatch(logout()).unwrap();
-      router.push(getLocalizedPath('/login', lang));
     } catch (error) {
       console.error('Logout failed:', error);
-      // Even if logout fails, navigate to login
+    } finally {
       router.push(getLocalizedPath('/login', lang));
     }
-  };
-
-  const handleRemoveFromCart = async (itemId: number) => {
-    try {
-      await dispatch(removeFromCart(itemId)).unwrap();
-    } catch (error) {
-      console.error('Failed to remove item from cart:', error);
-    }
-  };
-
-  const handleUpdateQty = async (itemId: number, quantity: number) => {
-    if (quantity < 1) {
-      await handleRemoveFromCart(itemId);
-      return;
-    }
-    try {
-      await dispatch(updateCartItem({ itemId, quantity })).unwrap();
-    } catch (error) {
-      console.error('Failed to update cart item quantity:', error);
-    }
-  };
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat(
-      lang === "ar" ? "ar-EG" : "en-EG",
-      { style: "currency", currency: "EGP", maximumFractionDigits: 0 }
-    ).format(price);
-  };
-
-  const getImageUrl = (imageUrl: string | null | undefined) => {
-    // Return empty string if imageUrl is null or undefined
-    if (!imageUrl) {
-      return '';
-    }
-    // If it's already a full URL, return as is
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return imageUrl;
-    }
-    // Otherwise, prepend the API base URL
-    const baseUrl = env.NEXT_PUBLIC_API_BASE_URL || '';
-    return `${baseUrl}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
   };
 
   return (
     <>
-      {/* Mobile Menu Backdrop - Outside header for proper z-index */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-[100] md:hidden transition-opacity duration-300"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* Mobile Menu Drawer - Outside header for proper z-index */}
-      <div
-        className={`mobile-menu-container fixed top-0 ${isRTL ? 'left-0' : 'right-0'} h-full w-80 max-w-[85vw] bg-white shadow-2xl z-[101] md:hidden transform transition-transform duration-300 ease-in-out ${
-          isMobileMenuOpen ? 'translate-x-0' : isRTL ? '-translate-x-full' : 'translate-x-full'
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Mobile Menu Header */}
-          <div className="flex items-center justify-between p-4 border-b border-neutral-200">
-            <div className="flex items-center gap-3">
-              <img src={logo.src} alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
-              <div className="font-extrabold text-xl tracking-tight">SAFSAFAH</div>
-            </div>
-            <button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="p-2 hover:bg-neutral-100 rounded-xl transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-
-          {/* Mobile Menu Navigation */}
-          <nav className="flex-1 overflow-y-auto p-4">
-            <div className="space-y-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  href={getLocalizedPath(item.path, lang)}
-                  className="block px-4 py-3 rounded-xl text-lg font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
-                  style={{
-                    backgroundColor: pathname === getLocalizedPath(item.path, lang) ? `${brand.primary}15` : undefined,
-                    color: pathname === getLocalizedPath(item.path, lang) ? brand.primary : undefined
-                  }}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-
-            {/* Account Section in Mobile Menu (only if authenticated) */}
-            {mounted && isAuthenticated && (
-              <div className="mt-6 pt-6 border-t border-neutral-200 space-y-2">
-                <Link
-                  href={getLocalizedPath('/account', lang)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-700 hover:bg-neutral-100 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <User2 className="w-5 h-5" />
-                  <span className="font-medium">{isRTL ? "حسابي" : "My Account"}</span>
-                </Link>
-                <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    handleLogout();
-                  }}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors w-full text-left"
-                >
-                  <LogOut className="w-5 h-5" />
-                  <span className="font-medium">{isRTL ? "تسجيل الخروج" : "Logout"}</span>
-                </button>
-              </div>
-            )}
-
-            {/* Language switcher */}
-            <div className="mt-6 pt-6 border-t border-neutral-200">
-              <LanguageSwitcher className="w-full px-4 py-3 text-lg justify-center" />
-            </div>
-          </nav>
-        </div>
-      </div>
+      <MobileMenuDrawer
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        navItems={navItems}
+        lang={lang}
+        brandPrimary={brand.primary}
+        isRTL={isRTL}
+        isAuthenticated={mounted && isAuthenticated}
+        onLogout={handleLogout}
+      />
 
       <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
-        {/* Logo + name (don't shrink) */}
-        <Link href={getLocalizedPath('/', lang)} className="flex items-center gap-3 shrink-0 order-1">
-          <img src={logo.src} alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
-          <div className="font-extrabold text-xl tracking-tight whitespace-nowrap">SAFSAFAH</div>
-        </Link>
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
+          {/* Logo */}
+          <Link href={getLocalizedPath('/', lang)} className="flex items-center gap-3 shrink-0 order-1">
+            <img src={logo.src} alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
+            <div className="font-extrabold text-xl tracking-tight whitespace-nowrap">SAFSAFAH</div>
+          </Link>
 
-        {/* Hamburger menu button for mobile */}
-        <button
-          onClick={() => setIsMobileMenuOpen(true)}
-          className={`mobile-menu-button md:hidden p-2 hover:bg-neutral-100 rounded-xl transition-colors order-5 ${isRTL ? 'mr-auto' : 'ml-auto'}`}
-          aria-label="Open menu"
-        >
-          <Menu className="w-6 h-6 text-neutral-800" />
-        </button>
+          {/* Hamburger — mobile only */}
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className={`mobile-menu-button md:hidden p-2 hover:bg-neutral-100 rounded-xl transition-colors order-5 ${isRTL ? 'mr-auto' : 'ml-auto'}`}
+            aria-label="Open menu"
+          >
+            <Menu className="w-6 h-6 text-neutral-800" />
+          </button>
 
-        {/* Desktop nav — lighter spacing; don't push */}
-        <nav className="hidden md:flex items-center gap-4 mx-4 shrink-0 order-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              href={getLocalizedPath(item.path, lang)}
-              className="text-sm font-medium text-neutral-700 hover:text-neutral-900 transition-colors duration-200 whitespace-nowrap"
-              style={{ color: pathname === getLocalizedPath(item.path, lang) ? brand.primary : undefined }}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+          {/* Desktop Nav */}
+          <DesktopNav navItems={navItems} lang={lang} brandPrimary={brand.primary} />
 
-        {/* Fluid search: grows but capped; min width guard */}
-        <div className="flex-1 max-w-[760px] min-w-[260px] hidden md:block order-3">
-          <div className={`flex overflow-hidden rounded-2xl border border-neutral-200 bg-white/80 focus-within:ring-2`}
-               style={{ '--tw-ring-color': brand.primary } as React.CSSProperties}>
-            <input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearchKeyDown}
-              className="flex-1 bg-transparent px-4 py-2 focus:outline-none text-sm"
-              placeholder={searchPlaceholder}
-            />
-            <button
-              onClick={handleSearch}
-              aria-label={isRTL ? 'بحث' : 'Search'}
-              className="flex items-center justify-center w-10 shrink-0 text-white transition-opacity hover:opacity-90"
-              style={{ background: brand.primary }}
-            >
-              <Search className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+          {/* Desktop Search */}
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            onSearch={handleSearch}
+            brandPrimary={brand.primary}
+            placeholder={searchPlaceholder}
+            isRTL={isRTL}
+          />
 
-        {/* Actions (account/cart) — don't shrink, keep tight */}
-        <div className="flex items-center gap-2 md:gap-3 shrink-0 order-4">
-          {/* Language switcher — desktop only */}
-          <div className="hidden md:flex">
-            <LanguageSwitcher />
-          </div>
-
-          {/* Account icon with click dropdown - Only show if authenticated */}
-          {mounted && isAuthenticated && (
-            <div className="relative profile-dropdown-container">
-              <button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="px-2 py-2 rounded-xl hover:bg-neutral-100"
-              >
-                <User2 className="w-6 h-6 text-neutral-800" />
-              </button>
-
-              {/* Account Dropdown */}
-              {isProfileOpen && (
-                <div
-                  className={`absolute top-full mt-2 w-48 bg-white rounded-xl shadow-2xl border border-neutral-200 overflow-hidden z-50 ${isRTL ? 'right-0' : 'left-0'}`}
-                >
-                  <div className="py-2">
-                    <Link
-                      href={getLocalizedPath('/account', lang)}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 transition-colors text-neutral-700"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      <User2 className="w-5 h-5" />
-                      <span className="font-medium">{isRTL ? "حسابي" : "My Account"}</span>
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 transition-colors text-red-600 w-full text-left"
-                    >
-                      <LogOut className="w-5 h-5" />
-                      <span className="font-medium">{isRTL ? "تسجيل الخروج" : "Logout"}</span>
-                    </button>
-                  </div>
-                </div>
-              )}
+          {/* Actions */}
+          <div className="flex items-center gap-2 md:gap-3 shrink-0 order-4">
+            {/* Language Switcher — desktop only */}
+            <div className="hidden md:flex">
+              <LanguageSwitcher />
             </div>
-          )}
 
-          {/* Cart icon with dropdown */}
-          <div className="relative cart-dropdown-container">
-            <button
-              onClick={() => setIsCartOpen(!isCartOpen)}
-              className="relative px-2 py-2 rounded-xl hover:bg-neutral-100"
-            >
-              <ShoppingBag className="w-6 h-6 text-neutral-800" />
-              {cart && cart.totalItems > 0 && (
-                <span
-                  className="absolute -top-1.5 -right-1.5 h-5 min-w-[20px] px-1 rounded-full text-[11px] flex items-center justify-center text-white"
-                  style={{ background: brand.primary }}
-                >
-                  {cart.totalItems}
-                </span>
-              )}
-            </button>
+            {/* Profile Dropdown — only when authenticated */}
+            {mounted && isAuthenticated && (
+              <ProfileDropdown
+                isRTL={isRTL}
+                brandPrimary={brand.primary}
+                lang={lang}
+                isOpen={isProfileOpen}
+                onToggle={() => setIsProfileOpen(!isProfileOpen)}
+                onClose={() => setIsProfileOpen(false)}
+                onLogout={handleLogout}
+              />
+            )}
 
             {/* Cart Dropdown */}
-            {isCartOpen && (
-              <div
-                className={`absolute top-full mt-2 w-96 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden z-50 ${isRTL ? 'left-0' : 'right-0'}`}
-                style={{ maxHeight: '500px' }}
-              >
-                {cart && cart.items.length > 0 ? (
-                  <>
-                    {/* Cart Items */}
-                    <div className="max-h-80 overflow-y-auto p-4 space-y-3">
-                      {cart.items.map((item) => (
-                        <div key={item.id} className="flex gap-3 p-2 rounded-xl hover:bg-neutral-50 transition-colors">
-                          {item.productImage && (
-                            <img
-                              src={getImageUrl(item.productImage)}
-                              alt={lang === "ar" ? item.productNameAr : item.productNameEn}
-                              className="hidden md:block w-14 h-14 object-cover rounded-lg flex-shrink-0"
-                            />
-                          )}
-
-                          {/* Left: name */}
-                          <div className="flex-1 min-w-0 flex items-start">
-                            <h4 className="font-semibold text-sm truncate leading-snug">
-                              {lang === "ar" ? item.productNameAr : item.productNameEn}
-                            </h4>
-                          </div>
-
-                          {/* Right: price then controls, stacked */}
-                          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                            <span className="font-bold text-sm whitespace-nowrap" style={{ color: brand.primary }}>
-                              {formatPrice(item.subtotal)}
-                            </span>
-
-                            <div className="flex items-center gap-1">
-                              <button
-                                type="button"
-                                disabled={isCartLoading}
-                                onClick={() =>
-                                  item.quantity <= 1
-                                    ? handleRemoveFromCart(item.id)
-                                    : handleUpdateQty(item.id, item.quantity - 1)
-                                }
-                                aria-label={item.quantity <= 1
-                                  ? (lang === "ar" ? "إزالة" : "Remove")
-                                  : (lang === "ar" ? "تقليل" : "Decrease")
-                                }
-                                className="w-7 h-7 rounded-md flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                style={{ backgroundColor: "#fee2e2", color: "#dc2626" }}
-                              >
-                                {item.quantity <= 1
-                                  ? <Trash2 size={12} strokeWidth={2.5} />
-                                  : <span className="text-sm font-bold leading-none select-none">−</span>
-                                }
-                              </button>
-
-                              <span className="w-7 text-center text-sm font-bold tabular-nums select-none">
-                                {item.quantity}
-                              </span>
-
-                              <button
-                                type="button"
-                                disabled={isCartLoading}
-                                onClick={() => handleUpdateQty(item.id, item.quantity + 1)}
-                                aria-label={lang === "ar" ? "زيادة" : "Increase"}
-                                className="w-7 h-7 rounded-md flex items-center justify-center text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                                style={{ backgroundColor: brand.primary }}
-                              >
-                                <span className="text-sm font-bold leading-none select-none">+</span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Cart Footer */}
-                    <div className="border-t border-neutral-200 p-4 bg-neutral-50">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="font-semibold text-neutral-700">
-                          {lang === "ar" ? "المجموع" : "Total"}
-                        </span>
-                        <span className="font-bold text-lg" style={{ color: brand.primary }}>
-                          {formatPrice(cart.totalPrice)}
-                        </span>
-                      </div>
-                      <Link
-                        href={getLocalizedPath('/cart', lang)}
-                        className="block w-full text-center py-2.5 rounded-xl text-white font-semibold hover:opacity-90 transition-opacity"
-                        style={{ background: brand.primary }}
-                      >
-                        {lang === "ar" ? "إتمام الطلب" : "Checkout"}
-                      </Link>
-                    </div>
-                  </>
-                ) : (
-                  <div className="p-8 text-center">
-                    <ShoppingBag className="w-16 h-16 mx-auto text-neutral-300 mb-3" />
-                    <p className="text-neutral-600 font-medium">
-                      {lang === "ar" ? "السلة فارغة" : "Your cart is empty"}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
+            <CartDropdown
+              isRTL={isRTL}
+              brandPrimary={brand.primary}
+              lang={lang}
+              isOpen={isCartOpen}
+              onToggle={() => setIsCartOpen(!isCartOpen)}
+            />
           </div>
         </div>
-      </div>
 
-      {/* Mobile search — RTL-aware icon/padding */}
-      <div className="md:hidden px-4 pb-3">
-        <div className={`flex overflow-hidden rounded-2xl border border-neutral-200 bg-white focus-within:ring-2 ${isRTL ? 'flex-row-reverse' : ''}`}
-             style={{ '--tw-ring-color': brand.primary } as React.CSSProperties}>
-          <input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleSearchKeyDown}
-            className="flex-1 bg-transparent px-4 py-3 focus:outline-none text-sm"
-            placeholder={searchPlaceholder}
-          />
-          <button
-            onClick={handleSearch}
-            aria-label={isRTL ? 'بحث' : 'Search'}
-            className="flex items-center justify-center w-12 shrink-0 text-white transition-opacity hover:opacity-90"
-            style={{ background: brand.primary }}
-          >
-            <Search className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
-    </header>
+        {/* Mobile Search */}
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          onSearch={handleSearch}
+          brandPrimary={brand.primary}
+          placeholder={searchPlaceholder}
+          isRTL={isRTL}
+          isMobile
+        />
+      </header>
     </>
   );
 }
