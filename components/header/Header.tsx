@@ -8,7 +8,7 @@ import { logout } from "@/store/slices/authSlice";
 import { removeFromCart, updateCartItem } from "@/store/slices/cartsSlice";
 import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
 import logo from "../../assets/safsafah-logo.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { env } from "@/config";
 import LanguageSwitcher from "./LanguageSwitcher";
 
@@ -21,7 +21,7 @@ interface HeaderProps {
   searchPlaceholder: string;
 }
 
-export default function Header({ brand, searchPlaceholder }: HeaderProps) {
+function HeaderContent({ brand, searchPlaceholder }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -478,5 +478,13 @@ export default function Header({ brand, searchPlaceholder }: HeaderProps) {
       </div>
     </header>
     </>
+  );
+}
+
+export default function Header(props: HeaderProps) {
+  return (
+    <Suspense fallback={null}>
+      <HeaderContent {...props} />
+    </Suspense>
   );
 }
