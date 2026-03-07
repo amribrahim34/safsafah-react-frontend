@@ -171,14 +171,14 @@ export default function ProductCard({
       <div className="p-2 sm:p-3 flex flex-col flex-1">
         {/* Brand name */}
         {(brandNameAr || brandNameEn) && (
-          <div className="text-xs text-neutral-400 mb-0.5">
+          <div className="text-xs mb-0.5 font-bold" style={{ color: brand.primary }}>
             {lang === "ar" ? brandNameAr : brandNameEn}
           </div>
         )}
 
         {/* Name — grows to fill available space, pushing everything below down */}
         <div className="flex-1">
-          <div className="font-semibold">{lang === "ar" ? nameAr : nameEn}</div>
+          <div className="font-bold">{lang === "ar" ? nameAr : nameEn}</div>
         </div>
 
         {/* Stars + price + cart — always pinned to the bottom */}
