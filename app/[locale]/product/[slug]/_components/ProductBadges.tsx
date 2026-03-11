@@ -67,10 +67,10 @@ export default function ProductBadges({ product, lang }: ProductBadgesProps) {
         >
           {skinTypes!.map((skinType) => (
             <span
-              key={skinType}
+              key={skinType.id}
               className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-neutral-100 text-neutral-700 border border-neutral-200"
             >
-              {skinType}
+              {lang === 'ar' ? skinType.nameAr : skinType.nameEn}
             </span>
           ))}
         </BadgeSection>

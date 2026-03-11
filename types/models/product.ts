@@ -40,7 +40,7 @@ export interface Product {
   tags?: string[];
   images?: string[];
   activeIngredients?: { id: number; nameAr: string; nameEn: string }[];
-  skinTypes?: string[];
+  skinTypes?: { id: number; nameAr: string; nameEn: string }[];
   skinConcerns?: string[];
   onSale?: boolean;
   inStock?: boolean;

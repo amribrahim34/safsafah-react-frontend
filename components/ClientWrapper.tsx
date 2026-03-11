@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../lib/i18n';
 import { useDir } from '../hooks/useDir';
@@ -23,12 +22,11 @@ export default function ClientWrapper({ children }: ClientWrapperProps) {
   const lang = useLocale(); // Get locale from URL
   useDir(); // Automatically syncs with URL
 
-  useEffect(() => {
-    // Sync i18n with the locale from URL
-    if (i18n.language !== lang) {
-      i18n.changeLanguage(lang);
-    }
-  }, [lang, i18n]);
+  // Sync language synchronously (before render) so SSR and client agree on
+  // the first render — avoids hydration mismatches.
+  if (i18n.language !== lang) {
+    i18n.changeLanguage(lang);
+  }
 
   return (
     <div id="home" className="min-h-screen bg-white text-neutral-900">
