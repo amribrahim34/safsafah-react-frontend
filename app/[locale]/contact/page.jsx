@@ -25,9 +25,9 @@ export default function ContactUs() {
 
   // Contact data shown on UI
   const CONTACT = {
-    whatsapp: "201000000000", // number without +
-    mobile: "+20 10 0000 0000", // public mobile instead of hotline
-    email: "support@example.com",
+    whatsapp: "201061016045", // number without +
+    mobile: "+20 10 6101 6045", // public mobile instead of hotline
+    email: "safsafah035@gmail.com",
   };
 
   // Form state + validation

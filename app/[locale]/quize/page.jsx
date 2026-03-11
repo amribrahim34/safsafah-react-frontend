@@ -173,7 +173,7 @@ export default function SkinCareQuize() {
       <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
 
       {/* Page Header */}
-      <section className="max-w-3xl mx-auto px-4 pt-8 pb-6">
+      <section className="max-w-5xl mx-auto px-4 pt-8 pb-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-neutral-900">
           {translations.pageTitle[lang]}
         </h1>
@@ -181,7 +181,7 @@ export default function SkinCareQuize() {
       </section>
 
       {/* Quiz Content */}
-      <section className="max-w-3xl mx-auto px-4 pb-16">
+      <section className="max-w-5xl mx-auto px-4 pb-16">
         <div className="rounded-2xl border-2 border-neutral-100 p-6 md:p-8 shadow-sm bg-white">
           {/* Loading State */}
           {loading && <QuizLoader lang={lang} />}
