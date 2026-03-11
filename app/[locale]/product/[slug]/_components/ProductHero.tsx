@@ -39,7 +39,6 @@ export default function ProductHero({
   ).format;
 
   const title = lang === "ar" ? product.nameAr : product.nameEn;
-  const description = lang === "ar" ? product.descriptionAr : product.descriptionEn;
   const images = product.image
     ? [{ src: product.image, alt: title ?? "" }]
     : [];
@@ -66,14 +65,6 @@ export default function ProductHero({
           lang={lang}
           onSuccess={onMiniCartOpen}
         />
-
-        {/* Description */}
-        {description && (
-          <div className="mt-6">
-            <div className="font-bold mb-1">{lang === "ar" ? "الوصف" : "Description"}</div>
-            <p className="text-neutral-700 text-sm">{description}</p>
-          </div>
-        )}
 
         {/* Add / edit review (authenticated purchasers only) */}
         {isAuthenticated && (

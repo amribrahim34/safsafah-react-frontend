@@ -26,6 +26,7 @@ import ExitIntentModal from "@/components/product_details/ExitIntentModal";
 
 // Page-scoped components
 import ProductHero from "./_components/ProductHero";
+import ProductDescription from "./_components/ProductDescription";
 import ReviewsSection from "./_components/ReviewsSection";
 import StickyATCBar from "./_components/StickyATCBar";
 
@@ -177,6 +178,13 @@ export default function ProductPage() {
         onMiniCartOpen={() => setMiniCartOpen(true)}
         onShowReviews={() => setShowReviews(true)}
         onReviewSuccess={() => dispatch(fetchProductBySlug(slug))}
+      />
+
+      {/* Product description — full width, below the hero */}
+      <ProductDescription
+        descriptionAr={product.descriptionAr}
+        descriptionEn={product.descriptionEn}
+        lang={lang}
       />
 
       {/* Customer reviews panel */}

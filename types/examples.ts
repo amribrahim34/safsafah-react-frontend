@@ -118,7 +118,11 @@ export const sampleProduct: Product = {
     "/products/retinol-serum-1.jpg",
     "/products/retinol-serum-2.jpg"
   ],
-  skinTypes: ["oily", "combination", "normal"],
+  skinTypes: [
+    { id: 1, nameAr: "دهنية", nameEn: "Oily" },
+    { id: 2, nameAr: "مختلطة", nameEn: "Combination" },
+    { id: 3, nameAr: "عادية", nameEn: "Normal" },
+  ],
   onSale: true,
   inStock: true,
   stock: 50,
