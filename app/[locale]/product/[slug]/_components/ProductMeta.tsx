@@ -41,7 +41,7 @@ export default function ProductMeta({ product, brand, lang, priceFmt, onShowRevi
       )}
 
       {/* Title */}
-      <h1 className="text-2xl md:text-3xl font-extrabold">{title}</h1>
+      <h1 className="text-2xl md:text-3xl font-extrabold leading-snug md:leading-snug">{title}</h1>
 
       {/* Rating */}
       <div className="mt-3 flex items-center gap-2 flex-wrap">
