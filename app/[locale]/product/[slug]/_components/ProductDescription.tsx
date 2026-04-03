@@ -41,7 +41,7 @@ export default function ProductDescription({
       <div className="md:mx-20">
         {isRichText ? (
           <div
-            className="prose prose-p:my-0 [&_p:empty]:h-[1.5em] max-w-none w-full break-words text-base leading-relaxed"
+            className="prose prose-p:my-0 [&_p:empty]:h-[1.5em]  prose-strong:font-bold prose-strong:text-neutral-900 max-w-none w-full break-words "
             dir={lang === 'ar' ? 'rtl' : 'ltr'}
             dangerouslySetInnerHTML={{ __html: description }}
           />
