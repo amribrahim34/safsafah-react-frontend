@@ -25,7 +25,7 @@ export default function ProductDescription({
   const isRichText = /<[a-z][\s\S]*>/i.test(description);
 
   return (
-    <section className=" mx-auto px-4 py-10 border-t border-neutral-100">
+    <section className="mx-auto px-4 py-10 border-t border-neutral-100">
       {/* Section heading */}
       <div className="text-center mb-8">
         <p className="text-xs font-semibold tracking-widest text-neutral-400 uppercase mb-1">
@@ -38,20 +38,22 @@ export default function ProductDescription({
       </div>
 
       {/* Body */}
-      {isRichText ? (
-        <div
-          className="prose prose-neutral max-w-6xl mx-auto text-neutral-700 leading-relaxed"
-          dir={lang === 'ar' ? 'rtl' : 'ltr'}
-          dangerouslySetInnerHTML={{ __html: description }}
-        />
-      ) : (
-        <p
-          className="max-w-6xl mx-auto text-neutral-700 leading-relaxed text-base"
-          dir={lang === 'ar' ? 'rtl' : 'ltr'}
-        >
-          {description}
-        </p>
-      )}
+      <div className="md:mx-20">
+        {isRichText ? (
+          <div
+            className="prose prose-p:my-0 [&_p:empty]:h-[1.5em] max-w-none w-full break-words text-base leading-relaxed"
+            dir={lang === 'ar' ? 'rtl' : 'ltr'}
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
+        ) : (
+          <p
+            className="w-full text-neutral-700 leading-relaxed text-base whitespace-pre-line"
+            dir={lang === 'ar' ? 'rtl' : 'ltr'}
+          >
+            {description}
+          </p>
+        )}
+      </div>
     </section>
   );
 }
