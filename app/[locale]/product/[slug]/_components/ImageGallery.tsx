@@ -41,7 +41,7 @@ export default function ImageGallery({ images, brand: _brand }: ImageGalleryProp
             <img
               src={img.src}
               alt={img.alt}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"
             />
           </div>
         ))}

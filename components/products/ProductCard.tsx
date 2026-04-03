@@ -180,7 +180,7 @@ export default function ProductCard({
     >
       {/* Product image with optional recommended badge */}
       <div className="relative">
-        <img src={image} alt="product" className="w-full h-36 sm:h-56 object-cover" loading="lazy" />
+        <img src={image} alt="product" className="w-full h-36 sm:h-56 object-contain" loading="lazy" />
 
         {isRecommended && (
           <div
