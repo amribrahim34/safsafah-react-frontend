@@ -87,7 +87,7 @@ export default function BrandCard({
   if (clickable) {
     return (
       <Link 
-        href={`/brands/${brand.id}`}
+        href={`/catalog?brandIds=${brand.id}`}
         className={baseClasses}
       >
         {cardContent}
