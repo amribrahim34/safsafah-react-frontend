@@ -1,8 +1,8 @@
 export const IMG = {
   hero1: "/hero/hero1.png",
   // hero1: "https://images.unsplash.com/photo-1629198735660-758bfff43616?q=80&w=2400&auto=format&fit=crop",
-  hero2: "https://images.unsplash.com/photo-1616394584738-fc6e612e69cb?q=80&w=2400&auto=format&fit=crop",
-  hero3: "https://images.unsplash.com/photo-1611932588897-0e6480bc63f8?q=80&w=2400&auto=format&fit=crop",
+  hero2: "/hero/hero2.jpeg",
+  hero3: "/hero/hero3.jpeg",
   bannerTall: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=2000&auto=format&fit=crop",
   bannerWide: "https://images.unsplash.com/photo-1556228453-efd1a5f58e8a?q=80&w=2400&auto=format&fit=crop",
   // Product images - using local assets
