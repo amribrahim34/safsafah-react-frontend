@@ -16,3 +16,5 @@ export { cartService } from './cart.service';
 export { wishlistService } from './wishlist.service';
 export { beautyProfileService } from './beauty-profile.service';
 export { homeService } from './home.service';
+export { settingsService } from './settings.service';
+export type { SiteSettings } from './settings.service';

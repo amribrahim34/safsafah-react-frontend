@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Leaf, ShieldCheck, ChevronDown } from "lucide-react";
+import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa6";
 import Link from "next/link";
 import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
+import { settingsService, type SiteSettings } from "@/lib/api/services";
 
 interface FooterProps {
   brand: {
@@ -76,6 +78,11 @@ function FooterSection({ title, children, defaultOpen = false }: FooterSectionPr
 export default function Footer({ brand }: FooterProps) {
   const locale = useLocale();
   const isRTL = locale === "ar";
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+  useEffect(() => {
+    settingsService.getSettings().then(setSettings).catch(() => {});
+  }, []);
 
   // Translation mapping
   const translations: Record<"ar" | "en", FooterTranslations> = {
@@ -125,6 +132,30 @@ export default function Footer({ brand }: FooterProps) {
             <div className="font-extrabold text-xl tracking-tight">SAFSAFAH</div>
           </div>
           <p className="mt-4 text-neutral-600 text-sm leading-relaxed">{t.about}</p>
+          {settings && (
+            <div className="flex gap-3 mt-4">
+              {settings.facebook && (
+                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <FaFacebook className="w-5 h-5 hover:opacity-80 transition-opacity" style={{ color: brand.primary }} />
+                </a>
+              )}
+              {settings.instagram && (
+                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <FaInstagram className="w-5 h-5 hover:opacity-80 transition-opacity" style={{ color: brand.primary }} />
+                </a>
+              )}
+              {settings.tiktok && (
+                <a href={settings.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                  <FaTiktok className="w-5 h-5 hover:opacity-80 transition-opacity" style={{ color: brand.primary }} />
+                </a>
+              )}
+              {settings.whatsapp && (
+                <a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                  <FaWhatsapp className="w-5 h-5 hover:opacity-80 transition-opacity" style={{ color: brand.primary }} />
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Quick links - Collapsible on mobile */}

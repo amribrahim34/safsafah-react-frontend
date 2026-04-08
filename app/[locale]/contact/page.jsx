@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
+import { settingsService } from "@/lib/api/services";
 import { BRAND } from "@/content/brand";
 import { COPY } from "@/content/copy";
 import { useDir } from "@/hooks/useDir";
@@ -23,11 +24,17 @@ export default function ContactUs() {
   const isRTL = lang === "ar";
   useDir();
 
+  const [siteSettings, setSiteSettings] = useState(null);
+
+  useEffect(() => {
+    settingsService.getSettings().then(setSiteSettings).catch(() => {});
+  }, []);
+
   // Contact data shown on UI
   const CONTACT = {
-    whatsapp: "201061016045", // number without +
-    mobile: "+20 10 6101 6045", // public mobile instead of hotline
-    email: "safsafah035@gmail.com",
+    whatsapp: siteSettings?.whatsapp?.replace(/\D/g, '') ?? "",
+    mobile: siteSettings?.mobile ?? "",
+    email: siteSettings?.email ?? "",
   };
 
   // Form state + validation

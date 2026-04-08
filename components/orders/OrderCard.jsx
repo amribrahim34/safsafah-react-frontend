@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { settingsService } from "@/lib/api/services";
 import { HelpCircle, MessageCircle, FileText, RotateCcw, XCircle, RefreshCcw, Star, Truck } from "lucide-react";
 import { IMG } from "../../content/images";
 
@@ -11,6 +12,11 @@ const IMG_MAP = {
 
 export default function OrderCard({ lang = "ar", brand, order }) {
   const isRTL = lang === "ar";
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    settingsService.getSettings().then(setSettings).catch(() => {});
+  }, []);
   const fmt = (n) =>
     new Intl.NumberFormat(isRTL ? "ar-EG" : "en-EG", {
       style: "currency",
@@ -156,7 +162,7 @@ function renderActions({ order, isRTL, brand }) {
           <button className={primary} style={{ background: brand.primary }}>
             <Truck className="inline w-4 h-4 me-1" /> {isRTL ? "تتبّع" : "Track"}
           </button>
-          <a href="https://wa.me/201061016045" className={outline}>
+          <a href={settings?.whatsapp ? `https://wa.me/${settings.whatsapp.replace(/\D/g, '')}` : '#'} className={outline}>
             <MessageCircle className="inline w-4 h-4 me-1" /> {isRTL ? "دعم" : "Support"}
           </a>
           <button className={`${outline} hidden md:inline-flex`}>
