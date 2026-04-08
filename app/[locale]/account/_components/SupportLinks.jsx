@@ -7,10 +7,10 @@ export default function SupportLinks({ brand, lang="ar" }) {
     <section className="rounded-3xl border border-neutral-200 p-4 bg-white">
       <div className="text-lg font-extrabold mb-2">{isRTL?"الدعم والمساعدة":"Support & help"}</div>
       <div className="grid grid-cols-2 gap-2">
-        <LinkCard icon={PackageCheck} label={isRTL?"تتبع طلبي":"Track my order"} href="/orders/track" brand={brand} />
-        <LinkCard icon={MessageCircle} label={isRTL?"واتساب":"WhatsApp"} href="https://wa.me/201000000000" brand={brand} />
-        <LinkCard icon={Phone} label={isRTL?"الخط الساخن":"Hotline"} href="tel:+201000000000" brand={brand} />
-        <LinkCard icon={HelpCircle} label={isRTL?"الأسئلة الشائعة":"FAQ"} href="/help" brand={brand} />
+        {/* <LinkCard icon={PackageCheck} label={isRTL?"تتبع طلبي":"Track my order"} href="/orders/track" brand={brand} /> */}
+        <LinkCard icon={MessageCircle} label={isRTL?"واتساب":"WhatsApp"} href="https://wa.me/201061016045" brand={brand} />
+        <LinkCard icon={Phone} label={isRTL?"خدمة العملاء":"Customer Service"} href="tel:+201061016045" brand={brand} />
+        {/* <LinkCard icon={HelpCircle} label={isRTL?"الأسئلة الشائعة":"FAQ"} href="/help" brand={brand} /> */}
       </div>
     </section>
   );

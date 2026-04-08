@@ -72,12 +72,12 @@ export default function OrdersList({ brand, lang="ar" }) {
                   {isRTL ? statusAr(order.status) : order.status}
                 </span>
                 <div className="ms-auto flex items-center gap-2">
-                  <button className="px-3 py-1.5 rounded-xl border text-sm hover:bg-neutral-50">
+                  {/* <button className="px-3 py-1.5 rounded-xl border text-sm hover:bg-neutral-50">
                     <Download className="inline w-4 h-4" /> {isRTL?"الفاتورة":"Invoice"}
-                  </button>
-                  <button className="px-3 py-1.5 rounded-xl text-white text-sm" style={{background:brand.primary}}>
+                  </button> */}
+                  {/* <button className="px-3 py-1.5 rounded-xl text-white text-sm" style={{background:brand.primary}}>
                     <RefreshCcw className="inline w-4 h-4" /> {isRTL?"إعادة الشراء":"Reorder"}
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </article>

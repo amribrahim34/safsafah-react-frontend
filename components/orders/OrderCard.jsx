@@ -137,15 +137,15 @@ function renderActions({ order, isRTL, brand }) {
     case "Confirmed":
       return (
         <>
-          <button className={primary} style={{ background: brand.primary }}>
+          {/* <button className={primary} style={{ background: brand.primary }}>
             <Truck className="inline w-4 h-4 me-1" /> {isRTL ? "تتبّع" : "Track"}
-          </button>
+          </button> */}
           <button className={outline}>
             <XCircle className="inline w-4 h-4 me-1" /> {isRTL ? "إلغاء" : "Cancel"}
           </button>
-          <button className={`${outline} hidden md:inline-flex`}>
+          {/* <button className={`${outline} hidden md:inline-flex`}>
             <FileText className="inline w-4 h-4 me-1" /> {isRTL ? "فاتورة" : "Invoice"}
-          </button>
+          </button> */}
         </>
       );
 
@@ -156,7 +156,7 @@ function renderActions({ order, isRTL, brand }) {
           <button className={primary} style={{ background: brand.primary }}>
             <Truck className="inline w-4 h-4 me-1" /> {isRTL ? "تتبّع" : "Track"}
           </button>
-          <a href="https://wa.me/201000000000" className={outline}>
+          <a href="https://wa.me/201061016045" className={outline}>
             <MessageCircle className="inline w-4 h-4 me-1" /> {isRTL ? "دعم" : "Support"}
           </a>
           <button className={`${outline} hidden md:inline-flex`}>

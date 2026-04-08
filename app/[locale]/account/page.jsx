@@ -68,7 +68,7 @@ export default function ProfilePage() {
 
           {/* RIGHT: account tools */}
           <aside className="space-y-6 lg:sticky lg:top-24">
-            <RewardsWallet brand={BRAND} lang={lang} user={user} />
+            {/* <RewardsWallet brand={BRAND} lang={lang} user={user} /> */}
             <AddressesPayments brand={BRAND} lang={lang} />
             {/* <SettingsPanel brand={BRAND} lang={lang} user={user} /> */}
             <SupportLinks brand={BRAND} lang={lang} />
