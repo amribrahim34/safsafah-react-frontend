@@ -13,7 +13,7 @@ import { LocaleSync } from "./LocaleSync";
 
 export const metadata: Metadata = {
   title: "Safsafah | صفصافه",
-  description: "ecommerce platform for selling cosmatic and skincare products",
+  description: "Discover Safsafah – your destination for premium cosmetics and skincare products. Shop trusted brands, expert-curated routines, and the latest beauty essentials. Enjoy fast delivery and exclusive deals every day.",
 };
 
 export default function RootLayout({
