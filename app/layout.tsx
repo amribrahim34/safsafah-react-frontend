@@ -27,7 +27,20 @@ export default function RootLayout({
       <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png"></link>
       <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png"></link>
       <link rel="manifest" href="/favicons/site.webmanifest"></link>
+      {/* Google tag (gtag.js) */}
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-XPJ4C7758M"></script>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-XPJ4C7758M');
+          `,
+        }}
+      />
       </head>
+
       <body
         className={`${cairo.variable} font-sans`}
       >
