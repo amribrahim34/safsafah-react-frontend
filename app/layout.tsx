@@ -28,7 +28,7 @@ export default function RootLayout({
       <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png"></link>
       <link rel="manifest" href="/favicons/site.webmanifest"></link>
       {/* Google tag (gtag.js) */}
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-XPJ4C7758M"></script>
+      {/* <script async src="https://www.googletagmanager.com/gtag/js?id=G-XPJ4C7758M"></script>
       <script
         dangerouslySetInnerHTML={{
           __html: `
@@ -38,7 +38,7 @@ export default function RootLayout({
             gtag('config', 'G-XPJ4C7758M');
           `,
         }}
-      />
+      /> */}
       </head>
 
       <body
