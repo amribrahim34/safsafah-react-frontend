@@ -1,6 +1,6 @@
 import { BRAND } from "@/content/brand";
 import { IMG } from "@/content/images";
-import { COPY } from "@/content/copy";
+// import { COPY } from "@/content/copy";
 
 import ClientWrapper from "@/components/ClientWrapper";
 import BrandTrust from "@/components/home/trust/BrandTrust";
@@ -10,7 +10,7 @@ import BestSellers from "@/components/home/bestsellers/BestSellers";
 import CategoriesSection from "@/components/home/categories/CategoriesSection";
 import BrandsSection from "@/components/home/brands/BrandsSection";
 import MoreBanners from "@/components/home/banners/ExtraBanners";
-import Newsletter from "@/components/home/newsletter/Newsletter";
+// import Newsletter from "@/components/home/newsletter/Newsletter";
 import Footer from "@/components/footer/Footer";
 
 // Force dynamic rendering
@@ -54,7 +54,7 @@ export default async function Home({ params }: PageProps) {
         <BestSellers brand={BRAND} lang={lang} />
       </section>
 
-      <Newsletter brand={BRAND} lang={lang} copy={COPY[lang as keyof typeof COPY]} />
+      {/* <Newsletter brand={BRAND} lang={lang} copy={COPY[lang as keyof typeof COPY]} /> */}
 
       <Footer brand={BRAND} />
     </ClientWrapper>
