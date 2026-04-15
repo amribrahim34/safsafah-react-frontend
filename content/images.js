@@ -1,5 +1,5 @@
 export const IMG = {
-  hero1: "/hero/hero1.png",
+  hero1: "/hero/hero1.jpeg",
   // hero1: "https://images.unsplash.com/photo-1629198735660-758bfff43616?q=80&w=2400&auto=format&fit=crop",
   hero2: "/hero/hero2.jpeg",
   hero3: "/hero/hero3.jpeg",
