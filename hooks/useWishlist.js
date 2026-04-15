@@ -4,6 +4,7 @@ import {
   setCurrentProductWishlistStatus,
   silentFetchProductById,
 } from "../store/slices/productsSlice";
+import posthog from "posthog-js";
 
 /**
  * useWishlist
@@ -56,8 +57,25 @@ export function useWishlist(product) {
       // 3. Silent background re-fetch for authoritative server state
       dispatch(silentFetchProductById(product.id));
 
+      if (previousValue) {
+        posthog.capture('wishlist_item_removed', {
+          product_id: product.id,
+          product_name_en: product.nameEn,
+          product_name_ar: product.nameAr,
+          price: product.price,
+        });
+      } else {
+        posthog.capture('wishlist_item_added', {
+          product_id: product.id,
+          product_name_en: product.nameEn,
+          product_name_ar: product.nameAr,
+          price: product.price,
+        });
+      }
+
       onSuccess?.(previousValue ? "removed" : "added");
     } catch (error) {
+      posthog.captureException(error);
       console.error("Failed to toggle wishlist:", error);
       // 4. Rollback on failure
       dispatch(setCurrentProductWishlistStatus(previousValue));

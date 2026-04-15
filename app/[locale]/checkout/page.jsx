@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useState, useRef, useEffect } from "react";
+import posthog from "posthog-js";
 import { BRAND } from "@/content/brand";
 import { COPY } from "@/content/copy";
 import { useDir } from "@/hooks/useDir";
@@ -227,7 +228,17 @@ export default function CheckoutQuickPage() {
     }
 
     try {
-      await dispatch(createOrder(orderData)).unwrap();
+      const orderResult = await dispatch(createOrder(orderData)).unwrap();
+
+      posthog.capture('order_placed', {
+        order_id: orderResult?.id,
+        payment_method: payment,
+        total,
+        subtotal,
+        discount,
+        shipping,
+        item_count: cart?.items?.length,
+      });
 
       // Refetch cart since it's cleared on the backend
       await dispatch(fetchCart());
@@ -243,6 +254,12 @@ export default function CheckoutQuickPage() {
         router.push("/");
       }, 2000);
     } catch (error) {
+      posthog.captureException(error);
+      posthog.capture('order_placement_failed', {
+        payment_method: payment,
+        total,
+        error_message: error?.message || String(error),
+      });
       console.error("Order creation failed:", error);
       setErrorMessage(
         lang === "ar"

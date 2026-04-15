@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import posthog from "posthog-js";
 
 import { BRAND } from "@/content/brand";
 import { COPY } from "@/content/copy";
@@ -120,6 +121,18 @@ export default function ProductPage() {
   useEffect(() => {
     if (slug) dispatch(fetchProductBySlug(slug));
   }, [slug, dispatch]);
+
+  // Track product view once product data is available
+  useEffect(() => {
+    if (!product?.id) return;
+    posthog.capture('product_viewed', {
+      product_id: product.id,
+      product_name_en: product.nameEn,
+      product_name_ar: product.nameAr,
+      product_slug: slug,
+      price: typeof product.price === 'number' ? product.price : undefined,
+    });
+  }, [product?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch reviews whenever the product ID becomes available
   useEffect(() => {

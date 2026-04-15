@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import posthog from "posthog-js";
 import { BRAND } from "@/content/brand";
 import { COPY } from "@/content/copy";
 import { useDir } from "@/hooks/useDir";
@@ -79,8 +80,13 @@ export default function CartPage() {
     if (promo.trim()) {
       try {
         await dispatch(applyPromoCode(promo.trim())).unwrap();
+        posthog.capture('promo_code_applied', {
+          promo_code: promo.trim(),
+          cart_total: subtotal,
+        });
         // Success - cart will be updated automatically via Redux
       } catch (error) {
+        posthog.captureException(error);
         // Error handling - you might want to show a toast notification here
         console.error('Failed to apply promo code:', error);
       }
@@ -146,7 +152,13 @@ export default function CartPage() {
                   discount={discount}
                   shipping={shipping}
                   total={total}
-                  onCheckout={() => router.push("/checkout")}
+                  onCheckout={() => {
+                    posthog.capture('checkout_started', {
+                      cart_total: total,
+                      item_count: items.length,
+                    });
+                    router.push("/checkout");
+                  }}
                 />
               </aside>
             </div>
@@ -183,7 +195,13 @@ export default function CartPage() {
               </div>
             </div>
             <button
-              onClick={() => router.push("/checkout")}
+              onClick={() => {
+                posthog.capture('checkout_started', {
+                  cart_total: total,
+                  item_count: items.length,
+                });
+                router.push("/checkout");
+              }}
               className="px-5 py-3 rounded-2xl text-white font-semibold"
               style={{ background: BRAND.primary }}
             >

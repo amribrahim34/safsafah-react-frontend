@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { addToCart as addToCartAction, updateCartItem, removeFromCart } from "../store/slices/cartsSlice";
+import posthog from "posthog-js";
 
 /**
  * Custom hook for managing product cart operations
@@ -22,11 +23,20 @@ export function useProductCart(product) {
         quantity: 1,
       })).unwrap();
 
+      posthog.capture('product_added_to_cart', {
+        product_id: product.id,
+        product_name_en: product.nameEn,
+        product_name_ar: product.nameAr,
+        price: product.price,
+        quantity: 1,
+      });
+
       // Callback for success (e.g., show mini cart)
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
+      posthog.captureException(error);
       console.error('Failed to add to cart:', error);
     }
   };
@@ -60,7 +70,14 @@ export function useProductCart(product) {
     if (currentQty <= 1) {
       try {
         await dispatch(removeFromCart(cartItem.id)).unwrap();
+        posthog.capture('product_removed_from_cart', {
+          product_id: product.id,
+          product_name_en: product.nameEn,
+          product_name_ar: product.nameAr,
+          price: product.price,
+        });
       } catch (error) {
+        posthog.captureException(error);
         console.error('Failed to remove from cart:', error);
       }
       return;

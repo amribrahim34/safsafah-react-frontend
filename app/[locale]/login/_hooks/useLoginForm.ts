@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { login, clearError } from '@/store/slices/authSlice';
 import { fetchCart } from '@/store/slices/cartsSlice';
 import { useLocaleRouter, type Locale } from '@/lib/locale-navigation';
+import posthog from 'posthog-js';
 
 type LoginMode = 'email' | 'mobile';
 
@@ -95,6 +96,16 @@ export function useLoginForm(locale: Locale) {
     const result = await dispatch(login(credentials));
 
     if (login.fulfilled.match(result)) {
+      const user = (result.payload as { id?: string; email?: string; phone?: string; name?: string } | undefined);
+      const distinctId = user?.id ?? identifier.trim();
+      posthog.identify(distinctId, {
+        email: mode === 'email' ? identifier.trim() : user?.email,
+        phone: mode === 'mobile' ? identifier.trim() : user?.phone,
+        name: user?.name,
+      });
+      posthog.capture('user_logged_in', {
+        login_method: mode,
+      });
       dispatch(fetchCart());
       router.push('/');
     }
