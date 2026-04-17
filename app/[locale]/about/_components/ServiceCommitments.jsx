@@ -1,5 +1,5 @@
 import React from "react";
-import { Clock, Truck, RotateCcw, CreditCard, Phone } from "lucide-react";
+import { Clock, Truck, RotateCcw, CreditCard } from "lucide-react";
 
 export default function ServiceCommitments({ brand }) {
   return (

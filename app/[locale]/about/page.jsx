@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { settingsService } from "@/lib/api/services";
 import { BRAND } from "@/content/brand";
 import { COPY } from "@/content/copy";
 import { IMG } from "@/content/images";
@@ -11,14 +12,12 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import BottomTabs from "@/components/appchrome/BottomTabs";
 
-import AboutHero from "@/components/about/AboutHero";
-import VisionMission from "@/components/about/VisionMission";
-import Assurances from "@/components/about/Assurances";
-import ValuesGrid from "@/components/about/ValuesGrid";
-import HowWeWork from "@/components/about/HowWeWork";
-import ServiceCommitments from "@/components/about/ServiceCommitments";
+import AboutHero from "./_components/AboutHero";
+import VisionMission from "./_components/VisionMission";
+import Assurances from "./_components/Assurances";
+import ServiceCommitments from "./_components/ServiceCommitments";
 import QuickFAQ from "@/components/about/QuickFAQ";
-import ContactPanel from "@/components/about/ContactPanel";
+import ContactPanel from "./_components/ContactPanel";
 
 export default function About() {
   // الصفحة عربية فصحى بشكل افتراضي
@@ -26,6 +25,11 @@ export default function About() {
   const T = useMemo(() => COPY[lang], [lang]);
   const isRTL = true; // هذه الصفحة عربية فصحى فقط
   useDir();
+
+  const [siteSettings, setSiteSettings] = useState(null);
+  useEffect(() => {
+    settingsService.getSettings().then(setSiteSettings).catch(() => {});
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
@@ -74,7 +78,7 @@ export default function About() {
 
         <QuickFAQ brand={BRAND} />
 
-        <ContactPanel brand={BRAND} />
+        <ContactPanel brand={BRAND} siteSettings={siteSettings} />
       </main>
 
       <Footer brand={BRAND} lang="ar" copy={T} />
