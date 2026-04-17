@@ -64,8 +64,8 @@ export default function LoginPage() {
   const config = IDENTIFIER_CONFIG[mode];
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
-      <div className="grid min-h-screen md:grid-cols-2">
+    <div className="md:min-h-screen bg-white text-neutral-900">
+      <div className="grid md:min-h-screen md:grid-cols-2">
         <AuthHeroPanel
           imageSrc={IMG.login}
           subtitle={isRTL ? 'دخول سريع لإدارة طلباتك وتتبع الشحن.' : 'Sign in to manage orders and track delivery.'}
@@ -163,9 +163,9 @@ export default function LoginPage() {
                 </div>
               </form>
 
-              <div className="text-sm text-neutral-700 mt-4">
+              <div className=" mt-4">
                 {isRTL ? 'لا تملك حسابًا؟' : "Don't have an account?"}{' '}
-                <a href="/signup" className="font-semibold" style={{ color: BRAND.primary }}>
+                <a href="/signup" className="font-bold" style={{ color: BRAND.primary }}>
                   {isRTL ? 'إنشاء حساب' : 'Create one'}
                 </a>
               </div>
@@ -174,14 +174,14 @@ export default function LoginPage() {
         </main>
 
         {/* Mobile hero strip */}
-        <div className="md:hidden relative h-48">
+        {/* <div className="md:hidden relative h-48">
           <img
             src={IMG.bannerTall}
             alt="Skincare"
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/25" />
-        </div>
+        </div> */}
       </div>
     </div>
   );
