@@ -68,7 +68,7 @@ export default function LoginPage() {
       <div className="grid md:min-h-screen md:grid-cols-2">
         <AuthHeroPanel
           imageSrc={IMG.login}
-          subtitle={isRTL ? 'دخول سريع لإدارة طلباتك وتتبع الشحن.' : 'Sign in to manage orders and track delivery.'}
+          subtitle={isRTL ? 'اكتشف أحدث العروض، تتبع طلباتك، واستمتع بتجربة تسوق سريعة وآمنة.' : 'Discover exclusive deals, track your orders, and enjoy a seamless shopping experience.'}
         />
 
         <main className="flex flex-col">
@@ -86,12 +86,12 @@ export default function LoginPage() {
           <div className="flex-1 flex items-center">
             <div className="w-full max-w-xl md:max-w-[42rem] mx-auto px-5">
               <h1 className="text-2xl md:text-3xl font-extrabold">
-                {isRTL ? 'تسجيل الدخول' : 'Sign in'}
+                {isRTL ? 'مرحباً بعودتك!' : 'Welcome back!'}
               </h1>
               <p className="text-neutral-600 mt-1 mb-6">
                 {isRTL
-                  ? 'استخدم البريد الإلكتروني أو الموبايل. بدون رمز تحقق.'
-                  : 'Use email or mobile. No OTP needed.'}
+                  ? 'سجّل دخولك للوصول إلى طلباتك، قائمة الرغبات، وعروضك الحصرية.'
+                  : 'Sign in to access your orders, wishlist, and exclusive member deals.'}
               </p>
 
               <LoginModePills

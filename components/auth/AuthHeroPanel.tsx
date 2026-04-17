@@ -10,7 +10,7 @@ export default function AuthHeroPanel({ imageSrc, subtitle }: AuthHeroPanelProps
     <aside className="relative hidden md:block">
       <img
         src={imageSrc}
-        alt="Skincare visual"
+        alt="Shop skincare &amp; beauty products"
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div
