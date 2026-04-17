@@ -1,18 +1,21 @@
 import { BRAND } from "@/content/brand";
-import { COPY } from "@/content/copy";
 import { IMG } from "@/content/images";
+
+import enAbout from "@/locales/en/about.json";
+import arAbout from "@/locales/ar/about.json";
 
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import BottomTabs from "@/components/appchrome/BottomTabs";
 
-import AboutHero from "./_components/AboutHero";
 import VisionMission from "./_components/VisionMission";
-import Assurances from "./_components/Assurances";
 import ServiceCommitments from "./_components/ServiceCommitments";
 import QuickFAQ from "@/components/about/QuickFAQ";
 import ContactPanel from "./_components/ContactPanel";
+
+import enHome from "@/locales/en/home.json";
+import arHome from "@/locales/ar/home.json";
 
 async function fetchSettings() {
   try {
@@ -27,70 +30,49 @@ async function fetchSettings() {
   }
 }
 
-export default async function About() {
-  const T = COPY["ar"];
+export default async function About({ params }) {
+  const { locale } = await params;
+  const lang = locale === "en" ? "en" : "ar";
+  const t = lang === "en" ? enAbout : arAbout;
+  const homeT = lang === "en" ? enHome : arHome;
+
   const siteSettings = await fetchSettings();
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900" dir="rtl">
+    <div className="min-h-screen bg-white text-neutral-900" dir={lang === "ar" ? "rtl" : "ltr"}>
       <PromoBar
-        text={T.promo}
-        lang="ar"
+        text={homeT.promo}
+        lang={lang}
         onToggleLang={() => {}}
         brand={BRAND}
       />
-      <Header brand={BRAND} searchPlaceholder={T.search} lang="ar" />
-
-      {/* <AboutHero brand={BRAND} img={IMG.bannerWide} /> */}
+      <Header brand={BRAND} searchPlaceholder={homeT.search} lang={lang} />
 
       <main className="max-w-7xl mx-auto px-4">
         <section className="py-8 md:py-12 grid md:grid-cols-12 gap-6 items-start">
           <div className="md:col-span-7">
-            <h2 className="text-xl md:text-2xl font-extrabold">من نحن</h2>
-            <p className="mt-3 text-neutral-800 leading-relaxed">
-              نحن متجرًا إلكترونيًا مستقلًا لمنتجات العناية بالبشرة ومستحضرات التجميل داخل مصر.
-              لا نُصنّع المنتجات، بل نعمل كموزّع يختار بضائعَه من موردين وتُجّار جملة موثوقين،
-              مع عناية دقيقة بالتحقق من الأصالة وحالة العبوة وتواريخ الصلاحية قبل الشحن.
-              هدفنا أن نجعل شراء مستحضرات العناية تجربة بسيطة، واضحة، وخالية من المبالغة.
-            </p>
-            <p className="mt-3 text-neutral-800 leading-relaxed">
-              تقوم فلسفتنا على ثلاثة أركان: الشفافية في المعلومات، الاعتمادية في التنفيذ،
-              والاحترام لوقت العميل وميزانيته. إن ثقتك لا تُكتسب بشعار؛ بل تُبنى بتجربة متسقة
-              في كل طلبية.
-            </p>
+            <h2 className="text-xl md:text-2xl font-extrabold">{t.whoWeAre}</h2>
+            <p className="mt-3 text-neutral-800 leading-relaxed">{t.intro}</p>
+            <p className="mt-3 text-neutral-800 leading-relaxed">{t.philosophy}</p>
           </div>
           <div className="md:col-span-5">
             <div className="rounded-3xl overflow-hidden border">
-              <img src={IMG.cream} alt="تحضير الطلبات" className="w-full h-64 object-cover" />
+              <img src={IMG.cream} alt={t.imgAlt} className="w-full h-64 object-cover" />
             </div>
           </div>
         </section>
 
-        <VisionMission brand={BRAND} />
+        <VisionMission brand={BRAND} t={t.visionMission} />
 
-        {/* <Assurances brand={BRAND} /> */}
+        <ServiceCommitments brand={BRAND} t={t.serviceCommitments} />
 
-        {/* <ValuesGrid brand={BRAND} /> */}
+        <QuickFAQ brand={BRAND} t={t.faq} />
 
-        {/* <HowWeWork brand={BRAND} images={{ a: IMG.cleanser, b: IMG.hero1, c: IMG.oils }} /> */}
-
-        <ServiceCommitments brand={BRAND} />
-
-        <QuickFAQ brand={BRAND} />
-
-        <ContactPanel brand={BRAND} siteSettings={siteSettings} />
+        <ContactPanel brand={BRAND} siteSettings={siteSettings} t={t.contact} />
       </main>
 
-      <Footer brand={BRAND} lang="ar" copy={T} />
-      <BottomTabs
-        labels={{
-          home: "الرئيسية",
-          cats: "الفئات",
-          cart: "السلة",
-          wish: "المفضلة",
-          account: "حسابي",
-        }}
-      />
+      <Footer brand={BRAND} lang={lang} copy={homeT} />
+      <BottomTabs labels={t.bottomTabs} />
     </div>
   );
 }
