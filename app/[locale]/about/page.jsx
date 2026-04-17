@@ -41,7 +41,7 @@ export default async function About() {
       />
       <Header brand={BRAND} searchPlaceholder={T.search} lang="ar" />
 
-      <AboutHero brand={BRAND} img={IMG.bannerWide} />
+      {/* <AboutHero brand={BRAND} img={IMG.bannerWide} /> */}
 
       <main className="max-w-7xl mx-auto px-4">
         <section className="py-8 md:py-12 grid md:grid-cols-12 gap-6 items-start">
@@ -68,7 +68,7 @@ export default async function About() {
 
         <VisionMission brand={BRAND} />
 
-        <Assurances brand={BRAND} />
+        {/* <Assurances brand={BRAND} /> */}
 
         {/* <ValuesGrid brand={BRAND} /> */}
 
