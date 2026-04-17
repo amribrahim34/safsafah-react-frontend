@@ -124,6 +124,27 @@ export default function ContactUs() {
     }
   };
 
+  const FAQ = {
+    en: {
+      heading: "Quick FAQs",
+      items: [
+        { q: "Are the products authentic?", a: "We purchase from trusted suppliers and wholesalers within Egypt and retain purchase proofs. We inspect packaging and expiry dates before shipping." },
+        { q: "How can I pay?", a: "You can pay cash on delivery, or by card/available wallets depending on the courier." },
+        { q: "When will my order arrive?", a: "Typically 1–3 business days within Greater Cairo, and 2–5 business days for other governorates. The timeframe is an estimate and depends on the courier." },
+        { q: "What is the return policy?", a: "Returns within 14 days for unopened products and in accordance with the stated conditions on the returns page. For assistance, contact us before returning." },
+      ],
+    },
+    ar: {
+      heading: "أسئلة سريعة",
+      items: [
+        { q: "هل المنتجات أصلية؟", a: "نشتري من موردين وتجار جملة موثوقين داخل مصر ونحتفظ بإثباتات الشراء. نفحص العبوة وتاريخ الصلاحية قبل الشحن." },
+        { q: "كيف يمكنني الدفع؟", a: "يمكنك الدفع نقدًا عند الاستلام، أو عبر البطاقة/المحافظ المتاحة وفق شركة الشحن." },
+        { q: "متى يصل طلبي؟", a: "عادةً 1–3 أيام عمل داخل القاهرة الكبرى، و2–5 أيام عمل لباقي المحافظات. المدة تقديرية وتعتمد على شركة الشحن." },
+        { q: "ما سياسة الإرجاع؟", a: "إرجاع خلال 14 يومًا للمنتجات غير المفتوحة ووفق الشروط المعلنة في صفحة الإرجاع. لمساعدتك، تواصل معنا قبل الإرجاع." },
+      ],
+    },
+  };
+
   const labels = {
     whatsapp: isRTL ? "واتساب" : "WhatsApp",
     mobile: isRTL ? "موبايل" : "Mobile",
@@ -345,7 +366,7 @@ export default function ContactUs() {
 
         {/* Keep UX parity with About page */}
         <section className="px-4 pb-10">
-          <QuickFAQ brand={BRAND} />
+          <QuickFAQ brand={BRAND} t={FAQ[lang]} />
         </section>
       </main>
 
