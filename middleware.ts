@@ -7,11 +7,13 @@ const defaultLocale = 'ar';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip middleware for API routes, static files, and Next.js internals
+  // Skip middleware for API routes, static files, Next.js internals,
+  // and PostHog proxy paths (/ingest/*) so rewrites in next.config.ts work correctly.
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/favicon') ||
+    pathname.startsWith('/ingest') ||
     pathname.includes('.')
   ) {
     return NextResponse.next();
@@ -35,11 +37,13 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next (Next.js internals)
-     * - Static files
+     * Match all request paths EXCEPT:
+     * - api        (API routes)
+     * - _next      (Next.js internals)
+     * - favicon    (favicon files)
+     * - ingest     (PostHog proxy – must reach next.config.ts rewrites)
+     * - Static files (anything with a dot extension)
      */
-    '/((?!api|_next|favicon|.*\\.).*)',
+    '/((?!api|_next|favicon|ingest|.*\\.).*)',
   ],
 };
