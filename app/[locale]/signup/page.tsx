@@ -73,8 +73,8 @@ export default function SignupPage() {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
-      <div className="grid min-h-screen md:grid-cols-2">
+    <div className="md:min-h-screen bg-white text-neutral-900">
+      <div className="grid md:min-h-screen md:grid-cols-2">
         <AuthHeroPanel
           imageSrc={IMG.signup}
           subtitle={isRTL ? 'انضمي إلى مجتمع الجمال في مصر.' : "Join Egypt's beauty community."}
@@ -214,14 +214,14 @@ export default function SignupPage() {
         </main>
 
         {/* Mobile hero strip */}
-        <div className="md:hidden relative h-40">
+        {/* <div className="md:hidden relative h-40">
           <img
             src={IMG.bannerTall}
             alt="Skincare"
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/25" />
-        </div>
+        </div> */}
       </div>
     </div>
   );
