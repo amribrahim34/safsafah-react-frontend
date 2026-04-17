@@ -1,11 +1,6 @@
-'use client';
-
-import React, { useMemo, useState, useEffect } from "react";
-import { settingsService } from "@/lib/api/services";
 import { BRAND } from "@/content/brand";
 import { COPY } from "@/content/copy";
 import { IMG } from "@/content/images";
-import { useDir } from "@/hooks/useDir";
 
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
@@ -19,20 +14,25 @@ import ServiceCommitments from "./_components/ServiceCommitments";
 import QuickFAQ from "@/components/about/QuickFAQ";
 import ContactPanel from "./_components/ContactPanel";
 
-export default function About() {
-  // الصفحة عربية فصحى بشكل افتراضي
-  const [lang, setLang] = useState("ar");
-  const T = useMemo(() => COPY[lang], [lang]);
-  const isRTL = true; // هذه الصفحة عربية فصحى فقط
-  useDir();
+async function fetchSettings() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/settings`, {
+      headers: { Accept: "application/json", "Accept-Language": "ar" },
+      next: { revalidate: 3600 },
+    });
+    const json = await res.json();
+    return json.data ?? null;
+  } catch {
+    return null;
+  }
+}
 
-  const [siteSettings, setSiteSettings] = useState(null);
-  useEffect(() => {
-    settingsService.getSettings().then(setSiteSettings).catch(() => {});
-  }, []);
+export default async function About() {
+  const T = COPY["ar"];
+  const siteSettings = await fetchSettings();
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
+    <div className="min-h-screen bg-white text-neutral-900" dir="rtl">
       <PromoBar
         text={T.promo}
         lang="ar"
