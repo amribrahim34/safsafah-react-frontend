@@ -94,7 +94,10 @@ export default function AddToCartControls({ product, brand, lang, onSuccess }: A
         ) : (
           /* Add to cart button — shown when product is NOT in cart */
           <button
-            onClick={() => handleAddToCart(onSuccess)}
+            onClick={() => handleAddToCart(() => {
+              document.dispatchEvent(new CustomEvent('open-mini-cart'));
+              onSuccess?.();
+            })}
             disabled={isLoading || isOutOfStock}
             className="px-6 py-3 rounded-2xl text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ background: brand.primary }}

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Star } from "lucide-react";
 import { productsService } from "@/lib/api/services/products.service";
 import type { Product } from '@/types/models/product';
@@ -26,6 +27,7 @@ interface AddReviewProps {
  * Only renders if `product.canAddRating` is true (set by the backend).
  */
 export default function AddReview({ product, brand, lang, userReview, onSuccess }: AddReviewProps) {
+  const router = useRouter();
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -78,6 +80,7 @@ export default function AddReview({ product, brand, lang, userReview, onSuccess 
           : isEditing ? "Review updated successfully!" : "Review submitted successfully!"
       );
       onSuccess?.();
+      router.refresh();
     } catch (err) {
       console.error("Failed to submit review:", err);
       setError(

@@ -1,5 +1,3 @@
-'use client';
-
 import type { Language } from '@/types/models/common';
 
 interface ProductDescriptionProps {

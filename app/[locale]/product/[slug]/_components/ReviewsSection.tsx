@@ -36,7 +36,7 @@ export default function ReviewsSection({
   if (!isLoadingReviews && reviewCount === 0) return null;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 pb-8">
+    <section id="reviews" className="max-w-7xl mx-auto px-4 pb-8">
       <div className="rounded-3xl border border-neutral-200 p-4">
         {/* Header toggle */}
         <div className="flex items-center justify-between">

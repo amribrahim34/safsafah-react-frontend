@@ -1,9 +1,6 @@
-'use client';
-
-import React from "react";
 import ImageGallery from "./ImageGallery";
 import AddToCartControls from "./AddToCartControls";
-import AddReview from "./AddReview";
+import AuthGatedReview from "./AuthGatedReview";
 import ProductMeta from "./ProductMeta";
 import type { Product } from '@/types/models/product';
 import type { BrandColors, LocalReview } from '../types';
@@ -12,32 +9,10 @@ interface ProductHeroProps {
   product: Product;
   brand: BrandColors;
   lang: string;
-  isAuthenticated: boolean;
-  userReview?: LocalReview | null;
-  onMiniCartOpen: () => void;
-  onShowReviews: () => void;
-  onReviewSuccess: () => void;
+  reviews: LocalReview[];
 }
 
-/**
- * ProductHero
- * Two-column section: image gallery on the left, product info on the right.
- */
-export default function ProductHero({
-  product,
-  brand,
-  lang,
-  isAuthenticated,
-  userReview,
-  onMiniCartOpen,
-  onShowReviews,
-  onReviewSuccess,
-}: ProductHeroProps) {
-  const priceFmt = new Intl.NumberFormat(
-    lang === "ar" ? "ar-EG" : "en-EG",
-    { style: "currency", currency: "EGP", maximumFractionDigits: 0 }
-  ).format;
-
+export default function ProductHero({ product, brand, lang, reviews }: ProductHeroProps) {
   const title = lang === "ar" ? product.nameAr : product.nameEn;
   const images = product.image
     ? [{ src: product.image, alt: title ?? "" }]
@@ -45,37 +20,14 @@ export default function ProductHero({
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-6 grid md:grid-cols-2 gap-6">
-      {/* Gallery */}
       <ImageGallery images={images} brand={brand} />
 
-      {/* Info column */}
       <div>
-        <ProductMeta
-          product={product}
-          brand={brand}
-          lang={lang}
-          priceFmt={priceFmt}
-          onShowReviews={onShowReviews}
-        />
+        <ProductMeta product={product} brand={brand} lang={lang} />
 
-        {/* Add to cart + wishlist */}
-        <AddToCartControls
-          product={product}
-          brand={brand}
-          lang={lang}
-          onSuccess={onMiniCartOpen}
-        />
+        <AddToCartControls product={product} brand={brand} lang={lang} />
 
-        {/* Add / edit review (authenticated purchasers only) */}
-        {isAuthenticated && (
-          <AddReview
-            product={product}
-            brand={brand}
-            lang={lang}
-            userReview={userReview}
-            onSuccess={onReviewSuccess}
-          />
-        )}
+        <AuthGatedReview product={product} brand={brand} lang={lang} reviews={reviews} />
       </div>
     </section>
   );

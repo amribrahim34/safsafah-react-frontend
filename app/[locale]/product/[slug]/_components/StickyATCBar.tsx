@@ -2,39 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
+import { useProductCart } from "@/hooks/useProductCart";
+import type { Product } from "@/types/models/product";
 import type { BrandColors } from '../types';
 import type { CartItem } from '@/types/models/cart';
 
 const SCROLL_THRESHOLD = 500;
 
 interface StickyATCBarProps {
+  product: Product;
   brand: BrandColors;
   lang: string;
-  title: string;
-  price: number;
-  onAdd: () => void;
-  cartItem?: CartItem;
-  onIncrement: () => void;
-  onDecrement: () => void;
-  isLoading: boolean;
 }
 
-/**
- * StickyATCBar
- * Fixed bottom bar that appears after the user scrolls past the main ATC button.
- * Shows product title + price, and either an ATC button or a quantity stepper.
- */
-export default function StickyATCBar({
-  brand,
-  lang,
-  title,
-  price,
-  onAdd,
-  cartItem,
-  onIncrement,
-  onDecrement,
-  isLoading,
-}: StickyATCBarProps) {
+export default function StickyATCBar({ product, brand, lang }: StickyATCBarProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -43,7 +24,24 @@ export default function StickyATCBar({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const {
+    cartItem,
+    isLoading,
+    handleAddToCart,
+    handleIncrement,
+    handleDecrement,
+  } = useProductCart(product) as {
+    cartItem: CartItem | undefined;
+    isLoading: boolean;
+    handleAddToCart: (cb?: () => void) => void;
+    handleIncrement: () => void;
+    handleDecrement: () => void;
+  };
+
   if (!visible) return null;
+
+  const title = lang === "ar" ? product.nameAr : product.nameEn;
+  const price = typeof product.price === "number" ? product.price : 0;
 
   const formattedPrice = new Intl.NumberFormat(
     lang === "ar" ? "ar-EG" : "en-EG",
@@ -66,7 +64,7 @@ export default function StickyATCBar({
           >
             <button
               className="px-3 py-2 hover:bg-neutral-100 transition-colors disabled:opacity-50"
-              onClick={onDecrement}
+              onClick={handleDecrement}
               disabled={isLoading}
               style={{ color: cartItem.quantity <= 1 ? "#ef4444" : brand.primary }}
               aria-label={lang === "ar" ? "تقليل الكمية" : "Decrease quantity"}
@@ -84,7 +82,7 @@ export default function StickyATCBar({
 
             <button
               className="px-3 py-2 hover:bg-neutral-100 transition-colors disabled:opacity-50"
-              onClick={onIncrement}
+              onClick={handleIncrement}
               disabled={isLoading}
               style={{ color: brand.primary }}
               aria-label={lang === "ar" ? "زيادة الكمية" : "Increase quantity"}
@@ -94,7 +92,7 @@ export default function StickyATCBar({
           </div>
         ) : (
           <button
-            onClick={onAdd}
+            onClick={() => handleAddToCart(() => document.dispatchEvent(new CustomEvent('open-mini-cart')))}
             disabled={isLoading}
             className="px-5 py-3 rounded-2xl text-white font-semibold disabled:opacity-50"
             style={{ background: brand.primary }}
