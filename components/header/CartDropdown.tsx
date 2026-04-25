@@ -2,6 +2,7 @@
 
 import { ShoppingBag, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { removeFromCart, updateCartItem } from '@/store/slices/cartsSlice';
 import { getLocalizedPath, Locale } from '@/lib/locale-navigation';
@@ -41,6 +42,11 @@ export default function CartDropdown({
   const cart = useAppSelector((state) => state.cart.cart);
   const isCartLoading = useAppSelector((state) => state.cart.isLoading);
 
+  // Suppress cart-dependent output during SSR to prevent hydration mismatch.
+  // The Redux store is always empty on the server, but may have items on the client.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const handleRemove = async (itemId: number) => {
     try {
       await dispatch(removeFromCart(itemId)).unwrap();
@@ -69,7 +75,8 @@ export default function CartDropdown({
         className="relative px-2 py-2 rounded-xl hover:bg-neutral-100"
       >
         <ShoppingBag className="w-6 h-6 text-neutral-800" />
-        {cart && cart.totalItems > 0 && (
+        {/* Badge — only after mount to match server HTML (no cart on server) */}
+        {mounted && cart && cart.totalItems > 0 && (
           <span
             className="absolute -top-1.5 -right-1.5 h-5 min-w-[20px] px-1 rounded-full text-[11px] flex items-center justify-center text-white"
             style={{ background: brandPrimary }}
@@ -79,8 +86,8 @@ export default function CartDropdown({
         )}
       </button>
 
-      {/* Dropdown Panel */}
-      {isOpen && (
+      {/* Dropdown Panel — only after mount */}
+      {mounted && isOpen && (
         <div
           className={`absolute top-full mt-2 w-96 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden z-50 ${isRTL ? 'left-0' : 'right-0'}`}
           style={{ maxHeight: '500px' }}
