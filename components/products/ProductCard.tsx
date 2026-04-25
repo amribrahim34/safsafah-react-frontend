@@ -265,7 +265,7 @@ export default function ProductCard({
                 onBlur={handleQuantityBlur}
                 onClick={(e) => e.stopPropagation()}
                 disabled={isLoading}
-                className="w-10 text-center font-semibold text-sm border-0 focus:outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="w-10 text-center font-semibold text-sm border-0 focus:outline-none appearance-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 style={{ color: brand.primary }}
               />
 
