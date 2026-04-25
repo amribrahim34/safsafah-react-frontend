@@ -28,6 +28,12 @@ export default async function Home({ params }: PageProps) {
   
   return (
     <ClientWrapper lang={lang}>
+      <h1 className="sr-only">
+        {lang === 'ar' 
+          ? 'صفصافه - أفضل منتجات العناية بالبشرة والتجميل' 
+          : 'Safsafah - Premium Skincare & Cosmetics'}
+      </h1>
+
       {/* Server-rendered content */}
       <BrandTrust brand={BRAND} lang={lang} />
 

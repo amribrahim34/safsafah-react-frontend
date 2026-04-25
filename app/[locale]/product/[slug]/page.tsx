@@ -27,11 +27,16 @@ export async function generateMetadata({
   try {
     const product = await productsService.getProductBySlug(slug);
     if (!product) return {};
-    const title = locale === "ar" ? product.nameAr : product.nameEn;
-    const description =
-      locale === "ar"
-        ? product.descriptionAr?.slice(0, 160)
-        : product.descriptionEn?.slice(0, 160);
+    const rawTitle = locale === "ar" ? product.nameAr : product.nameEn;
+    const title = rawTitle ? rawTitle.slice(0, 60) : undefined;
+
+    const fallbackDesc = locale === "ar"
+      ? `تسوقي ${title || 'هذا المنتج'} من صفصافه. أفضل منتجات العناية والجمال.`
+      : `Shop ${title || 'this product'} at Safsafah. Premium beauty and skincare products.`;
+
+    const rawDesc = locale === "ar" ? product.descriptionAr : product.descriptionEn;
+    const cleanDesc = rawDesc ? rawDesc.replace(/<[^>]*>?/gm, '').trim().slice(0, 155) : "";
+    const description = cleanDesc || fallbackDesc;
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://safsafah.com";
     const productUrl = `${siteUrl}/${locale}/product/${slug}`;

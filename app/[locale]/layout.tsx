@@ -19,8 +19,13 @@ const metadataByLocale: Record<string, { title: string; description: string }> =
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const meta = metadataByLocale[locale] ?? metadataByLocale['en'];
+  const brandSuffix = locale === 'ar' ? 'صفصافه' : 'Safsafah';
+  
   return {
-    title: meta.title,
+    title: {
+      template: `%s | ${brandSuffix}`,
+      default: meta.title,
+    },
     description: meta.description,
   };
 }
