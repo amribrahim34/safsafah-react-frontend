@@ -14,6 +14,7 @@ import Footer from "@/components/footer/Footer";
 // Page-scoped components
 import ProductDescription from "./_components/ProductDescription";
 import ProductHero from "./_components/ProductHero";
+import ProductJsonLd from "./_components/ProductJsonLd";
 import ProductPageClient from "./_components/ProductPageClient";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -31,6 +32,7 @@ export async function generateMetadata({
       locale === "ar"
         ? product.descriptionAr?.slice(0, 160)
         : product.descriptionEn?.slice(0, 160);
+
     return {
       title: title ?? undefined,
       description: description ?? undefined,
@@ -103,6 +105,9 @@ export default async function ProductPage({
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
+      {/* Structured data for Google rich results (price, stock, rating) */}
+      <ProductJsonLd product={product} locale={locale} slug={slug} />
+
       <PromoBar text={T.promo} brand={BRAND} />
       <Header brand={BRAND} searchPlaceholder={T.search} />
 
