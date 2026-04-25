@@ -33,13 +33,48 @@ export async function generateMetadata({
         ? product.descriptionAr?.slice(0, 160)
         : product.descriptionEn?.slice(0, 160);
 
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://safsafah.com";
+    const productUrl = `${siteUrl}/${locale}/product/${slug}`;
+    const imageUrl = product.image ?? "";
+
     return {
       title: title ?? undefined,
       description: description ?? undefined,
-      openGraph: {
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-snippet": -1,
+          "max-image-preview": "large",
+          "max-video-preview": -1,
+        },
+      },
+      twitter: {
+        card: "summary_large_image",
         title: title ?? undefined,
         description: description ?? undefined,
-        images: product.image ? [{ url: product.image }] : [],
+        images: imageUrl ? [imageUrl] : [],
+      },
+      openGraph: {
+        type: "website",
+        title: title ?? undefined,
+        description: description ?? undefined,
+        siteName: locale === "ar" ? "Safsafah | صفصافه" : "Safsafah",
+        locale: locale === "ar" ? "ar_EG" : "en_US",
+        url: productUrl,
+        images: imageUrl
+          ? [
+              {
+                url: imageUrl,
+                width: 1024,
+                height: 1024,
+                alt: title ?? "Product Image",
+              },
+            ]
+          : [],
+        ...(product.updatedAt ? { modifiedTime: product.updatedAt } : {}),
       },
     };
   } catch {

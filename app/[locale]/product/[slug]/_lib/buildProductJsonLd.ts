@@ -15,14 +15,11 @@ export function buildProductJsonLd({
   locale,
   slug,
 }: BuildProductJsonLdOptions): Record<string, unknown> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://safsafah.com";
   const productUrl = `${siteUrl}/${locale}/product/${slug}`;
 
   const name = locale === "ar" ? product.nameAr : product.nameEn;
-  const description =
-    locale === "ar"
-      ? product.descriptionAr?.slice(0, 160)
-      : product.descriptionEn?.slice(0, 160);
+  const description = locale === "ar" ? product.descriptionAr : product.descriptionEn;
 
   return {
     "@context": "https://schema.org",

@@ -16,13 +16,19 @@ export const metadata: Metadata = {
   description: "Discover Safsafah – your destination for premium cosmetics and skincare products. Shop trusted brands, expert-curated routines, and the latest beauty essentials. Enjoy fast delivery and exclusive deals every day.",
 };
 
-export default function RootLayout({
+import { headers } from "next/headers";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const locale = headersList.get("x-locale") || "ar";
+  const dir = locale === "ar" ? "rtl" : "ltr";
+
   return (
-    <html suppressHydrationWarning>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
        <GoogleTagManager gtmId="G-XPJ4C7758M" />
       <head>
       <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
