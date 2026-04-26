@@ -4,7 +4,14 @@ import React, { useEffect, useState } from "react";
 export default function ExitIntentModal({ brand, lang }){
   const [show,setShow] = useState(false);
   useEffect(()=>{
-    const onLeave = (e)=>{ setShow(true); };
+    const hasSeenModal = sessionStorage.getItem('exit_intent_seen');
+    if (hasSeenModal) return;
+
+    const onLeave = (e)=>{ 
+      setShow(true); 
+      sessionStorage.setItem('exit_intent_seen', 'true');
+      document.removeEventListener('mouseleave', onLeave);
+    };
     document.addEventListener('mouseleave', onLeave);
     return ()=> document.removeEventListener('mouseleave', onLeave);
   },[]);
