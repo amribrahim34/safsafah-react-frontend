@@ -29,7 +29,6 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
-       <GoogleTagManager gtmId="G-XPJ4C7758M" />
       <head>
       <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
       <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png"></link>
@@ -41,6 +40,7 @@ export default async function RootLayout({
       <body
         className={`${cairo.variable} font-sans`}
       >
+        <GoogleTagManager gtmId="G-XPJ4C7758M" />
         <LocaleSync />
         <Providers>{children}</Providers>
       </body>

@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   // Disable static export to prevent SSR issues with browser-only code
   output: 'standalone',
+  experimental: {
+    optimizeCss: true,
+  },
   async rewrites() {
     return [
       {
