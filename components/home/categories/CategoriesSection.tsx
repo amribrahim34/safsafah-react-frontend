@@ -6,6 +6,7 @@ import { homeService } from "@/lib/api/services";
 import { env } from "@/config/env";
 import type { HomeCategory } from "@/types";
 import { useParams } from "next/navigation";
+import { getLocalizedPath } from '@/lib/locale-navigation';
 
 
 export default function CategoriesSection() {
@@ -83,7 +84,7 @@ export default function CategoriesSection() {
         <h2 className="text-xl md:text-2xl font-extrabold">
           {lang === "ar" ? "تسوق حسب الفئة" : "Shop by category"}
         </h2>
-        <Link href="/catalog" className="font-semibold">
+        <Link href={getLocalizedPath('/catalog', lang)} className="font-semibold">
           {lang === "ar" ? "الكل" : "View all"}
         </Link>
       </div>
@@ -95,7 +96,7 @@ export default function CategoriesSection() {
           return (
             <Link
               key={category.id}
-              href={`/catalog?categoryId=${category.id}`}
+              href={getLocalizedPath(`/catalog?categoryId=${category.id}`, lang)}
               className="relative rounded-2xl overflow-hidden border border-neutral-200"
             >
               {imageUrl ? (

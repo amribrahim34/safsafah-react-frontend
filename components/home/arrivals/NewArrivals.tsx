@@ -7,6 +7,7 @@ import Link from "next/link";
 import ProductGrid from "../../products/ProductGrid";
 import { homeService } from "@/lib/api/services";
 import type { HomeProduct } from "@/types";
+import { getLocalizedPath } from '@/lib/locale-navigation';
 
 interface NewArrivalsProps {
   brand: {
@@ -89,7 +90,7 @@ export default function NewArrivals({ brand }: NewArrivalsProps) {
           <h2 className="text-xl md:text-2xl font-extrabold">
             {t('newArrivals.title')}
           </h2>
-          <Link href="/catalog" className="font-semibold" style={{ color: brand.primary }}>
+          <Link href={getLocalizedPath('/catalog', lang)} className="font-semibold" style={{ color: brand.primary }}>
             {t('newArrivals.viewAll')}
           </Link>
         </div>

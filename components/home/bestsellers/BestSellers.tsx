@@ -7,6 +7,7 @@ import ProductGrid from "../../products/ProductGrid";
 import { homeService } from "@/lib/api/services";
 import type { HomeProduct } from "@/types";
 import { useParams } from "next/navigation";
+import { getLocalizedPath } from '@/lib/locale-navigation';
 
 interface BestSellersProps {
   brand: {
@@ -88,7 +89,7 @@ export default function BestSellers({ brand }: BestSellersProps) {
           <h2 className="text-xl md:text-2xl font-extrabold">
             {t('sections.trending')}
           </h2>
-          <Link href="/catalog" className="font-semibold" style={{ color: brand.primary }}>
+          <Link href={getLocalizedPath('/catalog', lang)} className="font-semibold" style={{ color: brand.primary }}>
             {t('sections.viewAll')}
           </Link>
         </div>

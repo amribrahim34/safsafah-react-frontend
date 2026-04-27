@@ -6,6 +6,7 @@ import { homeService } from "@/lib/api/services";
 import { env } from "@/config/env";
 import type { HomeBrand } from "@/types";
 import { useParams } from "next/navigation";
+import { getLocalizedPath } from '@/lib/locale-navigation';
 
 
 export default function BrandsSection() {
@@ -83,7 +84,7 @@ export default function BrandsSection() {
         <h2 className="text-xl md:text-2xl font-extrabold">
           {lang === "ar" ? "تسوق حسب العلامة التجارية" : "Shop by brand"}
         </h2>
-        <Link href="/catalog" className="font-semibold">
+        <Link href={getLocalizedPath('/catalog', lang)} className="font-semibold">
           {lang === "ar" ? "الكل" : "View all"}
         </Link>
       </div>
@@ -95,7 +96,7 @@ export default function BrandsSection() {
           return (
             <Link
               key={brand.id}
-              href={`/catalog?brandId=${brand.id}`}
+              href={getLocalizedPath(`/catalog?brandId=${brand.id}`, lang)}
               className="bg-white rounded-lg border border-neutral-200 p-4 hover:shadow-md transition-shadow flex items-center justify-center"
             >
               {logoUrl ? (
