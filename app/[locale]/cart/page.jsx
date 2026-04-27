@@ -12,7 +12,6 @@ import { fetchCart, updateCartItem, removeFromCart, applyPromoCode } from "@/sto
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-import BottomTabs from "@/components/appchrome/BottomTabs";
 import FloatingCart from "@/components/appchrome/FloatingCart";
 
 import CartItem from "@/components/cart/CartItem";
@@ -168,15 +167,6 @@ export default function CartPage() {
 
       <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
-      <BottomTabs
-        labels={{
-          home: lang === "ar" ? "الرئيسية" : "Home",
-          cats: lang === "ar" ? "الفئات" : "Categories",
-          cart: lang === "ar" ? "السلة" : "Bag",
-          wish: lang === "ar" ? "المفضلة" : "Wishlist",
-          account: lang === "ar" ? "حسابي" : "Account",
-        }}
-      />
 
       {/* Sticky checkout on mobile */}
       {items.length > 0 && (

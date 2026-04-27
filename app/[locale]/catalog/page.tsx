@@ -9,7 +9,6 @@ import { COPY } from '@/content/copy';
 import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
 import ProductGrid from '@/components/products/ProductGrid';
-import BottomTabs from '@/components/appchrome/BottomTabs';
 import FloatingCart from '@/components/appchrome/FloatingCart';
 import Footer from '@/components/footer/Footer';
 import SortBar from '@/components/catalog/sortbar/SortBar';
@@ -152,15 +151,6 @@ function CatalogPageContent() {
 
       <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
-      <BottomTabs
-        labels={{
-          home: isRTL ? 'الرئيسية' : 'Home',
-          cats: isRTL ? 'الفئات' : 'Categories',
-          cart: isRTL ? 'السلة' : 'Bag',
-          wish: isRTL ? 'المفضلة' : 'Wishlist',
-          account: isRTL ? 'حسابي' : 'Account',
-        }}
-      />
     </div>
   );
 }

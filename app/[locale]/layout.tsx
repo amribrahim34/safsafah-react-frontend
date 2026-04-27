@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
+import BottomTabs from '@/components/appchrome/BottomTabs';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -38,10 +39,12 @@ type LayoutProps = {
 };
 
 export default function LocaleLayout({ children }: LayoutProps) {
-  // Locale layout should not have html/body tags
-  // Those belong only in the root layout
-  // Locale is read from URL by client components using useLocale hook
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <BottomTabs />
+    </>
+  );
 }
 
 // Generate static params for known locales

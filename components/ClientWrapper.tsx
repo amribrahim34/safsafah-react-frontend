@@ -9,7 +9,6 @@ import { BRAND } from '../content/brand';
 import PromoBar from './header/PromoBar';
 import Header from './header/Header';
 import HeroSlider from './home/hero/HeroSlider';
-import BottomTabs from './appchrome/BottomTabs';
 import FloatingCart from './appchrome/FloatingCart';
 
 interface ClientWrapperProps {
@@ -38,13 +37,6 @@ export default function ClientWrapper({ children }: ClientWrapperProps) {
       {children}
       
       <FloatingCart brand={BRAND} />
-      <BottomTabs labels={{
-        home: t('bottomTabs.home'),
-        cats: t('bottomTabs.categories'),
-        cart: t('bottomTabs.cart'),
-        wish: t('bottomTabs.wishlist'),
-        account: t('bottomTabs.account')
-      }} />
     </div>
   );
 }

@@ -10,8 +10,6 @@ import { fetchPaginatedOrders } from "@/store/slices/ordersSlice";
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-import BottomTabs from "@/components/appchrome/BottomTabs";
-
 import OrdersTabs from "@/components/orders/OrdersTabs";
 import OrderCard from "@/components/orders/OrderCard";
 
@@ -225,15 +223,6 @@ export default function OrdersPage() {
       </main>
 
       <Footer brand={BRAND} />
-      <BottomTabs
-        labels={{
-          home: isRTL ? "الرئيسية" : "Home",
-          cats: isRTL ? "الفئات" : "Categories",
-          cart: isRTL ? "السلة" : "Bag",
-          wish: isRTL ? "المفضلة" : "Wishlist",
-          account: isRTL ? "حسابي" : "Account",
-        }}
-      />
     </div>
   );
 }

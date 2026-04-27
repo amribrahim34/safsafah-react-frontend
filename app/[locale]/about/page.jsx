@@ -12,8 +12,6 @@ import { IMG } from '@/content/images';
 import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
-import BottomTabs from '@/components/appchrome/BottomTabs';
-
 import VisionMission from './_components/VisionMission';
 import ServiceCommitments from './_components/ServiceCommitments';
 import QuickFAQ from '@/components/about/QuickFAQ';
@@ -72,7 +70,6 @@ export default function AboutPage() {
       </main>
 
       <Footer brand={BRAND} />
-      <BottomTabs labels={t('bottomTabs', { returnObjects: true })} />
     </div>
   );
 }

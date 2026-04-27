@@ -13,7 +13,6 @@ import PromoBar from "./header/PromoBar";
 import Header from "./header/Header";
 import HeroSlider from "./home/hero/HeroSlider";
 import Banners from "./home/banners/Banners";
-import BottomTabs from "./appchrome/BottomTabs";
 import FloatingCart from "./appchrome/FloatingCart";
 import Newsletter from "./home/newsletter/Newsletter";
 import Footer from "./footer/Footer";
@@ -80,13 +79,6 @@ export default function ClientPageWrapper({ children }: ClientPageWrapperProps) 
       <Footer brand={BRAND} />
 
       <FloatingCart brand={BRAND} />
-      <BottomTabs labels={{
-        home: t('bottomTabs.home'),
-        cats: t('bottomTabs.categories'),
-        cart: t('bottomTabs.cart'),
-        wish: t('bottomTabs.wishlist'),
-        account: t('bottomTabs.account')
-      }} />
     </div>
   );
 }

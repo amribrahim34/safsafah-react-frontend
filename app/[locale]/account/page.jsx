@@ -9,8 +9,6 @@ import { useAppSelector } from "@/store/hooks";
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-import BottomTabs from "@/components/appchrome/BottomTabs";
-
 import OverviewHeader from "./_components/OverviewHeader";
 import OrdersList from "./_components/OrdersList";
 import WishlistGrid from "./_components/WishlistGrid";
@@ -77,13 +75,6 @@ export default function ProfilePage() {
       </main>
 
       <Footer brand={BRAND} />
-      <BottomTabs labels={{
-        home: lang === "ar" ? "الرئيسية" : "Home",
-        cats: lang === "ar" ? "الفئات" : "Categories",
-        cart: lang === "ar" ? "السلة" : "Bag",
-        wish: lang === "ar" ? "المفضلة" : "Wishlist",
-        account: lang === "ar" ? "حسابي" : "Account",
-      }} />
     </div>
   );
 }

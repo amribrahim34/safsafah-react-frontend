@@ -8,8 +8,6 @@ import { useDir } from "@/hooks/useDir";
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-import BottomTabs from "@/components/appchrome/BottomTabs";
-
 // ---- Return & Refund Policy Page ----
 // Default language is AR. No borders between blocks. Clean, consistent styling.
 
@@ -254,15 +252,6 @@ export default function RefundPolicy({ lastUpdated }) {
       </main>
 
       <Footer brand={BRAND} />
-      <BottomTabs
-        labels={{
-          home: isRTL ? "الرئيسية" : "Home",
-          cats: isRTL ? "الفئات" : "Categories",
-          cart: isRTL ? "السلة" : "Bag",
-          wish: isRTL ? "المفضلة" : "Wishlist",
-          account: isRTL ? "حسابي" : "Account",
-        }}
-      />
     </div>
   );
 }

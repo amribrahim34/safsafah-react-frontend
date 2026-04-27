@@ -4,7 +4,6 @@ import type { Product } from "@/types/models/product";
 import type { BrandColors, LocalReview } from "../types";
 import type { Language } from "@/types/models/common";
 
-import BottomTabs from "@/components/appchrome/BottomTabs";
 import FloatingCart from "@/components/appchrome/FloatingCart";
 import MiniCart from "@/components/product_details/MiniCart";
 // import ExitIntentModal from "@/components/product_details/ExitIntentModal";
@@ -21,14 +20,6 @@ interface ProductPageClientProps {
 }
 
 export default function ProductPageClient({ product, reviews, brand, lang }: ProductPageClientProps) {
-  const bottomLabels = {
-    home: lang === "ar" ? "الرئيسية" : "Home",
-    cats: lang === "ar" ? "الفئات" : "Categories",
-    cart: lang === "ar" ? "السلة" : "Bag",
-    wish: lang === "ar" ? "المفضلة" : "Wishlist",
-    account: lang === "ar" ? "حسابي" : "Account",
-  };
-
   return (
     <>
       <ProductViewTracker product={product} />
@@ -42,7 +33,6 @@ export default function ProductPageClient({ product, reviews, brand, lang }: Pro
       />
 
       <FloatingCart brand={brand} />
-      <BottomTabs labels={bottomLabels} />
 
       <StickyATCBar product={product} brand={brand} lang={lang} />
 

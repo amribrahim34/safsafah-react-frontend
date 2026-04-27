@@ -10,7 +10,6 @@ import { useBeautyQuestionnaire, useBeautyProfileSubmit } from './_hooks/useBeau
 import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
-import BottomTabs from '@/components/appchrome/BottomTabs';
 import FloatingCart from '@/components/appchrome/FloatingCart';
 
 import {
@@ -226,15 +225,6 @@ export default function SkinCareQuize() {
 
       <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
-      <BottomTabs
-        labels={{
-          home: lang === 'ar' ? 'الرئيسية' : 'Home',
-          cats: lang === 'ar' ? 'الفئات' : 'Categories',
-          cart: lang === 'ar' ? 'السلة' : 'Bag',
-          wish: lang === 'ar' ? 'المفضلة' : 'Wishlist',
-          account: lang === 'ar' ? 'حسابي' : 'Account',
-        }}
-      />
     </div>
   );
 }

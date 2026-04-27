@@ -9,8 +9,6 @@ import { useDir } from "@/hooks/useDir";
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-import BottomTabs from "@/components/appchrome/BottomTabs";
-
 // Reuse existing About blocks for consistency
 import QuickFAQ from "@/components/about/QuickFAQ";
 
@@ -371,15 +369,6 @@ export default function ContactUs() {
       </main>
 
       <Footer brand={BRAND} />
-      <BottomTabs
-        labels={{
-          home: isRTL ? "الرئيسية" : "Home",
-          cats: isRTL ? "الفئات" : "Categories",
-          cart: isRTL ? "السلة" : "Bag",
-          wish: isRTL ? "المفضلة" : "Wishlist",
-          account: isRTL ? "حسابي" : "Account",
-        }}
-      />
     </div>
   );
 }
