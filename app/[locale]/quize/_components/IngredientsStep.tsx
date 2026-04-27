@@ -3,12 +3,12 @@
  * Third step - Select preferred and avoided ingredients, and allergies
  */
 
+import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 
 
 interface IngredientsStepProps {
-  lang: 'en' | 'ar';
   ingredients: {
     id: number;
     nameAr: string;
@@ -24,7 +24,6 @@ interface IngredientsStepProps {
 }
 
 export default function IngredientsStep({
-  lang,
   ingredients,
   selectedPreferred,
   selectedAvoided,
@@ -67,6 +66,10 @@ export default function IngredientsStep({
       onAvoidedChange([...selectedAvoided, ingredientId]);
     }
   };
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+
 
   return (
     <div className="space-y-4">

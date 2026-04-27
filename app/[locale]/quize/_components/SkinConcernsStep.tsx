@@ -3,9 +3,9 @@
  * Second step - Select skin concerns (multiple selection)
  */
 import type { SkinConcern } from '@/types';
+import { useParams } from 'next/navigation';
 
 interface SkinConcernsStepProps {
-  lang: 'en' | 'ar';
   skinConcerns: SkinConcern[];
   selectedConcerns: number[]; // Array of selected concern IDs
   onToggle: (concernIds: number[]) => void; // Callback to toggle concerns
@@ -14,7 +14,6 @@ interface SkinConcernsStepProps {
 
 
 export default function SkinConcernsStep({
-  lang,
   skinConcerns,
   selectedConcerns,
   onToggle,
@@ -37,6 +36,10 @@ export default function SkinConcernsStep({
       onToggle([...selectedConcerns, concernId]);
     }
   };
+
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   return (
     <div className="space-y-4">

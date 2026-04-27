@@ -3,14 +3,18 @@
  * Loading state for the quiz
  */
 
-interface QuizLoaderProps {
-  lang: 'en' | 'ar';
-}
-export default function QuizLoader({ lang }: QuizLoaderProps) {
+import { useParams } from "next/navigation";
+
+export default function QuizLoader() {
   const message = {
     ar: 'جاري تحميل الاستبيان...',
     en: 'Loading questionnaire...',
   };
+
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+
 
   return (
     <div className="flex flex-col items-center justify-center py-16">

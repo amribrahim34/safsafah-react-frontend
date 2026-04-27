@@ -3,16 +3,20 @@
  * Error state for the quiz
  */
 
+import { useParams } from "next/navigation";
+
 interface QuizErrorProps {
-  lang: 'en' | 'ar';
   error: string;
   onRetry?: () => void;
 }
-export default function QuizError({ lang, error, onRetry }: QuizErrorProps) {
+export default function QuizError({ error, onRetry }: QuizErrorProps) {
   const translations = {
     title: { ar: 'حدث خطأ', en: 'Something went wrong' },
     retry: { ar: 'إعادة المحاولة', en: 'Try Again' },
   };
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">

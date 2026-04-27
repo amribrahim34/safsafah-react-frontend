@@ -22,9 +22,9 @@ export default function SkinTypeStep({  skinTypes, selectedSkinType, onSelect }:
     ar: 'اختر نوع بشرتك للحصول على توصيات مخصصة',
     en: 'Select your skin type to get personalized recommendations',
   };
-    const params = useParams();
-    const locale = params?.locale as string | undefined;
-    const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
     
 
   return (

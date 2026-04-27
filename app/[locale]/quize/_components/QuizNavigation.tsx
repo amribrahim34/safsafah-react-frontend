@@ -3,6 +3,8 @@
  * Navigation buttons for quiz (Back, Next, Submit)
  */
 
+import { useParams } from "next/navigation";
+
 interface QuizNavigationProps {
   lang: 'en' | 'ar';
   onBack: () => void;
@@ -14,7 +16,6 @@ interface QuizNavigationProps {
 }
 
 export default function QuizNavigation({
-  lang,
   onBack,
   onNext,
   showBack,
@@ -26,6 +27,11 @@ export default function QuizNavigation({
     back: { ar: 'رجوع', en: 'Back' },
     next: { ar: 'التالي', en: 'Next' },
   };
+
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+
 
   return (
     <div className="flex gap-3 mt-6">
