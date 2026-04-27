@@ -52,7 +52,7 @@ export default function ClientPageWrapper({ children }: ClientPageWrapperProps) 
 
       {/* Rich visual banners */}
       <section className="max-w-7xl mx-auto px-4 pb-6">
-        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND} lang={lang} />
+        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND} />
       </section>
       <MoreBanners brand={BRAND} lang={lang} />
 
@@ -60,19 +60,19 @@ export default function ClientPageWrapper({ children }: ClientPageWrapperProps) 
       <NewArrivals brand={BRAND} lang={lang} />
 
       <section className="max-w-7xl mx-auto px-4 pb-6">
-        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND} lang={lang} />
+        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND} />
       </section>
 
       <section id="categories">
-        <CategoriesSection lang={lang} />
+        <CategoriesSection />
       </section>
 
       <section id="brands">
-        <BrandsSection lang={lang} />
+        <BrandsSection />
       </section>
 
       <section id="bestsellers">
-        <BestSellers brand={BRAND} lang={lang} />
+        <BestSellers brand={BRAND} />
       </section>
 
       <Newsletter brand={BRAND} lang={lang} copy={COPY[lang as keyof typeof COPY]} />

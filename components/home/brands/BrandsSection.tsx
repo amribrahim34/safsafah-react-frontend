@@ -5,16 +5,17 @@ import Link from "next/link";
 import { homeService } from "@/lib/api/services";
 import { env } from "@/config/env";
 import type { HomeBrand } from "@/types";
+import { useParams } from "next/navigation";
 
-interface BrandsSectionProps {
-  lang: string;
-}
 
-export default function BrandsSection({ lang }: BrandsSectionProps) {
+export default function BrandsSection() {
   const [brands, setBrands] = useState<HomeBrand[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+ 
   useEffect(() => {
     const fetchBrands = async () => {
       try {

@@ -9,8 +9,7 @@ import NewArrivals from "@/components/home/arrivals/NewArrivals";
 import BestSellers from "@/components/home/bestsellers/BestSellers";
 import CategoriesSection from "@/components/home/categories/CategoriesSection";
 import BrandsSection from "@/components/home/brands/BrandsSection";
-import MoreBanners from "@/components/home/banners/ExtraBanners";
-// import Newsletter from "@/components/home/newsletter/Newsletter";
+// import MoreBanners from "@/components/home/banners/ExtraBanners";
 import Footer from "@/components/footer/Footer";
 
 // Force dynamic rendering
@@ -38,26 +37,26 @@ export default async function Home({ params }: PageProps) {
       <BrandTrust brand={BRAND} lang={lang} />
 
       <section className="max-w-7xl mx-auto px-4 pb-6">
-        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND} lang={lang} />
+        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND}  />
       </section>
-      <MoreBanners brand={BRAND} lang={lang} />
+      {/* <MoreBanners brand={BRAND} lang={lang} /> */}
 
-      <NewArrivals brand={BRAND} lang={lang} />
+      <NewArrivals brand={BRAND} />
 
       <section className="max-w-7xl mx-auto px-4 pb-6">
-        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND} lang={lang} />
+        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND}  />
       </section>
 
       <section id="categories">
-        <CategoriesSection lang={lang} />
+        <CategoriesSection />
       </section>
 
       <section id="brands">
-        <BrandsSection lang={lang} />
+        <BrandsSection />
       </section>
 
       <section id="bestsellers">
-        <BestSellers brand={BRAND} lang={lang} />
+        <BestSellers brand={BRAND} />
       </section>
 
       {/* <Newsletter brand={BRAND} lang={lang} copy={COPY[lang as keyof typeof COPY]} /> */}

@@ -6,6 +6,7 @@ import Link from "next/link";
 import ProductGrid from "../../products/ProductGrid";
 import { homeService } from "@/lib/api/services";
 import type { HomeProduct } from "@/types";
+import { useParams } from "next/navigation";
 
 interface BestSellersProps {
   brand: {
@@ -13,15 +14,17 @@ interface BestSellersProps {
     dark: string;
     light: string;
   };
-  lang: string;
 }
 
-export default function BestSellers({ brand, lang }: BestSellersProps) {
+export default function BestSellers({ brand }: BestSellersProps) {
   const { t } = useTranslation('home');
   const [products, setProducts] = useState<HomeProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+ 
   useEffect(() => {
     const fetchBestSellers = async () => {
       try {

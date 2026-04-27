@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import ProductGrid from "../../products/ProductGrid";
@@ -13,10 +14,13 @@ interface NewArrivalsProps {
     dark: string;
     light: string;
   };
-  lang: string;
+  lang?: string;
 }
 
-export default function NewArrivals({ brand, lang }: NewArrivalsProps) {
+export default function NewArrivals({ brand }: NewArrivalsProps) {
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
   const { t } = useTranslation('home');
   const [products, setProducts] = useState<HomeProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);

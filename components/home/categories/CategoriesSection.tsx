@@ -5,16 +5,17 @@ import Link from "next/link";
 import { homeService } from "@/lib/api/services";
 import { env } from "@/config/env";
 import type { HomeCategory } from "@/types";
+import { useParams } from "next/navigation";
 
-interface CategoriesSectionProps {
-  lang: string;
-}
 
-export default function CategoriesSection({ lang }: CategoriesSectionProps) {
+export default function CategoriesSection() {
   const [categories, setCategories] = useState<HomeCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+ 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
