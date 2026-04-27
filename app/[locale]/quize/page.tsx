@@ -1,24 +1,18 @@
-/**
- * SkinCareQuize Page
- * Beauty questionnaire with dynamic data fetching
- */
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { BRAND } from '@/content/brand';
 import { COPY } from '@/content/copy';
 import { useDir } from '@/hooks/useDir';
 import { useBeautyQuestionnaire, useBeautyProfileSubmit } from './_hooks/useBeautyQuestionnaire';
 
-// Layout components
 import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
 import BottomTabs from '@/components/appchrome/BottomTabs';
 import FloatingCart from '@/components/appchrome/FloatingCart';
 
-// Quiz components
 import {
   QuizProgress,
   QuizNavigation,
@@ -31,19 +25,49 @@ import {
 
 const TOTAL_STEPS = 3;
 
+type Lang = 'ar' | 'en';
+
+interface FormData {
+  skinTypeId: number | null;
+  skinConcernIds: number[];
+  allergies: string;
+  preferredIngredientIds: number[];
+  avoidedIngredientIds: number[];
+}
+
+const translations: Record<string, Record<Lang, string>> = {
+  pageTitle: {
+    ar: 'اكتشف روتين العناية المثالي لبشرتك',
+    en: 'Discover Your Perfect Skincare Routine',
+  },
+  pageDescription: {
+    ar: 'أجب على بعض الأسئلة البسيطة وسنساعدك في اختيار المنتجات المناسبة لبشرتك واحتياجاتك',
+    en: "Answer a few simple questions and we'll help you choose the right products for your skin",
+  },
+  submitButton: {
+    ar: 'احفظ ملفي الجمالي',
+    en: 'Save My Beauty Profile',
+  },
+  successMessage: {
+    ar: 'تم حفظ ملفك الجمالي بنجاح! سنوجهك الآن...',
+    en: 'Your beauty profile has been saved successfully! Redirecting...',
+  },
+};
+
 export default function SkinCareQuize() {
   const router = useRouter();
-  const [lang, setLang] = useState('ar');
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang: Lang = locale === 'en' || locale === 'ar' ? locale : 'ar';
+
   const T = useMemo(() => COPY[lang], [lang]);
   useDir();
 
-  // Fetch questionnaire options
   const { data: questionnaireData, loading, error } = useBeautyQuestionnaire();
   const { submitProfile, loading: submitting, error: submitError } = useBeautyProfileSubmit();
 
-  // Quiz state
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     skinTypeId: null,
     skinConcernIds: [],
     allergies: '',
@@ -51,47 +75,20 @@ export default function SkinCareQuize() {
     avoidedIngredientIds: [],
   });
 
-  // Translations
-  const translations = {
-    pageTitle: {
-      ar: 'اكتشف روتين العناية المثالي لبشرتك',
-      en: 'Discover Your Perfect Skincare Routine',
-    },
-    pageDescription: {
-      ar: 'أجب على بعض الأسئلة البسيطة وسنساعدك في اختيار المنتجات المناسبة لبشرتك واحتياجاتك',
-      en: 'Answer a few simple questions and we\'ll help you choose the right products for your skin',
-    },
-    submitButton: {
-      ar: 'احفظ ملفي الجمالي',
-      en: 'Save My Beauty Profile',
-    },
-    successMessage: {
-      ar: 'تم حفظ ملفك الجمالي بنجاح! سنوجهك الآن...',
-      en: 'Your beauty profile has been saved successfully! Redirecting...',
-    },
-  };
-
-  // Handlers
   const handleNext = useCallback(() => {
-    if (step < TOTAL_STEPS - 1) {
-      setStep((prev) => prev + 1);
-    }
+    if (step < TOTAL_STEPS - 1) setStep((prev) => prev + 1);
   }, [step]);
 
   const handleBack = useCallback(() => {
-    if (step > 0) {
-      setStep((prev) => prev - 1);
-    }
+    if (step > 0) setStep((prev) => prev - 1);
   }, [step]);
 
   const handleSubmit = useCallback(async () => {
     try {
-      // Validate required fields
       if (!formData.skinTypeId) {
         alert(lang === 'ar' ? 'يرجى اختيار نوع البشرة' : 'Please select a skin type');
         return;
       }
-
       if (formData.skinConcernIds.length === 0) {
         alert(
           lang === 'ar'
@@ -100,55 +97,42 @@ export default function SkinCareQuize() {
         );
         return;
       }
-
-      // Submit the profile
-      await submitProfile(formData);
-
-      // Show success message
+      await submitProfile({ ...formData, skinTypeId: formData.skinTypeId as number });
       alert(translations.successMessage[lang]);
-
-      // Redirect to profile or home page after 1 second
-      setTimeout(() => {
-        router.push('/account');
-      }, 1000);
+      setTimeout(() => router.push('/account'), 1000);
     } catch (err) {
       console.error('Failed to submit beauty profile:', err);
       alert(
         submitError ||
-        (lang === 'ar'
-          ? 'حدث خطأ أثناء حفظ الملف. يرجى المحاولة مرة أخرى'
-          : 'An error occurred while saving. Please try again')
+          (lang === 'ar'
+            ? 'حدث خطأ أثناء حفظ الملف. يرجى المحاولة مرة أخرى'
+            : 'An error occurred while saving. Please try again')
       );
     }
-  }, [formData, submitProfile, router, lang, translations, submitError]);
+  }, [formData, submitProfile, router, lang, submitError]);
 
-  // Retry loading questionnaire
-  const handleRetry = useCallback(() => {
-    // window.location.reload();
-  }, []);
+  const handleRetry = useCallback(() => {}, []);
 
-  // Update handlers
-  const handleSkinTypeSelect = useCallback((skinTypeId) => {
+  const handleSkinTypeSelect = useCallback((skinTypeId: number) => {
     setFormData((prev) => ({ ...prev, skinTypeId }));
   }, []);
 
-  const handleConcernsChange = useCallback((skinConcernIds) => {
+  const handleConcernsChange = useCallback((skinConcernIds: number[]) => {
     setFormData((prev) => ({ ...prev, skinConcernIds }));
   }, []);
 
-  const handlePreferredChange = useCallback((preferredIngredientIds) => {
+  const handlePreferredChange = useCallback((preferredIngredientIds: number[]) => {
     setFormData((prev) => ({ ...prev, preferredIngredientIds }));
   }, []);
 
-  const handleAvoidedChange = useCallback((avoidedIngredientIds) => {
+  const handleAvoidedChange = useCallback((avoidedIngredientIds: number[]) => {
     setFormData((prev) => ({ ...prev, avoidedIngredientIds }));
   }, []);
 
-  const handleAllergiesChange = useCallback((allergies) => {
+  const handleAllergiesChange = useCallback((allergies: string) => {
     setFormData((prev) => ({ ...prev, allergies }));
   }, []);
 
-  // Determine if current step is valid
   const isStepValid = useMemo(() => {
     switch (step) {
       case 0:
@@ -156,7 +140,7 @@ export default function SkinCareQuize() {
       case 1:
         return formData.skinConcernIds.length > 0;
       case 2:
-        return true; // This step is optional
+        return true;
       default:
         return false;
     }
@@ -164,15 +148,9 @@ export default function SkinCareQuize() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar
-        text={T.promo}
-        lang={lang}
-        onToggleLang={() => setLang(lang === 'ar' ? 'en' : 'ar')}
-        brand={BRAND}
-      />
-      <Header brand={BRAND} searchPlaceholder={T.search} lang={lang} />
+      <PromoBar text={T.promo} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={T.search} />
 
-      {/* Page Header */}
       <section className="max-w-5xl mx-auto px-4 pt-8 pb-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-neutral-900">
           {translations.pageTitle[lang]}
@@ -180,16 +158,12 @@ export default function SkinCareQuize() {
         <p className="text-neutral-600 leading-relaxed">{translations.pageDescription[lang]}</p>
       </section>
 
-      {/* Quiz Content */}
       <section className="max-w-5xl mx-auto px-4 pb-16">
         <div className="rounded-2xl border-2 border-neutral-100 p-6 md:p-8 shadow-sm bg-white">
-          {/* Loading State */}
-          {loading && <QuizLoader lang={lang} />}
+          {loading && <QuizLoader />}
 
-          {/* Error State */}
-          {error && !loading && <QuizError lang={lang} error={error} onRetry={handleRetry} />}
+          {error && !loading && <QuizError error={error} onRetry={handleRetry} />}
 
-          {/* Quiz Steps */}
           {!loading && !error && questionnaireData && (
             <>
               <QuizProgress
@@ -198,20 +172,16 @@ export default function SkinCareQuize() {
                 primaryColor={BRAND.primary}
               />
 
-              {/* Step 0: Skin Type */}
               {step === 0 && (
                 <SkinTypeStep
-                  lang={lang}
                   skinTypes={questionnaireData.skinTypes}
                   selectedSkinType={formData.skinTypeId}
                   onSelect={handleSkinTypeSelect}
                 />
               )}
 
-              {/* Step 1: Skin Concerns */}
               {step === 1 && (
                 <SkinConcernsStep
-                  lang={lang}
                   skinConcerns={questionnaireData.skinConcerns}
                   selectedConcerns={formData.skinConcernIds}
                   onToggle={handleConcernsChange}
@@ -219,10 +189,8 @@ export default function SkinCareQuize() {
                 />
               )}
 
-              {/* Step 2: Ingredients & Allergies */}
               {step === 2 && (
                 <IngredientsStep
-                  lang={lang}
                   ingredients={questionnaireData.activeIngredients}
                   selectedPreferred={formData.preferredIngredientIds}
                   selectedAvoided={formData.avoidedIngredientIds}
@@ -234,7 +202,6 @@ export default function SkinCareQuize() {
                 />
               )}
 
-              {/* Navigation */}
               <QuizNavigation
                 lang={lang}
                 onBack={handleBack}
@@ -245,7 +212,6 @@ export default function SkinCareQuize() {
                 primaryColor={BRAND.primary}
               />
 
-              {/* Validation message */}
               {!isStepValid && step < TOTAL_STEPS - 1 && (
                 <p className="text-sm text-amber-600 mt-4">
                   {lang === 'ar'

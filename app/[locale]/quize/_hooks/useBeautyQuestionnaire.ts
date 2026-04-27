@@ -1,19 +1,15 @@
-/**
- * Custom hook for managing beauty questionnaire data
- * Handles fetching questionnaire options and submitting beauty profile
- */
-
 import { useState, useEffect, useCallback } from 'react';
 import { beautyProfileService } from '@/lib/api';
+import type {
+  BeautyQuestionnaireOptions,
+  BeautyProfile,
+  CreateBeautyProfileRequest,
+} from '@/types/models/beauty-profile';
 
-/**
- * Hook for fetching beauty questionnaire options
- * @returns {Object} Questionnaire data, loading state, and error
- */
 export function useBeautyQuestionnaire() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<BeautyQuestionnaireOptions | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchQuestionnaireOptions = async () => {
@@ -23,7 +19,7 @@ export function useBeautyQuestionnaire() {
         const options = await beautyProfileService.getQuestionnaireOptions();
         setData(options);
       } catch (err) {
-        setError(err.message || 'Failed to load questionnaire options');
+        setError(err instanceof Error ? err.message : 'Failed to load questionnaire options');
         console.error('Error fetching questionnaire options:', err);
       } finally {
         setLoading(false);
@@ -36,28 +32,23 @@ export function useBeautyQuestionnaire() {
   return { data, loading, error };
 }
 
-/**
- * Hook for submitting beauty profile
- * @returns {Object} Submit function, loading state, error, and success state
- */
 export function useBeautyProfileSubmit() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [beautyProfile, setBeautyProfile] = useState(null);
+  const [beautyProfile, setBeautyProfile] = useState<BeautyProfile | null>(null);
 
-  const submitProfile = useCallback(async (profileData) => {
+  const submitProfile = useCallback(async (profileData: CreateBeautyProfileRequest) => {
     try {
       setLoading(true);
       setError(null);
       setSuccess(false);
-
       const result = await beautyProfileService.createBeautyProfile(profileData);
       setBeautyProfile(result);
       setSuccess(true);
       return result;
     } catch (err) {
-      const errorMessage = err.message || 'Failed to save beauty profile';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save beauty profile';
       setError(errorMessage);
       console.error('Error submitting beauty profile:', err);
       throw err;
@@ -73,24 +64,13 @@ export function useBeautyProfileSubmit() {
     setBeautyProfile(null);
   }, []);
 
-  return {
-    submitProfile,
-    loading,
-    error,
-    success,
-    beautyProfile,
-    reset,
-  };
+  return { submitProfile, loading, error, success, beautyProfile, reset };
 }
 
-/**
- * Hook for fetching user's existing beauty profile
- * @returns {Object} Profile data, loading state, error, and refetch function
- */
 export function useBeautyProfile() {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<BeautyProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchProfile = useCallback(async () => {
     try {
@@ -99,11 +79,10 @@ export function useBeautyProfile() {
       const data = await beautyProfileService.getBeautyProfile();
       setProfile(data);
     } catch (err) {
-      // If profile doesn't exist, it's not an error
-      if (err.statusCode === 404) {
+      if ((err as { statusCode?: number }).statusCode === 404) {
         setProfile(null);
       } else {
-        setError(err.message || 'Failed to load beauty profile');
+        setError(err instanceof Error ? err.message : 'Failed to load beauty profile');
         console.error('Error fetching beauty profile:', err);
       }
     } finally {
@@ -115,10 +94,5 @@ export function useBeautyProfile() {
     fetchProfile();
   }, [fetchProfile]);
 
-  return {
-    profile,
-    loading,
-    error,
-    refetch: fetchProfile,
-  };
+  return { profile, loading, error, refetch: fetchProfile };
 }
