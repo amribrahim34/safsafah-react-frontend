@@ -3,9 +3,16 @@
  * First step - Select skin type
  */
 
-import PropTypes from 'prop-types';
+import { useParams } from 'next/navigation';
+import type { SkinType } from '@/types';
 
-export default function SkinTypeStep({ lang, skinTypes, selectedSkinType, onSelect }) {
+interface SkinTypeStepProps {
+  skinTypes: SkinType[];
+  selectedSkinType: number | null;
+  onSelect: (skinTypeId: number) => void;
+}
+
+export default function SkinTypeStep({  skinTypes, selectedSkinType, onSelect }: SkinTypeStepProps) {
   const title = {
     ar: 'ما نوع بشرتك؟',
     en: "What's your skin type?",
@@ -15,6 +22,10 @@ export default function SkinTypeStep({ lang, skinTypes, selectedSkinType, onSele
     ar: 'اختر نوع بشرتك للحصول على توصيات مخصصة',
     en: 'Select your skin type to get personalized recommendations',
   };
+    const params = useParams();
+    const locale = params?.locale as string | undefined;
+    const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+    
 
   return (
     <div className="space-y-4">
@@ -72,17 +83,4 @@ export default function SkinTypeStep({ lang, skinTypes, selectedSkinType, onSele
   );
 }
 
-SkinTypeStep.propTypes = {
-  lang: PropTypes.string.isRequired,
-  skinTypes: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      nameAr: PropTypes.string.isRequired,
-      nameEn: PropTypes.string.isRequired,
-      descriptionAr: PropTypes.string.isRequired,
-      descriptionEn: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  selectedSkinType: PropTypes.number,
-  onSelect: PropTypes.func.isRequired,
-};
+

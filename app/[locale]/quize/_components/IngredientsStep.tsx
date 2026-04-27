@@ -4,7 +4,24 @@
  */
 
 import { useState } from 'react';
-import PropTypes from 'prop-types';
+
+
+
+interface IngredientsStepProps {
+  lang: 'en' | 'ar';
+  ingredients: {
+    id: number;
+    nameAr: string;
+    nameEn: string;
+  }[];
+  selectedPreferred: number[];
+  selectedAvoided: number[];
+  allergies: string;
+  onPreferredChange: (ids: number[]) => void;
+  onAvoidedChange: (ids: number[]) => void;
+  onAllergiesChange: (value: string) => void;
+  primaryColor: string;
+}
 
 export default function IngredientsStep({
   lang,
@@ -16,7 +33,7 @@ export default function IngredientsStep({
   onAvoidedChange,
   onAllergiesChange,
   primaryColor,
-}) {
+}:IngredientsStepProps ) {
   const [activeTab, setActiveTab] = useState('preferred'); // 'preferred' or 'avoided'
 
   const translations = {
@@ -35,7 +52,7 @@ export default function IngredientsStep({
     optional: { ar: '(اختياري)', en: '(Optional)' },
   };
 
-  const handlePreferredToggle = (ingredientId) => {
+  const handlePreferredToggle = (ingredientId : number) => {
     if (selectedPreferred.includes(ingredientId)) {
       onPreferredChange(selectedPreferred.filter((id) => id !== ingredientId));
     } else {
@@ -43,7 +60,7 @@ export default function IngredientsStep({
     }
   };
 
-  const handleAvoidedToggle = (ingredientId) => {
+  const handleAvoidedToggle = (ingredientId: number) => {
     if (selectedAvoided.includes(ingredientId)) {
       onAvoidedChange(selectedAvoided.filter((id) => id !== ingredientId));
     } else {
@@ -159,31 +176,10 @@ export default function IngredientsStep({
           placeholder={translations.allergiesPlaceholder[lang]}
           rows={3}
           className="w-full px-4 py-3 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 resize-none"
-          style={{ focusRing: primaryColor }}
+          
         />
       </div>
     </div>
   );
 }
 
-IngredientsStep.propTypes = {
-  lang: PropTypes.string.isRequired,
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      nameAr: PropTypes.string.isRequired,
-      nameEn: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  selectedPreferred: PropTypes.arrayOf(PropTypes.number).isRequired,
-  selectedAvoided: PropTypes.arrayOf(PropTypes.number).isRequired,
-  allergies: PropTypes.string.isRequired,
-  onPreferredChange: PropTypes.func.isRequired,
-  onAvoidedChange: PropTypes.func.isRequired,
-  onAllergiesChange: PropTypes.func.isRequired,
-  primaryColor: PropTypes.string,
-};
-
-IngredientsStep.defaultProps = {
-  primaryColor: '#288880',
-};

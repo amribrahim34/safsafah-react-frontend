@@ -3,7 +3,15 @@
  * Navigation buttons for quiz (Back, Next, Submit)
  */
 
-import PropTypes from 'prop-types';
+interface QuizNavigationProps {
+  lang: 'en' | 'ar';
+  onBack: () => void;
+  onNext: () => void;
+  showBack: boolean;
+  nextLabel?: string;
+  isLoading: boolean;
+  primaryColor: string;
+}
 
 export default function QuizNavigation({
   lang,
@@ -13,7 +21,7 @@ export default function QuizNavigation({
   nextLabel,
   isLoading,
   primaryColor,
-}) {
+}: QuizNavigationProps) {
   const translations = {
     back: { ar: 'رجوع', en: 'Back' },
     next: { ar: 'التالي', en: 'Next' },
@@ -67,19 +75,3 @@ export default function QuizNavigation({
     </div>
   );
 }
-
-QuizNavigation.propTypes = {
-  lang: PropTypes.string.isRequired,
-  onBack: PropTypes.func,
-  onNext: PropTypes.func.isRequired,
-  showBack: PropTypes.bool,
-  nextLabel: PropTypes.string,
-  isLoading: PropTypes.bool,
-  primaryColor: PropTypes.string,
-};
-
-QuizNavigation.defaultProps = {
-  showBack: false,
-  isLoading: false,
-  primaryColor: '#288880',
-};

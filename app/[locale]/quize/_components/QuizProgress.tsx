@@ -3,9 +3,14 @@
  * Displays a visual progress bar for the quiz
  */
 
-import PropTypes from 'prop-types';
+interface QuizProgressProps {
+  currentStep: number;
+  totalSteps: number;
+  primaryColor: string;
+}
 
-export default function QuizProgress({ currentStep, totalSteps, primaryColor }) {
+
+export default function QuizProgress({ currentStep, totalSteps, primaryColor }: QuizProgressProps) {
   const progress = ((currentStep + 1) / totalSteps) * 100;
 
   return (
@@ -28,13 +33,3 @@ export default function QuizProgress({ currentStep, totalSteps, primaryColor }) 
     </div>
   );
 }
-
-QuizProgress.propTypes = {
-  currentStep: PropTypes.number.isRequired,
-  totalSteps: PropTypes.number.isRequired,
-  primaryColor: PropTypes.string,
-};
-
-QuizProgress.defaultProps = {
-  primaryColor: '#288880',
-};

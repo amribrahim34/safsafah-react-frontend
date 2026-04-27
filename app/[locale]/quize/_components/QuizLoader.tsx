@@ -3,9 +3,10 @@
  * Loading state for the quiz
  */
 
-import PropTypes from 'prop-types';
-
-export default function QuizLoader({ lang }) {
+interface QuizLoaderProps {
+  lang: 'en' | 'ar';
+}
+export default function QuizLoader({ lang }: QuizLoaderProps) {
   const message = {
     ar: 'جاري تحميل الاستبيان...',
     en: 'Loading questionnaire...',
@@ -21,7 +22,3 @@ export default function QuizLoader({ lang }) {
     </div>
   );
 }
-
-QuizLoader.propTypes = {
-  lang: PropTypes.string.isRequired,
-};

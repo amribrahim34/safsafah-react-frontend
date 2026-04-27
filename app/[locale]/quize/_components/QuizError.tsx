@@ -3,9 +3,12 @@
  * Error state for the quiz
  */
 
-import PropTypes from 'prop-types';
-
-export default function QuizError({ lang, error, onRetry }) {
+interface QuizErrorProps {
+  lang: 'en' | 'ar';
+  error: string;
+  onRetry?: () => void;
+}
+export default function QuizError({ lang, error, onRetry }: QuizErrorProps) {
   const translations = {
     title: { ar: 'حدث خطأ', en: 'Something went wrong' },
     retry: { ar: 'إعادة المحاولة', en: 'Try Again' },
@@ -37,8 +40,3 @@ export default function QuizError({ lang, error, onRetry }) {
   );
 }
 
-QuizError.propTypes = {
-  lang: PropTypes.string.isRequired,
-  error: PropTypes.string.isRequired,
-  onRetry: PropTypes.func,
-};

@@ -2,8 +2,16 @@
  * SkinConcernsStep Component
  * Second step - Select skin concerns (multiple selection)
  */
+import type { SkinConcern } from '@/types';
 
-import PropTypes from 'prop-types';
+interface SkinConcernsStepProps {
+  lang: 'en' | 'ar';
+  skinConcerns: SkinConcern[];
+  selectedConcerns: number[]; // Array of selected concern IDs
+  onToggle: (concernIds: number[]) => void; // Callback to toggle concerns
+  primaryColor?: string; // Optional primary color for selected state
+}
+
 
 export default function SkinConcernsStep({
   lang,
@@ -11,7 +19,7 @@ export default function SkinConcernsStep({
   selectedConcerns,
   onToggle,
   primaryColor,
-}) {
+}: SkinConcernsStepProps) {
   const title = {
     ar: 'ما هي مشاكل بشرتك الأساسية؟',
     en: 'What are your main skin concerns?',
@@ -22,7 +30,7 @@ export default function SkinConcernsStep({
     en: 'You can select multiple concerns',
   };
 
-  const handleToggle = (concernId) => {
+  const handleToggle = (concernId: number) => {
     if (selectedConcerns.includes(concernId)) {
       onToggle(selectedConcerns.filter((id) => id !== concernId));
     } else {
@@ -71,21 +79,3 @@ export default function SkinConcernsStep({
     </div>
   );
 }
-
-SkinConcernsStep.propTypes = {
-  lang: PropTypes.string.isRequired,
-  skinConcerns: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      nameAr: PropTypes.string.isRequired,
-      nameEn: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  selectedConcerns: PropTypes.arrayOf(PropTypes.number).isRequired,
-  onToggle: PropTypes.func.isRequired,
-  primaryColor: PropTypes.string,
-};
-
-SkinConcernsStep.defaultProps = {
-  primaryColor: '#288880',
-};
