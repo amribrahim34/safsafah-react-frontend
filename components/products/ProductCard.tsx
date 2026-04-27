@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart, updateCartItem, removeFromCart } from "@/store/slices/cartsSlice";
 import { useParams } from "next/navigation";
+import { getLocalizedPath } from "@/lib/locale-navigation";
 
 interface ProductCardProps {
   id: number;
@@ -170,7 +171,7 @@ export default function ProductCard({
 
   return (
     <Link
-      href={`/product/${lang === 'ar' ? (slugAr ?? id) : (slugEn ?? id)}`}
+      href={getLocalizedPath(`/product/${lang === 'ar' ? (slugAr ?? id) : (slugEn ?? id)}`, lang)}
       className="flex flex-col rounded-2xl bg-white overflow-hidden hover:shadow-lg transition-shadow duration-200"
       style={{
         border: isRecommended
