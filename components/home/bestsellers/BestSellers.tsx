@@ -93,7 +93,7 @@ export default function BestSellers({ brand }: BestSellersProps) {
             {t('sections.viewAll')}
           </Link>
         </div>
-        <ProductGrid products={products} lang={lang} brand={brand} />
+        <ProductGrid products={products} brand={brand} />
       </div>
     </section>
   );

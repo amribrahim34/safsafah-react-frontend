@@ -134,7 +134,7 @@ function CatalogPageContent() {
                   brand={BRAND}
                   lang={locale}
                 />
-                <ProductGrid products={products} lang={locale} brand={BRAND} />
+                <ProductGrid products={products} brand={BRAND} />
                 <Pagination
                   page={page}
                   total={total}

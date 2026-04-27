@@ -94,7 +94,7 @@ export default function NewArrivals({ brand }: NewArrivalsProps) {
             {t('newArrivals.viewAll')}
           </Link>
         </div>
-        <ProductGrid products={products} lang={lang} brand={brand} />
+        <ProductGrid products={products}  brand={brand} />
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 import ProductCard from "./ProductCard";
 
-export default function ProductGrid({ products, lang, brand }) {
+export default function ProductGrid({ products,  brand }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
       {products.map(p => {
@@ -15,7 +15,6 @@ export default function ProductGrid({ products, lang, brand }) {
             {...p}
             brandNameAr={brandNameAr}
             brandNameEn={brandNameEn}
-            lang={lang}
             brand={brand}
           />
         );

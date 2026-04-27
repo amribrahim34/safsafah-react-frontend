@@ -3,6 +3,7 @@ import { Star, Plus, Minus, Trash2, Sparkles, Heart } from "lucide-react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart, updateCartItem, removeFromCart } from "@/store/slices/cartsSlice";
+import { useParams } from "next/navigation";
 
 interface ProductCardProps {
   id: number;
@@ -15,7 +16,6 @@ interface ProductCardProps {
   price: number;
   rating?: number;
   image: string;
-  lang: string;
   isRecommended?: boolean;
   isInWishlist?: boolean;
   brand: {
@@ -36,7 +36,6 @@ export default function ProductCard({
   price,
   rating = 0,
   image,
-  lang,
   isRecommended = false,
   isInWishlist = false,
   brand
@@ -44,6 +43,9 @@ export default function ProductCard({
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart.cart);
   const isLoading = useAppSelector((state) => state.cart.isLoading);
+  const params = useParams();
+    const locale = params?.locale as string | undefined;
+    const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   // Check if product is already in cart
   const cartItem = cart?.items?.find((item: any) => item.productId === id);

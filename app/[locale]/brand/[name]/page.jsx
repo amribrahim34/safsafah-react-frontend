@@ -339,7 +339,7 @@ export default function BrandLanding() {
                             img: p.img,
                         }))}
                         brand={BRAND}
-                        lang={lang}
+                       
 
                     />
 
