@@ -1,0 +1,70 @@
+{
+  "pageTitle": "Contact Us",
+  "pageSubtitle": "Site supports English & Arabic — we reply during business hours.",
+  "contactCards": {
+    "whatsapp": "WhatsApp",
+    "mobile": "Mobile",
+    "email": "Email"
+  },
+  "form": {
+    "name": {
+      "label": "Name",
+      "placeholder": "Your name"
+    },
+    "phone": {
+      "label": "Mobile",
+      "placeholder": "+20 1X XXXXXXXX / 01X"
+    },
+    "message": {
+      "label": "Message",
+      "placeholder": "Write your details in EN or AR"
+    },
+    "attachments": {
+      "label": "Attachments (optional)",
+      "dropHint": "Drag files here or click to choose",
+      "chooseFiles": "Choose files",
+      "hint": "Allowed PNG/JPG/PDF up to 10MB per file, max 5 files."
+    },
+    "submit": "Send",
+    "errors": {
+      "name": "Please enter a valid name",
+      "phone": "Invalid Egyptian mobile number",
+      "message": "Message must be at least 10 characters",
+      "fileSize": "Attachment exceeds 10MB",
+      "fileCount": "Max 5 attachments"
+    },
+    "success": "Message sent successfully ✅",
+    "mailtoFallback": "Opened your email client (attachments not supported via mailto)."
+  },
+  "responseHours": {
+    "title": "Response Hours",
+    "hours": "Sat – Thu: 10:00–18:00. Fri: Closed.",
+    "tipsTitle": "Tips to speed support",
+    "tips": [
+      "Include your order ID if applicable.",
+      "Attach photos/files (up to 10MB each).",
+      "Use a single channel to avoid duplicates."
+    ]
+  },
+  "faq": {
+    "heading": "Quick FAQs",
+    "items": [
+      {
+        "q": "Are the products authentic?",
+        "a": "We purchase from trusted suppliers and wholesalers within Egypt and retain purchase proofs. We inspect packaging and expiry dates before shipping."
+      },
+      {
+        "q": "How can I pay?",
+        "a": "You can pay cash on delivery, or by card/available wallets depending on the courier."
+      },
+      {
+        "q": "When will my order arrive?",
+        "a": "Typically 1–3 business days within Greater Cairo, and 2–5 business days for other governorates. The timeframe is an estimate and depends on the courier."
+      },
+      {
+        "q": "What is the return policy?",
+        "a": "Returns within 14 days for unopened products and in accordance with the stated conditions on the returns page. For assistance, contact us before returning."
+      }
+    ]
+  }
+}
