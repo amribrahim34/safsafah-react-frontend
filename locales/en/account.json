@@ -1,0 +1,75 @@
+{
+  "page": {
+    "loading": "Loading..."
+  },
+  "overview": {
+    "greeting": "Hey, {{name}} 🌸 ready to glow?",
+    "orders": "My Orders",
+    "wishlist": "Wishlist",
+    "rewards": "Rewards & Points",
+    "upload": "Change photo"
+  },
+  "orders": {
+    "title": "My orders",
+    "loading": "Loading...",
+    "error": "Error loading orders",
+    "empty": "No orders yet",
+    "viewAll": "View all",
+    "statuses": {
+      "DELIVERED": "Delivered",
+      "OUT_FOR_DELIVERY": "Out for delivery",
+      "PACKED": "Packed",
+      "PLACED": "Placed",
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "PROCESSING": "Processing",
+      "SHIPPED": "Shipped",
+      "CANCELLED": "Cancelled",
+      "RETURNED": "Returned"
+    }
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "empty": "Your wishlist is empty"
+  },
+  "beautyProfile": {
+    "title": "Beauty profile",
+    "skinType": "Skin type",
+    "concerns": "Concerns",
+    "preferred": "Preferred ingredients",
+    "avoided": "Avoided ingredients",
+    "allergies": "Allergies",
+    "cta": "See my routine",
+    "empty": "No beauty profile found."
+  },
+  "addresses": {
+    "title": "Addresses",
+    "loading": "Loading...",
+    "error": "Error loading addresses",
+    "empty": "No saved addresses",
+    "manage": "Manage addresses",
+    "fallback": "📍 Address"
+  },
+  "rewards": {
+    "title": "Rewards & points",
+    "points": "Your points",
+    "balance": "Wallet balance (approx.)",
+    "toNext": "{{count}} points to next tier.",
+    "redeem": "Redeem rewards",
+    "rate": "1 point = 1 EGP. T&Cs apply."
+  },
+  "settings": {
+    "title": "Settings",
+    "notifications": "Notifications",
+    "editInfo": "Edit info",
+    "logout": "Logout"
+  },
+  "support": {
+    "title": "Support & help",
+    "whatsapp": "WhatsApp",
+    "customerService": "Customer Service"
+  },
+  "recentlyViewed": {
+    "title": "Recently viewed"
+  }
+}

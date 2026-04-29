@@ -1,13 +1,19 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchBeautyProfile } from '@/store/slices/beautyProfileSlice';
+import type { BrandConfig, BeautyProfileTranslations } from './_types';
 
-export default function BeautyProfileCard({ brand, lang = 'ar' }) {
+interface BeautyProfileCardProps {
+  brand: BrandConfig;
+  lang: 'ar' | 'en';
+  t: BeautyProfileTranslations;
+}
+
+export default function BeautyProfileCard({ brand, lang, t }: BeautyProfileCardProps) {
   const isRTL = lang === 'ar';
   const dispatch = useAppDispatch();
-
   const { profile, isLoading, error } = useAppSelector((state) => state.beautyProfile);
 
   useEffect(() => {
@@ -17,9 +23,7 @@ export default function BeautyProfileCard({ brand, lang = 'ar' }) {
   if (isLoading) {
     return (
       <section className="rounded-3xl border border-neutral-200 p-4 bg-white">
-        <div className="text-lg font-extrabold mb-4">
-          {isRTL ? 'ملف الجمال' : 'Beauty profile'}
-        </div>
+        <div className="text-lg font-extrabold mb-4">{t.title}</div>
         <div className="flex items-center justify-center py-8">
           <div
             className="animate-spin rounded-full h-8 w-8 border-b-2"
@@ -33,12 +37,8 @@ export default function BeautyProfileCard({ brand, lang = 'ar' }) {
   if (error || !profile) {
     return (
       <section className="rounded-3xl border border-neutral-200 p-4 bg-white">
-        <div className="text-lg font-extrabold mb-2">
-          {isRTL ? 'ملف الجمال' : 'Beauty profile'}
-        </div>
-        <p className="text-sm text-neutral-500">
-          {isRTL ? 'لا يوجد ملف جمال بعد.' : 'No beauty profile found.'}
-        </p>
+        <div className="text-lg font-extrabold mb-2">{t.title}</div>
+        <p className="text-sm text-neutral-500">{t.empty}</p>
       </section>
     );
   }
@@ -47,16 +47,11 @@ export default function BeautyProfileCard({ brand, lang = 'ar' }) {
 
   return (
     <section className="rounded-3xl border border-neutral-200 p-4 bg-white">
-      <div className="text-lg font-extrabold mb-2">
-        {isRTL ? 'ملف الجمال' : 'Beauty profile'}
-      </div>
+      <div className="text-lg font-extrabold mb-2">{t.title}</div>
 
       <div className="grid md:grid-cols-2 gap-3">
-        {/* Skin Type */}
         <div>
-          <div className="text-sm font-semibold mb-1">
-            {isRTL ? 'نوع البشرة' : 'Skin type'}
-          </div>
+          <div className="text-sm font-semibold mb-1">{t.skinType}</div>
           <div className="flex flex-wrap gap-2">
             <span
               className="px-3 py-1.5 rounded-xl border text-sm text-white"
@@ -67,12 +62,9 @@ export default function BeautyProfileCard({ brand, lang = 'ar' }) {
           </div>
         </div>
 
-        {/* Skin Concerns */}
         {profile.skinConcerns?.length > 0 && (
           <div>
-            <div className="text-sm font-semibold mb-1">
-              {isRTL ? 'الاهتمامات' : 'Concerns'}
-            </div>
+            <div className="text-sm font-semibold mb-1">{t.concerns}</div>
             <div className="flex flex-wrap gap-2">
               {profile.skinConcerns.map((concern) => (
                 <span
@@ -87,18 +79,12 @@ export default function BeautyProfileCard({ brand, lang = 'ar' }) {
           </div>
         )}
 
-        {/* Preferred Ingredients */}
         {profile.preferredIngredients?.length > 0 && (
           <div>
-            <div className="text-sm font-semibold mb-1">
-              {isRTL ? 'المكونات المفضلة' : 'Preferred ingredients'}
-            </div>
+            <div className="text-sm font-semibold mb-1">{t.preferred}</div>
             <div className="flex flex-wrap gap-2">
               {profile.preferredIngredients.map((ingredient) => (
-                <span
-                  key={ingredient.id}
-                  className="px-3 py-1.5 rounded-xl border text-sm"
-                >
+                <span key={ingredient.id} className="px-3 py-1.5 rounded-xl border text-sm">
                   {isRTL ? ingredient.nameAr : ingredient.nameEn}
                 </span>
               ))}
@@ -106,12 +92,9 @@ export default function BeautyProfileCard({ brand, lang = 'ar' }) {
           </div>
         )}
 
-        {/* Avoided Ingredients */}
         {profile.avoidedIngredients?.length > 0 && (
           <div>
-            <div className="text-sm font-semibold mb-1">
-              {isRTL ? 'المكونات المتجنبة' : 'Avoided ingredients'}
-            </div>
+            <div className="text-sm font-semibold mb-1">{t.avoided}</div>
             <div className="flex flex-wrap gap-2">
               {profile.avoidedIngredients.map((ingredient) => (
                 <span
@@ -125,12 +108,9 @@ export default function BeautyProfileCard({ brand, lang = 'ar' }) {
           </div>
         )}
 
-        {/* Allergies */}
         {profile.allergies && (
           <div>
-            <div className="text-sm font-semibold mb-1">
-              {isRTL ? 'الحساسية' : 'Allergies'}
-            </div>
+            <div className="text-sm font-semibold mb-1">{t.allergies}</div>
             <p className="text-sm text-neutral-600">{profile.allergies}</p>
           </div>
         )}
@@ -141,7 +121,7 @@ export default function BeautyProfileCard({ brand, lang = 'ar' }) {
         className="inline-block mt-3 px-4 py-2 rounded-2xl text-white font-semibold"
         style={{ background: brand.primary }}
       >
-        {isRTL ? 'مشاهدة الروتين المقترح' : 'See my routine'}
+        {t.cta}
       </a>
     </section>
   );

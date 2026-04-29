@@ -1,19 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { productsService } from "@/lib/api/services/products.service";
-import CartButton from "@/components/products/CartButton";
-import WishlistButton from "@/components/products/WishlistButton";
+'use client';
 
-export default function WishlistGrid({ brand, lang = "ar" }) {
-  const isRTL = lang === "ar";
+import React, { useEffect, useState } from 'react';
+import { productsService } from '@/lib/api/services/products.service';
+import CartButtonJs from '@/components/products/CartButton';
+import WishlistButtonJs from '@/components/products/WishlistButton';
+import type { Product } from '@/types/models/product';
+import type { BrandConfig, WishlistGridTranslations } from './_types';
 
-  const [items, setItems] = useState([]);
+const CartButton = CartButtonJs as React.ComponentType<{
+  product: Product;
+  brand: BrandConfig;
+  lang: 'ar' | 'en';
+  onSuccess?: () => void;
+}>;
+
+const WishlistButton = WishlistButtonJs as React.ComponentType<{
+  product: Product;
+  brand: BrandConfig;
+  lang: 'ar' | 'en';
+  initialIsInWishlist?: boolean;
+}>;
+
+interface WishlistGridProps {
+  brand: BrandConfig;
+  lang: 'ar' | 'en';
+  t: WishlistGridTranslations;
+}
+
+export default function WishlistGrid({ brand, lang, t }: WishlistGridProps) {
+  const isRTL = lang === 'ar';
+  const [items, setItems] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const fmt = (n) =>
-    new Intl.NumberFormat(isRTL ? "ar-EG" : "en-EG", {
-      style: "currency",
-      currency: "EGP",
+  const fmt = (n: number) =>
+    new Intl.NumberFormat(isRTL ? 'ar-EG' : 'en-EG', {
+      style: 'currency',
+      currency: 'EGP',
       maximumFractionDigits: 0,
     }).format(n);
 
@@ -23,9 +46,9 @@ export default function WishlistGrid({ brand, lang = "ar" }) {
         setIsLoading(true);
         setError(null);
         const data = await productsService.getWishlist();
-        setItems(data);
+        setItems(data as unknown as Product[]);
       } catch (err) {
-        setError(err.message || "Failed to load wishlist");
+        setError(err instanceof Error ? err.message : 'Failed to load wishlist');
       } finally {
         setIsLoading(false);
       }
@@ -36,9 +59,7 @@ export default function WishlistGrid({ brand, lang = "ar" }) {
 
   return (
     <section className="rounded-3xl border border-neutral-200 p-4 bg-white">
-      <div className="text-lg font-extrabold mb-3">
-        {isRTL ? "المفضلة" : "Wishlist"}
-      </div>
+      <div className="text-lg font-extrabold mb-3">{t.title}</div>
 
       {isLoading && (
         <div className="flex justify-center py-8">
@@ -54,9 +75,7 @@ export default function WishlistGrid({ brand, lang = "ar" }) {
       )}
 
       {!isLoading && !error && items.length === 0 && (
-        <p className="text-sm text-neutral-500 text-center py-4">
-          {isRTL ? "قائمة المفضلة فارغة" : "Your wishlist is empty"}
-        </p>
+        <p className="text-sm text-neutral-500 text-center py-4">{t.empty}</p>
       )}
 
       {!isLoading && !error && items.length > 0 && (
@@ -68,11 +87,11 @@ export default function WishlistGrid({ brand, lang = "ar" }) {
             >
               <div className="h-36 md:h-48 overflow-hidden">
                 <img
-                  src={product?.image ?? "/placeholder-product.png"}
+                  src={product?.image ?? '/placeholder-product.png'}
                   alt={isRTL ? product?.nameAr : product?.nameEn}
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    e.currentTarget.src = "/placeholder-product.png";
+                    e.currentTarget.src = '/placeholder-product.png';
                   }}
                 />
               </div>
@@ -81,13 +100,16 @@ export default function WishlistGrid({ brand, lang = "ar" }) {
                 <div className="text-sm font-semibold line-clamp-2">
                   {isRTL ? product?.nameAr : product?.nameEn}
                 </div>
-                <div className="text-sm font-extrabold mt-1">
-                  {fmt(product?.price)}
-                </div>
+                <div className="text-sm font-extrabold mt-1">{fmt(product?.price)}</div>
 
                 <div className="mt-2 flex gap-2">
                   <CartButton product={product} brand={brand} lang={lang} />
-                  <WishlistButton product={product} brand={brand} lang={lang} initialIsInWishlist={true} />
+                  <WishlistButton
+                    product={product}
+                    brand={brand}
+                    lang={lang}
+                    initialIsInWishlist={true}
+                  />
                 </div>
               </div>
             </article>
