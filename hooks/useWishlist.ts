@@ -4,24 +4,10 @@ import {
   setCurrentProductWishlistStatus,
   silentFetchProductById,
 } from "../store/slices/productsSlice";
+import type { Product } from "@/types/models/product";
 import posthog from "posthog-js";
 
-/**
- * useWishlist
- *
- * Manages wishlist state for a single product.
- *
- * Strategy:
- *  1. Optimistic update  — flip `isInWishlist` in Redux immediately so the
- *     button re-renders without waiting for the network.
- *  2. API call           — add / remove on the backend.
- *  3. Silent re-fetch    — pull fresh product data (including the authoritative
- *     `isInWishlist` value) without triggering the page loading skeleton.
- *  4. Rollback on error  — if the API call fails, restore the previous value.
- *
- * @param {Object} product - Product object (must have `id` and `isInWishlist`)
- */
-export function useWishlist(product) {
+export function useWishlist(product: Product | null | undefined) {
   const dispatch = useAppDispatch();
   const { loadingProductId } = useAppSelector((state) => state.wishlist);
 
@@ -37,13 +23,9 @@ export function useWishlist(product) {
   // True only while this specific product's API call is in-flight
   const isLoading = loadingProductId === product?.id;
 
-  /**
-   * Toggle wishlist membership.
-   * Updates the UI immediately and syncs with the server in the background.
-   *
-   * @param {Function} [onSuccess] - Optional callback receiving 'added' | 'removed'
-   */
-  const handleToggleWishlist = async (onSuccess) => {
+  const handleToggleWishlist = async (
+    onSuccess?: (action: "added" | "removed") => void
+  ) => {
     if (!product || isLoading) return;
 
     const previousValue = isInWishlist;
@@ -64,14 +46,14 @@ export function useWishlist(product) {
       dispatch(silentFetchProductById(product.id));
 
       if (previousValue) {
-        posthog.capture('wishlist_item_removed', {
+        posthog.capture("wishlist_item_removed", {
           product_id: product.id,
           product_name_en: product.nameEn,
           product_name_ar: product.nameAr,
           price: product.price,
         });
       } else {
-        posthog.capture('wishlist_item_added', {
+        posthog.capture("wishlist_item_added", {
           product_id: product.id,
           product_name_en: product.nameEn,
           product_name_ar: product.nameAr,

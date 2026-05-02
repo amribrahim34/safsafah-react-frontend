@@ -38,11 +38,7 @@ export default function AddToCartControls({ product, brand, lang, onSuccess }: A
     isInWishlist,
     isLoading: isWishlistLoading,
     handleToggleWishlist,
-  } = useWishlist(product) as {
-    isInWishlist: boolean;
-    isLoading: boolean;
-    handleToggleWishlist: () => void;
-  };
+  } = useWishlist(product);
 
   const isOutOfStock = product.stock != null && product.stock < 1;
   const atStockLimit = Boolean(
