@@ -11,46 +11,41 @@ import posthog from "posthog-js";
 /**
  * Manages wishlist state for a single product.
  *
- * Strategy:
- *  1. Local state drives the UI so optimistic updates are instant.
- *  2. On mount, a client-side fetch hydrates the auth-aware `isInWishlist`
- *     value (SSR fetches are unauthenticated, so the initial prop may be wrong).
- *  3. A useEffect syncs local state whenever Redux receives a fresh value from
- *     any silentFetchProductById call (mount or post-toggle).
- *  4. On toggle: optimistic update → API call → silent re-fetch to confirm.
- *  5. Rollback on error.
+ * Value priority (highest to lowest):
+ *  1. optimisticStatus — set immediately on click, cleared once server confirms.
+ *  2. reduxWishlistStatus — authoritative value from silentFetchProductById.
+ *  3. product.isInWishlist — SSR prop (may lack auth context, used as fallback only).
+ *
+ * On mount a client-side fetch is fired to hydrate the auth-aware status,
+ * correcting any unauthenticated SSR value.
  */
 export function useWishlist(product: Product | null | undefined) {
   const dispatch = useAppDispatch();
   const { loadingProductId } = useAppSelector((state) => state.wishlist);
 
-  // Local state is the source of truth for the button — gives instant feedback.
-  const [isInWishlist, setIsInWishlist] = useState<boolean>(
-    product?.isInWishlist ?? false
+  // null = no pending change; boolean = user clicked and server hasn't confirmed yet.
+  const [optimisticStatus, setOptimisticStatus] = useState<boolean | null>(null);
+
+  // Authoritative value populated by every silentFetchProductById call.
+  const reduxWishlistStatus = useAppSelector((state) =>
+    state.products.currentProduct?.id === product?.id
+      ? state.products.currentProduct?.isInWishlist
+      : undefined
   );
 
-  // Subscribe to Redux so we pick up the result of every silentFetchProductById.
-  const reduxProductId = useAppSelector(
-    (state) => state.products.currentProduct?.id
-  );
-  const reduxWishlistStatus = useAppSelector(
-    (state) => state.products.currentProduct?.isInWishlist
-  );
-
-  // Sync local state whenever Redux has a fresh authoritative value for this product.
-  useEffect(() => {
-    if (reduxProductId === product?.id && reduxWishlistStatus !== undefined) {
-      setIsInWishlist(reduxWishlistStatus);
-    }
-  }, [reduxProductId, reduxWishlistStatus, product?.id]);
-
-  // On mount, fetch client-side to get the auth-aware wishlist status.
-  // This corrects the SSR-supplied prop which may lack authentication context.
+  // Client-side fetch on mount to get the auth-aware status.
+  // SSR runs without the user's auth cookie so the initial prop value may be stale.
   useEffect(() => {
     if (product?.id) {
       dispatch(silentFetchProductById(product.id));
     }
   }, [product?.id, dispatch]);
+
+  // Derived — no setState in effects.
+  const isInWishlist =
+    optimisticStatus !== null
+      ? optimisticStatus
+      : (reduxWishlistStatus ?? product?.isInWishlist ?? false);
 
   const isLoading = loadingProductId === product?.id;
 
@@ -62,20 +57,26 @@ export function useWishlist(product: Product | null | undefined) {
     const previousValue = isInWishlist;
     const nextValue = !previousValue;
 
-    // 1. Optimistic update — instant UI feedback before any network round-trip.
-    setIsInWishlist(nextValue);
+    // 1. Optimistic update — instant UI feedback, no network wait.
+    setOptimisticStatus(nextValue);
     dispatch(setCurrentProductWishlistStatus(nextValue));
 
     try {
-      // 2. API call
+      // 2. API call.
       if (previousValue) {
         await dispatch(removeFromWishlist(product.id)).unwrap();
       } else {
         await dispatch(addToWishlist(product.id)).unwrap();
       }
 
-      // 3. Silent background re-fetch to confirm the server's authoritative state.
-      dispatch(silentFetchProductById(product.id));
+      // 3. Background re-fetch to confirm server state.
+      //    Once Redux is updated, clear the optimistic override and let Redux drive.
+      //    If the fetch fails we keep the optimistic value — the API call succeeded,
+      //    so it reflects the correct server state.
+      dispatch(silentFetchProductById(product.id))
+        .unwrap()
+        .then(() => setOptimisticStatus(null))
+        .catch(() => undefined);
 
       posthog.capture(
         previousValue ? "wishlist_item_removed" : "wishlist_item_added",
@@ -91,8 +92,8 @@ export function useWishlist(product: Product | null | undefined) {
     } catch (error) {
       posthog.captureException(error);
       console.error("Failed to toggle wishlist:", error);
-      // 4. Rollback on failure.
-      setIsInWishlist(previousValue);
+      // 4. Rollback on API failure — restore both the UI and Redux.
+      setOptimisticStatus(previousValue);
       dispatch(setCurrentProductWishlistStatus(previousValue));
     }
   };
