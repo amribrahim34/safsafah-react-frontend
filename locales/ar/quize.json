@@ -7,7 +7,13 @@
   "alerts": {
     "noSkinType": "يرجى اختيار نوع البشرة",
     "noConcerns": "يرجى اختيار مشكلة واحدة على الأقل",
-    "saveError": "حدث خطأ أثناء حفظ الملف. يرجى المحاولة مرة أخرى"
+    "saveError": "حدث خطأ أثناء حفظ الملف. يرجى المحاولة مرة أخرى",
+    "validationTitle": "انتبه!",
+    "errorTitle": "عذراً!",
+    "successTitle": "تم حفظ ملفك!",
+    "successText": "تم حفظ ملفك الجمالي. اعرض توصيات المنتجات المخصصة لك الآن.",
+    "viewRecommendations": "عرض التوصيات",
+    "backToAccount": "الذهاب إلى حسابي"
   },
   "navigation": {
     "back": "رجوع",

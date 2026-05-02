@@ -7,7 +7,13 @@
   "alerts": {
     "noSkinType": "Please select a skin type",
     "noConcerns": "Please select at least one concern",
-    "saveError": "An error occurred while saving. Please try again"
+    "saveError": "An error occurred while saving. Please try again",
+    "validationTitle": "Hold on!",
+    "errorTitle": "Oops!",
+    "successTitle": "Profile Saved!",
+    "successText": "Your beauty profile has been saved. View personalized product recommendations now.",
+    "viewRecommendations": "View My Recommendations",
+    "backToAccount": "Go to Account"
   },
   "navigation": {
     "back": "Back",

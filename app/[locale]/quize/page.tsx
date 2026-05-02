@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { createThemedSwal } from '@/lib/swal';
 import { BRAND } from '@/content/brand';
 import { COPY } from '@/content/copy';
 import enQuize from '@/locales/en/quize.json';
@@ -67,23 +68,42 @@ export default function SkinCareQuize() {
   }, [step]);
 
   const handleSubmit = useCallback(async () => {
+    const swal = createThemedSwal(lang === 'ar');
+
+    if (!formData.skinTypeId) {
+      await swal.fire({ icon: 'warning', title: t.alerts.validationTitle, text: t.alerts.noSkinType });
+      return;
+    }
+    if (formData.skinConcernIds.length === 0) {
+      await swal.fire({ icon: 'warning', title: t.alerts.validationTitle, text: t.alerts.noConcerns });
+      return;
+    }
+
     try {
-      if (!formData.skinTypeId) {
-        alert(t.alerts.noSkinType);
-        return;
-      }
-      if (formData.skinConcernIds.length === 0) {
-        alert(t.alerts.noConcerns);
-        return;
-      }
       await submitProfile({ ...formData, skinTypeId: formData.skinTypeId as number });
-      alert(t.successMessage);
-      setTimeout(() => router.push('/account'), 1000);
+
+      const catalogParams = new URLSearchParams();
+      catalogParams.set('skinTypeIds', String(formData.skinTypeId));
+      if (formData.skinConcernIds.length > 0) {
+        catalogParams.set('skinConcernIds', formData.skinConcernIds.join(','));
+      }
+      const catalogUrl = `/${lang}/catalog?${catalogParams.toString()}`;
+
+      const result = await swal.fire({
+        icon: 'success',
+        title: t.alerts.successTitle,
+        text: t.alerts.successText,
+        confirmButtonText: t.alerts.viewRecommendations,
+        cancelButtonText: t.alerts.backToAccount,
+        showCancelButton: true,
+      });
+
+      router.push(result.isConfirmed ? catalogUrl : `/${lang}/account`);
     } catch (err) {
       console.error('Failed to submit beauty profile:', err);
-      alert(submitError || t.alerts.saveError);
+      await swal.fire({ icon: 'error', title: t.alerts.errorTitle, text: submitError || t.alerts.saveError });
     }
-  }, [formData, submitProfile, router, submitError, t]);
+  }, [formData, submitProfile, router, submitError, t, lang]);
 
   const handleRetry = useCallback(() => {}, []);
 
