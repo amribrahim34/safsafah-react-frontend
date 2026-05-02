@@ -25,8 +25,14 @@ export function useWishlist(product) {
   const dispatch = useAppDispatch();
   const { loadingProductId } = useAppSelector((state) => state.wishlist);
 
-  // Read backend-supplied field from currentProduct
-  const isInWishlist = product?.isInWishlist ?? false;
+  // Read from Redux currentProduct when IDs match (so optimistic updates trigger a re-render),
+  // falling back to the prop for contexts outside the product detail page.
+  const reduxWishlistStatus = useAppSelector((state) =>
+    state.products.currentProduct?.id === product?.id
+      ? state.products.currentProduct?.isInWishlist
+      : undefined
+  );
+  const isInWishlist = reduxWishlistStatus ?? product?.isInWishlist ?? false;
 
   // True only while this specific product's API call is in-flight
   const isLoading = loadingProductId === product?.id;
