@@ -1,20 +1,15 @@
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { addToCart as addToCartAction, updateCartItem, removeFromCart } from "../store/slices/cartsSlice";
+import type { Product } from "@/types/models/product";
 import posthog from "posthog-js";
 
-/**
- * Custom hook for managing product cart operations
- * @param {Object} product - The product object
- * @returns {Object} Cart item, handlers, and loading state
- */
-export function useProductCart(product) {
+export function useProductCart(product: Product | null | undefined) {
   const dispatch = useAppDispatch();
   const { cart, isLoading } = useAppSelector((state) => state.cart);
 
-  // Check if product is already in cart
   const cartItem = cart?.items.find((item) => item.productId === product?.id);
 
-  const handleAddToCart = async (onSuccess) => {
+  const handleAddToCart = async (onSuccess?: () => void): Promise<void> => {
     if (!product) return;
 
     try {
@@ -31,22 +26,18 @@ export function useProductCart(product) {
         quantity: 1,
       });
 
-      // Callback for success (e.g., show mini cart)
-      if (onSuccess) {
-        onSuccess();
-      }
+      onSuccess?.();
     } catch (error) {
       posthog.captureException(error);
       console.error('Failed to add to cart:', error);
     }
   };
 
-  const handleIncrement = async () => {
+  const handleIncrement = async (): Promise<void> => {
     if (!product || !cartItem) return;
 
     const newQuantity = (cartItem.quantity || 0) + 1;
 
-    // Check stock limit
     if (product.stock && newQuantity > product.stock) {
       return;
     }
@@ -54,19 +45,18 @@ export function useProductCart(product) {
     try {
       await dispatch(updateCartItem({
         itemId: cartItem.id,
-        quantity: newQuantity
+        quantity: newQuantity,
       })).unwrap();
     } catch (error) {
       console.error('Failed to update cart:', error);
     }
   };
 
-  const handleDecrement = async () => {
+  const handleDecrement = async (): Promise<void> => {
     if (!product || !cartItem) return;
 
     const currentQty = cartItem.quantity || 0;
 
-    // If quantity is 1, remove the item instead of decrementing
     if (currentQty <= 1) {
       try {
         await dispatch(removeFromCart(cartItem.id)).unwrap();
@@ -87,7 +77,7 @@ export function useProductCart(product) {
     try {
       await dispatch(updateCartItem({
         itemId: cartItem.id,
-        quantity: newQuantity
+        quantity: newQuantity,
       })).unwrap();
     } catch (error) {
       console.error('Failed to update cart:', error);

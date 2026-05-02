@@ -26,13 +26,7 @@ export default function AddToCartControls({ product, brand, lang, onSuccess }: A
     handleAddToCart,
     handleIncrement,
     handleDecrement,
-  } = useProductCart(product) as {
-    cartItem: { id: string; quantity: number } | undefined;
-    isLoading: boolean;
-    handleAddToCart: (cb?: () => void) => void;
-    handleIncrement: () => void;
-    handleDecrement: () => void;
-  };
+  } = useProductCart(product);
 
   const {
     isInWishlist,

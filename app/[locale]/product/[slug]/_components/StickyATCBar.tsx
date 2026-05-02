@@ -5,7 +5,6 @@ import { Trash2 } from "lucide-react";
 import { useProductCart } from "@/hooks/useProductCart";
 import type { Product } from "@/types/models/product";
 import type { BrandColors } from '../types';
-import type { CartItem } from '@/types/models/cart';
 
 const SCROLL_THRESHOLD = 500;
 
@@ -30,13 +29,7 @@ export default function StickyATCBar({ product, brand, lang }: StickyATCBarProps
     handleAddToCart,
     handleIncrement,
     handleDecrement,
-  } = useProductCart(product) as {
-    cartItem: CartItem | undefined;
-    isLoading: boolean;
-    handleAddToCart: (cb?: () => void) => void;
-    handleIncrement: () => void;
-    handleDecrement: () => void;
-  };
+  } = useProductCart(product);
 
   if (!visible) return null;
 
