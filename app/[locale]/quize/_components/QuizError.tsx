@@ -4,19 +4,18 @@
  */
 
 import { useParams } from "next/navigation";
+import enQuize from '@/locales/en/quize.json';
+import arQuize from '@/locales/ar/quize.json';
 
 interface QuizErrorProps {
   error: string;
   onRetry?: () => void;
 }
 export default function QuizError({ error, onRetry }: QuizErrorProps) {
-  const translations = {
-    title: { ar: 'حدث خطأ', en: 'Something went wrong' },
-    retry: { ar: 'إعادة المحاولة', en: 'Try Again' },
-  };
   const params = useParams();
   const locale = params?.locale as string | undefined;
-  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const t = lang === 'en' ? enQuize : arQuize;
 
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
@@ -30,14 +29,14 @@ export default function QuizError({ error, onRetry }: QuizErrorProps) {
           />
         </svg>
       </div>
-      <h3 className="text-lg font-bold mb-2 text-neutral-900">{translations.title[lang]}</h3>
+      <h3 className="text-lg font-bold mb-2 text-neutral-900">{t.error.title}</h3>
       <p className="text-neutral-600 text-center mb-6 max-w-md">{error}</p>
       {onRetry && (
         <button
           onClick={onRetry}
           className="px-6 py-2.5 bg-[#288880] text-white rounded-xl font-semibold hover:bg-[#237870] transition-colors"
         >
-          {translations.retry[lang]}
+          {t.error.retry}
         </button>
       )}
     </div>

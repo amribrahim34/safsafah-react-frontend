@@ -5,6 +5,8 @@
 
 import { useParams } from 'next/navigation';
 import type { SkinType } from '@/types';
+import enQuize from '@/locales/en/quize.json';
+import arQuize from '@/locales/ar/quize.json';
 
 interface SkinTypeStepProps {
   skinTypes: SkinType[];
@@ -13,25 +15,17 @@ interface SkinTypeStepProps {
 }
 
 export default function SkinTypeStep({  skinTypes, selectedSkinType, onSelect }: SkinTypeStepProps) {
-  const title = {
-    ar: 'ما نوع بشرتك؟',
-    en: "What's your skin type?",
-  };
-
-  const description = {
-    ar: 'اختر نوع بشرتك للحصول على توصيات مخصصة',
-    en: 'Select your skin type to get personalized recommendations',
-  };
   const params = useParams();
   const locale = params?.locale as string | undefined;
-  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const t = lang === 'en' ? enQuize : arQuize;
     
 
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-xl font-bold mb-1">{title[lang]}</h3>
-        <p className="text-sm text-neutral-600">{description[lang]}</p>
+        <h3 className="text-xl font-bold mb-1">{t.skinType.title}</h3>
+        <p className="text-sm text-neutral-600">{t.skinType.description}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

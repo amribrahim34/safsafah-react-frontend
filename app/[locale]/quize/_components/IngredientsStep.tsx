@@ -5,6 +5,8 @@
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import enQuize from '@/locales/en/quize.json';
+import arQuize from '@/locales/ar/quize.json';
 
 
 
@@ -33,23 +35,7 @@ export default function IngredientsStep({
   onAllergiesChange,
   primaryColor,
 }:IngredientsStepProps ) {
-  const [activeTab, setActiveTab] = useState('preferred'); // 'preferred' or 'avoided'
-
-  const translations = {
-    title: { ar: 'المكونات والحساسية', en: 'Ingredients & Allergies' },
-    description: {
-      ar: 'ساعدنا في تخصيص توصياتنا بناءً على تفضيلاتك',
-      en: 'Help us personalize recommendations based on your preferences',
-    },
-    preferred: { ar: 'مكونات مفضلة', en: 'Preferred Ingredients' },
-    avoided: { ar: 'مكونات يجب تجنبها', en: 'Ingredients to Avoid' },
-    allergiesLabel: { ar: 'الحساسية (اختياري)', en: 'Allergies (Optional)' },
-    allergiesPlaceholder: {
-      ar: 'مثال: حساسية من العطور، المكسرات...',
-      en: 'Example: fragrance sensitivity, nuts...',
-    },
-    optional: { ar: '(اختياري)', en: '(Optional)' },
-  };
+  const [activeTab, setActiveTab] = useState('preferred');
 
   const handlePreferredToggle = (ingredientId : number) => {
     if (selectedPreferred.includes(ingredientId)) {
@@ -68,14 +54,14 @@ export default function IngredientsStep({
   };
   const params = useParams();
   const locale = params?.locale as string | undefined;
-  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
-
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const t = lang === 'en' ? enQuize : arQuize;
 
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-xl font-bold mb-1">{translations.title[lang]}</h3>
-        <p className="text-sm text-neutral-600">{translations.description[lang]}</p>
+        <h3 className="text-xl font-bold mb-1">{t.ingredients.title}</h3>
+        <p className="text-sm text-neutral-600">{t.ingredients.description}</p>
       </div>
 
       {/* Tabs */}
@@ -89,7 +75,7 @@ export default function IngredientsStep({
           }`}
           style={activeTab === 'preferred' ? { color: primaryColor } : {}}
         >
-          {translations.preferred[lang]}
+          {t.ingredients.preferred}
         </button>
         <button
           onClick={() => setActiveTab('avoided')}
@@ -100,7 +86,7 @@ export default function IngredientsStep({
           }`}
           style={activeTab === 'avoided' ? { color: primaryColor } : {}}
         >
-          {translations.avoided[lang]}
+          {t.ingredients.avoided}
         </button>
       </div>
 
@@ -170,13 +156,13 @@ export default function IngredientsStep({
       <div className="pt-2">
         <label className="block mb-2">
           <span className="text-sm font-medium text-neutral-700">
-            {translations.allergiesLabel[lang]}
+            {t.ingredients.allergiesLabel}
           </span>
         </label>
         <textarea
           value={allergies}
           onChange={(e) => onAllergiesChange(e.target.value)}
-          placeholder={translations.allergiesPlaceholder[lang]}
+          placeholder={t.ingredients.allergiesPlaceholder}
           rows={3}
           className="w-full px-4 py-3 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 resize-none"
           

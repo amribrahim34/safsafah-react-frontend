@@ -4,6 +4,8 @@ import { useState, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { BRAND } from '@/content/brand';
 import { COPY } from '@/content/copy';
+import enQuize from '@/locales/en/quize.json';
+import arQuize from '@/locales/ar/quize.json';
 import { useDir } from '@/hooks/useDir';
 import { useBeautyQuestionnaire, useBeautyProfileSubmit } from './_hooks/useBeautyQuestionnaire';
 
@@ -34,25 +36,6 @@ interface FormData {
   avoidedIngredientIds: number[];
 }
 
-const translations: Record<string, Record<Lang, string>> = {
-  pageTitle: {
-    ar: 'اكتشف روتين العناية المثالي لبشرتك',
-    en: 'Discover Your Perfect Skincare Routine',
-  },
-  pageDescription: {
-    ar: 'أجب على بعض الأسئلة البسيطة وسنساعدك في اختيار المنتجات المناسبة لبشرتك واحتياجاتك',
-    en: "Answer a few simple questions and we'll help you choose the right products for your skin",
-  },
-  submitButton: {
-    ar: 'احفظ ملفي الجمالي',
-    en: 'Save My Beauty Profile',
-  },
-  successMessage: {
-    ar: 'تم حفظ ملفك الجمالي بنجاح! سنوجهك الآن...',
-    en: 'Your beauty profile has been saved successfully! Redirecting...',
-  },
-};
-
 export default function SkinCareQuize() {
   const router = useRouter();
   const params = useParams();
@@ -60,6 +43,7 @@ export default function SkinCareQuize() {
   const lang: Lang = locale === 'en' || locale === 'ar' ? locale : 'ar';
 
   const T = useMemo(() => COPY[lang], [lang]);
+  const t = lang === 'en' ? enQuize : arQuize;
   useDir();
 
   const { data: questionnaireData, loading, error } = useBeautyQuestionnaire();
@@ -85,30 +69,21 @@ export default function SkinCareQuize() {
   const handleSubmit = useCallback(async () => {
     try {
       if (!formData.skinTypeId) {
-        alert(lang === 'ar' ? 'يرجى اختيار نوع البشرة' : 'Please select a skin type');
+        alert(t.alerts.noSkinType);
         return;
       }
       if (formData.skinConcernIds.length === 0) {
-        alert(
-          lang === 'ar'
-            ? 'يرجى اختيار مشكلة واحدة على الأقل'
-            : 'Please select at least one concern'
-        );
+        alert(t.alerts.noConcerns);
         return;
       }
       await submitProfile({ ...formData, skinTypeId: formData.skinTypeId as number });
-      alert(translations.successMessage[lang]);
+      alert(t.successMessage);
       setTimeout(() => router.push('/account'), 1000);
     } catch (err) {
       console.error('Failed to submit beauty profile:', err);
-      alert(
-        submitError ||
-          (lang === 'ar'
-            ? 'حدث خطأ أثناء حفظ الملف. يرجى المحاولة مرة أخرى'
-            : 'An error occurred while saving. Please try again')
-      );
+      alert(submitError || t.alerts.saveError);
     }
-  }, [formData, submitProfile, router, lang, submitError]);
+  }, [formData, submitProfile, router, submitError, t]);
 
   const handleRetry = useCallback(() => {}, []);
 
@@ -152,9 +127,9 @@ export default function SkinCareQuize() {
 
       <section className="max-w-5xl mx-auto px-4 pt-8 pb-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-neutral-900">
-          {translations.pageTitle[lang]}
+          {t.pageTitle}
         </h1>
-        <p className="text-neutral-600 leading-relaxed">{translations.pageDescription[lang]}</p>
+        <p className="text-neutral-600 leading-relaxed">{t.pageDescription}</p>
       </section>
 
       <section className="max-w-5xl mx-auto px-4 pb-16">
@@ -206,17 +181,13 @@ export default function SkinCareQuize() {
                 onBack={handleBack}
                 onNext={step === TOTAL_STEPS - 1 ? handleSubmit : handleNext}
                 showBack={step > 0}
-                nextLabel={step === TOTAL_STEPS - 1 ? translations.submitButton[lang] : undefined}
+                nextLabel={step === TOTAL_STEPS - 1 ? t.submitButton : undefined}
                 isLoading={submitting}
                 primaryColor={BRAND.primary}
               />
 
               {!isStepValid && step < TOTAL_STEPS - 1 && (
-                <p className="text-sm text-amber-600 mt-4">
-                  {lang === 'ar'
-                    ? 'يرجى إكمال هذه الخطوة للمتابعة'
-                    : 'Please complete this step to continue'}
-                </p>
+                <p className="text-sm text-amber-600 mt-4">{t.stepHint}</p>
               )}
             </>
           )}

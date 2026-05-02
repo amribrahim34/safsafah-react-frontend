@@ -4,14 +4,15 @@
  */
 import type { SkinConcern } from '@/types';
 import { useParams } from 'next/navigation';
+import enQuize from '@/locales/en/quize.json';
+import arQuize from '@/locales/ar/quize.json';
 
 interface SkinConcernsStepProps {
   skinConcerns: SkinConcern[];
-  selectedConcerns: number[]; // Array of selected concern IDs
-  onToggle: (concernIds: number[]) => void; // Callback to toggle concerns
-  primaryColor?: string; // Optional primary color for selected state
+  selectedConcerns: number[];
+  onToggle: (concernIds: number[]) => void;
+  primaryColor?: string;
 }
-
 
 export default function SkinConcernsStep({
   skinConcerns,
@@ -19,16 +20,6 @@ export default function SkinConcernsStep({
   onToggle,
   primaryColor,
 }: SkinConcernsStepProps) {
-  const title = {
-    ar: 'ما هي مشاكل بشرتك الأساسية؟',
-    en: 'What are your main skin concerns?',
-  };
-
-  const description = {
-    ar: 'يمكنك اختيار أكثر من مشكلة',
-    en: 'You can select multiple concerns',
-  };
-
   const handleToggle = (concernId: number) => {
     if (selectedConcerns.includes(concernId)) {
       onToggle(selectedConcerns.filter((id) => id !== concernId));
@@ -39,13 +30,14 @@ export default function SkinConcernsStep({
 
   const params = useParams();
   const locale = params?.locale as string | undefined;
-  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const t = lang === 'en' ? enQuize : arQuize;
 
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-xl font-bold mb-1">{title[lang]}</h3>
-        <p className="text-sm text-neutral-600">{description[lang]}</p>
+        <h3 className="text-xl font-bold mb-1">{t.skinConcerns.title}</h3>
+        <p className="text-sm text-neutral-600">{t.skinConcerns.description}</p>
       </div>
 
       <div className="flex flex-wrap gap-2">

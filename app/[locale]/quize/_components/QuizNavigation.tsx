@@ -3,7 +3,8 @@
  * Navigation buttons for quiz (Back, Next, Submit)
  */
 
-import { useParams } from "next/navigation";
+import enQuize from '@/locales/en/quize.json';
+import arQuize from '@/locales/ar/quize.json';
 
 interface QuizNavigationProps {
   lang: 'en' | 'ar';
@@ -16,6 +17,7 @@ interface QuizNavigationProps {
 }
 
 export default function QuizNavigation({
+  lang,
   onBack,
   onNext,
   showBack,
@@ -23,14 +25,7 @@ export default function QuizNavigation({
   isLoading,
   primaryColor,
 }: QuizNavigationProps) {
-  const translations = {
-    back: { ar: 'رجوع', en: 'Back' },
-    next: { ar: 'التالي', en: 'Next' },
-  };
-
-  const params = useParams();
-  const locale = params?.locale as string | undefined;
-  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const t = lang === 'en' ? enQuize : arQuize;
 
 
   return (
@@ -45,7 +40,7 @@ export default function QuizNavigation({
             color: primaryColor,
           }}
         >
-          {translations.back[lang]}
+          {t.navigation.back}
         </button>
       )}
       <button
@@ -72,10 +67,10 @@ export default function QuizNavigation({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            {lang === 'ar' ? 'جاري الحفظ...' : 'Saving...'}
+            {t.navigation.saving}
           </span>
         ) : (
-          nextLabel || translations.next[lang]
+          nextLabel || t.navigation.next
         )}
       </button>
     </div>

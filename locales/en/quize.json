@@ -1,0 +1,35 @@
+{
+  "pageTitle": "Discover Your Perfect Skincare Routine",
+  "pageDescription": "Answer a few simple questions and we'll help you choose the right products for your skin",
+  "submitButton": "Save My Beauty Profile",
+  "successMessage": "Your beauty profile has been saved successfully! Redirecting...",
+  "stepHint": "Please complete this step to continue",
+  "alerts": {
+    "noSkinType": "Please select a skin type",
+    "noConcerns": "Please select at least one concern",
+    "saveError": "An error occurred while saving. Please try again"
+  },
+  "navigation": {
+    "back": "Back",
+    "next": "Next",
+    "saving": "Saving..."
+  },
+  "skinType": {
+    "title": "What's your skin type?",
+    "description": "Select your skin type to get personalized recommendations"
+  },
+  "skinConcerns": {
+    "title": "What are your main skin concerns?",
+    "description": "You can select multiple concerns"
+  },
+  "ingredients": {
+    "title": "Ingredients & Allergies",
+    "description": "Help us personalize recommendations based on your preferences",
+    "preferred": "Preferred Ingredients",
+    "avoided": "Ingredients to Avoid",
+    "allergiesLabel": "Allergies (Optional)",
+    "allergiesPlaceholder": "Example: fragrance sensitivity, nuts..."
+  },
+  "loader": { "message": "Loading questionnaire..." },
+  "error": { "title": "Something went wrong", "retry": "Try Again" }
+}
