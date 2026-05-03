@@ -93,6 +93,7 @@ export interface ProductFilters {
   maxPrice?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+  recommended?: boolean;
 }
 
 export interface ProductSearchResult {

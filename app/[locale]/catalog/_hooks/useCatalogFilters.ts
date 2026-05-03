@@ -36,6 +36,7 @@ export function useCatalogFilters(lang: Locale) {
   const [selectedBrandIds, setSelectedBrandIds] = useState<number[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [onSale, setOnSale] = useState<boolean>(false);
+  const [recommended, setRecommended] = useState<boolean>(false);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedSkinTypeIds, setSelectedSkinTypeIds] = useState<number[]>([]);
@@ -80,6 +81,7 @@ export function useCatalogFilters(lang: Locale) {
     const minPriceParam = searchParams.get('minPrice');
     const maxPriceParam = searchParams.get('maxPrice');
     const sortByParam = searchParams.get('sortBy');
+    const recommendedParam = searchParams.get('recommended');
 
     if (searchQueryParam) setSearchQuery(searchQueryParam);
     else setSearchQuery('');
@@ -115,6 +117,8 @@ export function useCatalogFilters(lang: Locale) {
     if (sortByParam) setSortValue(sortByParam);
     else setSortValue('relevance');
 
+    setRecommended(recommendedParam === 'true');
+
     if (minPriceParam || maxPriceParam) {
       const min = minPriceParam ? Number(minPriceParam) : 0;
       const max = maxPriceParam ? Number(maxPriceParam) : 0;
@@ -133,6 +137,7 @@ export function useCatalogFilters(lang: Locale) {
       maxPrice: maxPriceParam ? Number(maxPriceParam) : undefined,
       sortBy: sortByParam || undefined,
       sortOrder: (searchParams.get('sortOrder') as 'asc' | 'desc') || undefined,
+      recommended: recommendedParam === 'true' ? true : undefined,
     };
 
     setLocalFilters(filters);
@@ -174,6 +179,7 @@ export function useCatalogFilters(lang: Locale) {
       skinConcernIds,
       minPrice: hasPriceChanged ? validMinPrice : undefined,
       maxPrice: hasPriceChanged ? validMaxPrice : undefined,
+      recommended: recommended || undefined,
     };
 
     setLocalFilters(filters);
@@ -191,7 +197,7 @@ export function useCatalogFilters(lang: Locale) {
     });
 
     router.push(`/catalog?${params.toString()}`);
-  }, [priceRange, selectedCategoryIds, selectedBrandIds, selectedSkinTypeIds, selectedSkinConcernIds, searchQuery, router]);
+  }, [priceRange, selectedCategoryIds, selectedBrandIds, selectedSkinTypeIds, selectedSkinConcernIds, searchQuery, recommended, router]);
 
   /**
    * Handle page change
@@ -351,6 +357,14 @@ export function useCatalogFilters(lang: Locale) {
       });
     }
 
+    if (localFilters.recommended) {
+      pills.push({
+        key: 'recommended',
+        label: isRTL ? 'موصى به' : 'Recommended',
+        value: true,
+      });
+    }
+
     if (localFilters.minPrice || localFilters.maxPrice) {
       const min = localFilters.minPrice || 0;
       const max = localFilters.maxPrice || 5000;
@@ -400,8 +414,10 @@ export function useCatalogFilters(lang: Locale) {
       setSkinTypeIds: setSelectedSkinTypeIds,
       skinConcernIds: selectedSkinConcernIds,
       setSkinConcernIds: setSelectedSkinConcernIds,
+      recommended,
+      setRecommended,
     }),
-    [searchQuery, selectedBrandIds, selectedCategoryIds, onSale, priceRange, selectedTags, selectedSkinTypeIds, selectedSkinConcernIds],
+    [searchQuery, selectedBrandIds, selectedCategoryIds, onSale, priceRange, selectedTags, selectedSkinTypeIds, selectedSkinConcernIds, recommended],
   );
 
   return {

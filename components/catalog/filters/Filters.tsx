@@ -52,6 +52,8 @@ export interface FilterState {
   setSkinTypeIds: (skinTypeIds: number[]) => void;
   skinConcernIds: number[];
   setSkinConcernIds: (skinConcernIds: number[]) => void;
+  recommended: boolean;
+  setRecommended: (recommended: boolean) => void;
 }
 
 interface CatalogFilters {
@@ -86,10 +88,11 @@ export default function Filters({ lang, brandTokens, priceMin, priceMax, catalog
     tags, setTags,
     skinTypeIds, setSkinTypeIds,
     skinConcernIds, setSkinConcernIds,
+    recommended, setRecommended,
   } = state;
 
   const [open, setOpen] = useState({
-    brand: true, category: true, price: true, sale: true, tags: false, skinType: false, skinConcern: false
+    brand: true, category: true, price: true, sale: true, recommended: true, tags: false, skinType: false, skinConcern: false
   });
   const toggle = (k: keyof typeof open) => setOpen(o => ({ ...o, [k]: !o[k] }));
 
@@ -104,6 +107,7 @@ export default function Filters({ lang, brandTokens, priceMin, priceMax, catalog
     tags: lang === "ar" ? "خصائص" : "Attributes",
     skinType: lang === "ar" ? "نوع البشرة" : "Skin Type",
     skinConcern: lang === "ar" ? "مشاكل البشرة" : "Skin Concern",
+    recommended: lang === "ar" ? "موصى به" : "Recommended",
     min: lang === "ar" ? "الحد الأدنى" : "Min",
     max: lang === "ar" ? "الحد الأقصى" : "Max",
   };
@@ -215,6 +219,20 @@ export default function Filters({ lang, brandTokens, priceMin, priceMax, catalog
             style={{ accentColor: brandTokens.primary }}
           />
           <span className="text-sm">{lang === "ar" ? "خصومات فقط" : "Only discounted"}</span>
+        </label>
+      </FilterGroup>
+
+      {/* Recommended */}
+      <FilterGroup title={t.recommended} open={open.recommended} onToggle={() => toggle("recommended")}>
+        <label className="flex items-center gap-2 cursor-pointer hover:bg-neutral-50 p-2 rounded transition-colors">
+          <input
+            type="checkbox"
+            checked={recommended}
+            onChange={e => setRecommended(e.target.checked)}
+            className="rounded border-neutral-300 w-4 h-4 cursor-pointer"
+            style={{ accentColor: brandTokens.primary }}
+          />
+          <span className="text-sm">{lang === "ar" ? "المنتجات الموصى بها فقط" : "Only recommended"}</span>
         </label>
       </FilterGroup>
 
