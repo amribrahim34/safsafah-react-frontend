@@ -1,6 +1,8 @@
 'use client';
 
-import { useLocale, useLocaleRouter, getOppositeLocale } from '@/lib/locale-navigation';
+import { useEffect, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { useLocale, getOppositeLocale } from '@/lib/locale-navigation';
 
 interface LanguageSwitcherProps {
   className?: string;
@@ -8,16 +10,27 @@ interface LanguageSwitcherProps {
 
 export default function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
   const lang = useLocale();
-  const { switchLocale } = useLocaleRouter();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const oppositeLang = getOppositeLocale(lang);
+  const oppositeUrl = `/${oppositeLang}`;
+
+  useEffect(() => {
+    router.prefetch(oppositeUrl);
+  }, [router, oppositeUrl]);
 
   const handleToggleLang = () => {
-    switchLocale(getOppositeLocale(lang));
+    startTransition(() => {
+      router.push(oppositeUrl);
+    });
   };
 
   return (
     <button
       onClick={handleToggleLang}
-      className={`text-sm font-semibold px-3 py-1.5 rounded-xl border border-neutral-200 hover:bg-neutral-100 transition-colors whitespace-nowrap ${className}`}
+      disabled={isPending}
+      className={`text-sm font-semibold px-3 py-1.5 rounded-xl border border-neutral-200 hover:bg-neutral-100 transition-colors whitespace-nowrap ${isPending ? 'opacity-50 cursor-wait' : ''} ${className}`}
     >
       {lang === 'ar' ? 'English' : 'العربية'}
     </button>

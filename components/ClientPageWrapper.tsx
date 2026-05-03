@@ -6,7 +6,6 @@ import "../lib/i18n";
 import { BRAND } from "../content/brand";
 import { IMG } from "../content/images";
 import { COPY } from "../content/copy";
-import { useDir } from "../hooks/useDir";
 import { useLocale } from "@/lib/locale-navigation";
 
 import PromoBar from "./header/PromoBar";
@@ -30,8 +29,6 @@ export default function ClientPageWrapper({ children }: ClientPageWrapperProps) 
   const { t, i18n } = useTranslation('home');
   const lang = useLocale(); // Get locale from URL
   const T = useMemo(() => COPY[lang as keyof typeof COPY], [lang]);
-  useDir(); // Automatically syncs with URL
-
   useEffect(() => {
     // Sync i18n with the locale from URL
     if (i18n.language !== lang) {

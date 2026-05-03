@@ -2,7 +2,6 @@
 
 import { useTranslation } from 'react-i18next';
 import '../lib/i18n';
-import { useDir } from '../hooks/useDir';
 import { useLocale } from '@/lib/locale-navigation';
 import { BRAND } from '../content/brand';
 
@@ -19,8 +18,6 @@ interface ClientWrapperProps {
 export default function ClientWrapper({ children }: ClientWrapperProps) {
   const { t, i18n } = useTranslation('home');
   const lang = useLocale(); // Get locale from URL
-  useDir(); // Automatically syncs with URL
-
   // Sync language synchronously (before render) so SSR and client agree on
   // the first render — avoids hydration mismatches.
   if (i18n.language !== lang) {

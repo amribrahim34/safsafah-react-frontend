@@ -12,8 +12,6 @@ import BrandsSection from "@/components/home/brands/BrandsSection";
 // import MoreBanners from "@/components/home/banners/ExtraBanners";
 import Footer from "@/components/footer/Footer";
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
 
 type PageProps = {
   params: {
