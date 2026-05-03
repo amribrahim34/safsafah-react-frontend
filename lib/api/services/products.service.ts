@@ -26,7 +26,11 @@ export const productsService = {
   async getProducts(filters?: ProductFilters): Promise<ProductSearchResult> {
     // Laravel API returns: {data: Product[], links: {}, meta: {current_page, per_page, total}}
     // Using type assertion to match the actual Laravel paginated response structure
-    const response = await get<Product[]>('/products', filters as Record<string, unknown>) as any as {
+    const params: Record<string, unknown> = { ...filters };
+    if (typeof params.recommended === 'boolean') {
+      params.recommended = params.recommended ? 1 : 0;
+    }
+    const response = await get<Product[]>('/products', params) as any as {
       data: Product[];
       meta: {
         current_page: number;
