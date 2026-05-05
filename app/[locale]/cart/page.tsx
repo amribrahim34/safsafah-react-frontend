@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useMemo, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import type { Language } from "@/types";
 import posthog from "posthog-js";
 import { BRAND } from "@/content/brand";
 import { COPY } from "@/content/copy";
@@ -24,19 +25,21 @@ export default function CartPage() {
   const dispatch = useAppDispatch();
   const { cart, isLoading } = useAppSelector((state) => state.cart);
   const router = useRouter();
+  
 
-  const [lang, setLang] = useState("ar");
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang: Language = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+
   const T = useMemo(() => COPY[lang], [lang]);
   useDir();
 
   const [promo, setPromo] = useState("");
 
-  // Fetch cart data on component mount
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);
 
-  // Map API cart items to component format
   const items = useMemo(() => {
     if (!cart?.items) return [];
     return cart.items.map((item) => ({
@@ -48,22 +51,20 @@ export default function CartPage() {
       price: item.productPrice,
       productId: item.productId,
       img: item.productImage,
-      brand: item.brand, // Default brand since API doesn't provide it
-      variant: "30ml", // Default variant since API doesn't provide it
+      variant: "30ml",
       qty: item.quantity,
-      stock: 10, // Default stock since API doesn't provide it
+      stock: 10,
     }));
-  }, [cart?.items]);
+  }, [cart]);
 
-  const fmt = (n) =>
+  const fmt = (n: number): string =>
     new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", {
       style: "currency",
       currency: "EGP",
       maximumFractionDigits: 0,
     }).format(n);
 
-  const updateQty = (id, q) => {
-    // Find the item's stock limit
+  const updateQty = (id: number, q: number): void => {
     const item = items.find((it) => it.id === id);
     if (item) {
       const newQty = Math.max(1, Math.min(q, item.stock));
@@ -71,11 +72,11 @@ export default function CartPage() {
     }
   };
 
-  const removeItem = (id) => {
+  const removeItem = (id: number): void => {
     dispatch(removeFromCart(id));
   };
 
-  const handleApplyPromo = async () => {
+  const handleApplyPromo = async (): Promise<void> => {
     if (promo.trim()) {
       try {
         await dispatch(applyPromoCode(promo.trim())).unwrap();
@@ -83,10 +84,8 @@ export default function CartPage() {
           promo_code: promo.trim(),
           cart_total: subtotal,
         });
-        // Success - cart will be updated automatically via Redux
       } catch (error) {
         posthog.captureException(error);
-        // Error handling - you might want to show a toast notification here
         console.error('Failed to apply promo code:', error);
       }
     }
@@ -99,7 +98,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={T.promo} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
+      <PromoBar text={T.promo} brand={BRAND} />
       <Header brand={BRAND} searchPlaceholder={T.search} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
@@ -118,7 +117,6 @@ export default function CartPage() {
             <FreeShippingBar brand={BRAND} lang={lang} subtotal={subtotal} target={500} />
 
             <div className="grid gap-6 md:grid-cols-[minmax(0,1fr),380px]">
-              {/* Items */}
               <section className="space-y-3">
                 {items.map((it) => (
                   <CartItem
@@ -126,7 +124,7 @@ export default function CartPage() {
                     lang={lang}
                     brand={BRAND}
                     item={it}
-                    onQty={(q) => updateQty(it.productId, q)}
+                    onQty={(q: number) => updateQty(it.productId, q)}
                     onRemove={() => removeItem(it.productId)}
                   />
                 ))}
@@ -141,7 +139,6 @@ export default function CartPage() {
                 />
               </section>
 
-              {/* Summary */}
               <aside className="self-start">
                 <OrderSummary
                   lang={lang}
@@ -151,6 +148,7 @@ export default function CartPage() {
                   discount={discount}
                   shipping={shipping}
                   total={total}
+                  checkoutButton={null}
                   onCheckout={() => {
                     posthog.capture('checkout_started', {
                       cart_total: total,
@@ -168,7 +166,6 @@ export default function CartPage() {
       <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
 
-      {/* Sticky checkout on mobile */}
       {items.length > 0 && (
         <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-neutral-200 md:hidden">
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
@@ -177,11 +174,7 @@ export default function CartPage() {
                 {lang === "ar" ? "الإجمالي" : "Total"}
               </div>
               <div className="font-extrabold">
-                {new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", {
-                  style: "currency",
-                  currency: "EGP",
-                  maximumFractionDigits: 0,
-                }).format(total)}
+                {fmt(total)}
               </div>
             </div>
             <button

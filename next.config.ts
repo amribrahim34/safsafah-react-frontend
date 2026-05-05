@@ -4,10 +4,12 @@ const nextConfig: NextConfig = {
   /* config options here */
   // Disable static export to prevent SSR issues with browser-only code
   output: 'standalone',
+  // allowedDevOrigins: ['127.0.0.1'],
   experimental: {
     optimizeCss: true,
   },
   async rewrites() {
+    if (process.env.NODE_ENV === "development") return [];
     return [
       {
         source: "/ingest/static/:path*",

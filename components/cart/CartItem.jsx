@@ -45,7 +45,7 @@ export default function CartItem({ lang, brand, item, onQty, onRemove }) {
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <div className="font-semibold text-sm leading-snug truncate">
+            <div className="font-semibold text-sm leading-snug text-wrap">
               {isAr ? item.name.ar : item.name.en}
             </div>
             {item.brand && (
