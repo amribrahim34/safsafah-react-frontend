@@ -1,15 +1,17 @@
 'use client';
 
 import { useEffect, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
-import { useLocale, getOppositeLocale } from '@/lib/locale-navigation';
+import { useParams, useRouter } from 'next/navigation';
+import {  getOppositeLocale } from '@/lib/locale-navigation';
 
 interface LanguageSwitcherProps {
   className?: string;
 }
 
 export default function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
-  const lang = useLocale();
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

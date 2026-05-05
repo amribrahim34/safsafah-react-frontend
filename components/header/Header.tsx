@@ -2,10 +2,10 @@
 
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
-import { useLocale, getLocalizedPath } from '@/lib/locale-navigation';
+import {  getLocalizedPath } from '@/lib/locale-navigation';
 import logo from '../../assets/safsafah-logo.png';
 import { useState, useEffect, Suspense } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -28,7 +28,10 @@ function HeaderContent({ brand, searchPlaceholder }: HeaderProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
-  const lang = useLocale();
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  
 
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
