@@ -18,9 +18,9 @@ import Footer from "@/components/footer/Footer";
 import FloatingCart from "@/components/appchrome/FloatingCart";
 
 import OrderSummary from "@/components/cart/OrderSummary";
-import PaymentMethods from "@/components/checkout/PaymentMethods";
-import CheckoutForm from "@/components/checkout/CheckoutForm";
-import MobileCheckoutButton from "@/components/checkout/MobileCheckoutButton";
+import PaymentMethods from "./_components/PaymentMethods";
+import CheckoutForm from "./_components/CheckoutForm";
+import MobileCheckoutButton from "./_components/MobileCheckoutButton";
 import SuccessToast from "@/components/notifications/SuccessToast";
 import ErrorToast from "@/components/notifications/ErrorToast";
 
