@@ -89,7 +89,7 @@ export default function CartDropdown({
       {/* Dropdown Panel — only after mount */}
       {mounted && isOpen && (
         <div
-          className={`absolute top-full mt-2 w-96 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden z-50 ${isRTL ? 'left-0' : 'right-0'}`}
+          className={`absolute top-full mt-2 lg:w-96 md:w-80 w-60 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden z-50 ${isRTL ? 'left-0' : 'right-0'}`}
           style={{ maxHeight: '500px' }}
         >
           {cart && cart.items.length > 0 ? (
