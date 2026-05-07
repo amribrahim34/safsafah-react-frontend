@@ -102,7 +102,7 @@ export default function CartDropdown({
                       <img
                         src={getImageUrl(item.productImage)}
                         alt={lang === 'ar' ? item.productNameAr : item.productNameEn}
-                        className="hidden md:block w-14 h-14 object-cover rounded-lg flex-shrink-0"
+                        className=" md:block w-14 h-14 object-cover rounded-lg flex-shrink-0"
                       />
                     )}
 
