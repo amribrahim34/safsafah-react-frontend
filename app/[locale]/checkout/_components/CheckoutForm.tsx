@@ -1,11 +1,13 @@
+import '@/lib/i18n';
 import React from "react";
+import { useTranslation } from "react-i18next";
 import FormInput from "@/components/forms/FormInput";
 import FormTextarea from "@/components/forms/FormTextarea";
 import MapPicker from "./MapPicker";
 import { Language, AddressResponse } from "@/types/models/common";
 import { BrandColors } from "@/types/models/brand";
 
-interface FormData {
+export interface CheckoutFormData {
   fullName: string;
   mobile: string;
   address: string;
@@ -17,7 +19,7 @@ interface FormData {
 interface CheckoutFormProps {
   lang: Language;
   brand: BrandColors;
-  formData: FormData;
+  formData: CheckoutFormData;
   onFieldChange: (field: string, value: string | { lat: number; lng: number } | null) => void;
   fieldErrors: Record<string, string | undefined>;
   onFieldBlur: (field: string, value: string) => void;
@@ -37,46 +39,41 @@ export default function CheckoutForm({
   selectedAddressId,
   onAddressSelect,
 }: CheckoutFormProps) {
+  const { t } = useTranslation('checkout');
   const { fullName, mobile, address, notes } = formData;
   const isRTL = lang === "ar";
 
   return (
     <div className="rounded-3xl border border-neutral-200 p-4 bg-white">
       <div className="font-bold text-lg mb-3">
-        {lang === "ar" ? "الدفع السريع" : "Ultra-fast checkout"}
+        {t('form.title')}
       </div>
 
       <FormInput
-        label={lang === "ar" ? "الاسم *" : "Name *"}
+        label={t('form.name')}
         value={fullName}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange("fullName", e.target.value)}
         onBlur={(e: React.ChangeEvent<HTMLInputElement>) => onFieldBlur("fullName", e.target.value)}
         error={fieldErrors.fullName}
         inputMode={undefined}
-        placeholder={
-          lang === "ar" ? "الاسم" : "Your name"
-        }
+        placeholder={t('form.namePlaceholder')}
       />
 
       <FormInput
-        label={lang === "ar" ? "الموبايل *" : "Mobile *"}
+        label={t('form.mobile')}
         value={mobile}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFieldChange("mobile", e.target.value)}
         onBlur={(e: React.ChangeEvent<HTMLInputElement>) => onFieldBlur("mobile", e.target.value)}
         error={fieldErrors.mobile}
         inputMode="tel"
-        placeholder={
-          lang === "ar"
-            ? "01xxxxxxxxx أو +201xxxxxxxxx"
-            : "01xxxxxxxxx or +201xxxxxxxxx"
-        }
+        placeholder={t('form.mobilePlaceholder')}
       />
 
       {/* Saved Addresses */}
       {addresses && addresses.length > 0 && (
         <div className="mb-4">
           <div className="text-sm font-semibold mb-2">
-            {isRTL ? "اختر عنوان محفوظ" : "Choose saved address"}
+            {t('form.savedAddresses')}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {addresses.map((addr) => (
@@ -104,7 +101,7 @@ export default function CheckoutForm({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-semibold truncate">
-                      {addr.name || (isRTL ? "📍 عنوان" : "📍 Address")}
+                      {addr.name || t('form.addressLabel')}
                     </div>
                     <div className="text-xs text-neutral-700 line-clamp-2">{addr.details}</div>
                   </div>
@@ -135,7 +132,7 @@ export default function CheckoutForm({
                   )}
                 </div>
                 <div className="text-xs font-semibold">
-                  {isRTL ? "+ إضافة عنوان جديد" : "+ Add new address"}
+                  {t('form.addNewAddress')}
                 </div>
               </div>
             </div>
@@ -146,16 +143,12 @@ export default function CheckoutForm({
       {/* Only show address textarea for new addresses */}
       {(selectedAddressId === "new" || selectedAddressId === null || addresses.length === 0) && (
         <FormTextarea
-          label={lang === "ar" ? "العنوان التفصيلي *" : "Address *"}
+          label={t('form.address')}
           value={address}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldChange("address", e.target.value)}
           onBlur={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldBlur("address", e.target.value)}
           error={fieldErrors.address}
-          placeholder={
-            lang === "ar"
-              ? "اسم الشارع، المبنى/العمارة، الدور/الشقة"
-              : "Street, building, floor/apt"
-          }
+          placeholder={t('form.addressPlaceholder')}
         />
       )}
 
@@ -174,7 +167,7 @@ export default function CheckoutForm({
           {formData.geoLabel && (
             <div className="mt-2 text-sm rounded-xl bg-neutral-50 border border-neutral-200 p-2">
               <div className="font-semibold">
-                {lang === "ar" ? "الموقع المحدد" : "Selected location"}
+                {t('form.selectedLocation')}
               </div>
               <div className="text-neutral-700">{formData.geoLabel}</div>
             </div>
@@ -183,16 +176,12 @@ export default function CheckoutForm({
       )}
 
       <FormTextarea
-        label={lang === "ar" ? "ملاحظات للمندوب" : "Notes for courier"}
+        label={t('form.notes')}
         value={notes}
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onFieldChange("notes", e.target.value)}
         onBlur={undefined}
         error={undefined}
-        placeholder={
-          lang === "ar"
-            ? "مثلاً: اتصل قبل الوصول"
-            : "e.g., please call on arrival"
-        }
+        placeholder={t('form.notesPlaceholder')}
         minHeight="70px"
       />
     </div>

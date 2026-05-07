@@ -1,0 +1,36 @@
+{
+  "form": {
+    "title": "الدفع السريع",
+    "name": "الاسم *",
+    "namePlaceholder": "الاسم",
+    "mobile": "الموبايل *",
+    "mobilePlaceholder": "01xxxxxxxxx أو +201xxxxxxxxx",
+    "savedAddresses": "اختر عنوان محفوظ",
+    "addressLabel": "📍 عنوان",
+    "addNewAddress": "+ إضافة عنوان جديد",
+    "address": "العنوان التفصيلي *",
+    "addressPlaceholder": "اسم الشارع، المبنى/العمارة، الدور/الشقة",
+    "selectedLocation": "الموقع المحدد",
+    "notes": "ملاحظات للمندوب",
+    "notesPlaceholder": "مثلاً: اتصل قبل الوصول"
+  },
+  "payment": {
+    "title": "طريقة الدفع",
+    "cod": "الدفع عند الاستلام",
+    "card": "بطاقة (Visa/Mastercard)",
+    "wallet": "محفظة موبايل",
+    "fastest": "الأسرع"
+  },
+  "button": {
+    "processing": "جاري المعالجة...",
+    "walletPay": "الدفع بالمحفظة",
+    "checkout": "إتمام الشراء"
+  },
+  "summary": {
+    "total": "الإجمالي"
+  },
+  "messages": {
+    "orderSuccess": "تم إنشاء الطلب بنجاح 🎉",
+    "orderFailed": "فشل إنشاء الطلب. حاول مرة أخرى"
+  }
+}

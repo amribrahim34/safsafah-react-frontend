@@ -1,4 +1,6 @@
+import '@/lib/i18n';
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Language } from "@/types/models/common";
 import { BrandColors } from "@/types/models/brand";
 
@@ -25,12 +27,14 @@ export default function MobileCheckoutButton({
   onClick,
   fmt,
 }: MobileCheckoutButtonProps) {
+  const { t } = useTranslation('checkout');
+
   return (
     <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-neutral-200 md:hidden">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
         <div className="flex-1">
           <div className="text-xs text-neutral-600">
-            {lang === "ar" ? "الإجمالي" : "Total"}
+            {t('summary.total')}
           </div>
           <div className="font-extrabold">{fmt(total)}</div>
         </div>
@@ -43,16 +47,10 @@ export default function MobileCheckoutButton({
           style={{ background: brand.primary }}
         >
           {isSubmitting || isCreatingOrder
-            ? lang === "ar"
-              ? "جاري المعالجة..."
-              : "Processing..."
+            ? t('button.processing')
             : payment === "wallet"
-            ? lang === "ar"
-              ? "الدفع بالمحفظة"
-              : "Wallet payment"
-            : lang === "ar"
-            ? "إتمام الشراء"
-            : "Checkout"}
+            ? t('button.walletPay')
+            : t('button.checkout')}
         </button>
       </div>
     </div>

@@ -1,0 +1,36 @@
+{
+  "form": {
+    "title": "Ultra-fast checkout",
+    "name": "Name *",
+    "namePlaceholder": "Your name",
+    "mobile": "Mobile *",
+    "mobilePlaceholder": "01xxxxxxxxx or +201xxxxxxxxx",
+    "savedAddresses": "Choose saved address",
+    "addressLabel": "📍 Address",
+    "addNewAddress": "+ Add new address",
+    "address": "Address *",
+    "addressPlaceholder": "Street, building, floor/apt",
+    "selectedLocation": "Selected location",
+    "notes": "Notes for courier",
+    "notesPlaceholder": "e.g., please call on arrival"
+  },
+  "payment": {
+    "title": "Payment method",
+    "cod": "Cash on Delivery",
+    "card": "Card (Visa/Mastercard)",
+    "wallet": "Mobile wallet",
+    "fastest": "Fastest"
+  },
+  "button": {
+    "processing": "Processing...",
+    "walletPay": "Wallet payment",
+    "checkout": "Checkout"
+  },
+  "summary": {
+    "total": "Total"
+  },
+  "messages": {
+    "orderSuccess": "Order placed successfully 🎉",
+    "orderFailed": "Failed to create order. Please try again"
+  }
+}

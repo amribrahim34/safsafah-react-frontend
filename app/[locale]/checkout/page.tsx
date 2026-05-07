@@ -1,16 +1,19 @@
 'use client';
 
-import React, { useMemo, useState, useRef, useEffect } from "react";
+import '@/lib/i18n';
+import React, { useState, useRef, useEffect } from "react";
 import posthog from "posthog-js";
 import { BRAND } from "@/content/brand";
-import { COPY } from "@/content/copy";
 import { useDir } from "@/hooks/useDir";
 import { useCheckoutValidation } from "@/hooks/useCheckoutValidation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchCart } from "@/store/slices/cartsSlice";
 import { createOrder } from "@/store/slices/ordersSlice";
 import { fetchUserProfile } from "@/store/slices/authSlice";
+import { AddressResponse } from "@/types/models/common";
+import { CreateOrderApiRequest } from "@/types/models/order";
 
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
@@ -19,14 +22,22 @@ import FloatingCart from "@/components/appchrome/FloatingCart";
 
 import OrderSummary from "@/components/cart/OrderSummary";
 import PaymentMethods from "./_components/PaymentMethods";
-import CheckoutForm from "./_components/CheckoutForm";
+import CheckoutForm, { CheckoutFormData } from "./_components/CheckoutForm";
 import MobileCheckoutButton from "./_components/MobileCheckoutButton";
 import SuccessToast from "@/components/notifications/SuccessToast";
 import ErrorToast from "@/components/notifications/ErrorToast";
 
+type PaymentMethod = "cod" | "card" | "wallet";
+
 export default function CheckoutQuickPage() {
-  const [lang, setLang] = useState("ar");
-  const T = useMemo(() => COPY[lang], [lang]);
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+
+  const { t, i18n } = useTranslation('checkout');
+  const { t: tHome } = useTranslation('home');
+  if (i18n.language !== lang) i18n.changeLanguage(lang);
+
   useDir();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -34,27 +45,27 @@ export default function CheckoutQuickPage() {
   const { isLoading: isCreatingOrder } = useAppSelector((state) => state.orders);
   const user = useAppSelector((state) => state.auth.user);
 
-  // Fetch cart and user profile on component mount
   useEffect(() => {
-    // Always fetch fresh cart data for checkout
     dispatch(fetchCart());
-
-    // Fetch user profile if authenticated
     const token = localStorage.getItem('auth_token');
     if (token) {
       dispatch(fetchUserProfile());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array - only run once on mount
+  }, []);
 
   const subtotal = cart?.totalPrice || 0;
-  const discount = cart?.discountAmount || 0;
+  const discount = 0;
   const shipping = subtotal >= 500 ? 0 : 49;
   const total = Math.max(0, subtotal - discount + shipping);
-  const fmt = (n) => new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", { style: "currency", currency: "EGP", maximumFractionDigits: 0 }).format(n);
+  const fmt = (n: number): string =>
+    new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", {
+      style: "currency",
+      currency: "EGP",
+      maximumFractionDigits: 0,
+    }).format(n);
 
-  // Form fields matching API structure
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CheckoutFormData>({
     fullName: "",
     mobile: "",
     address: "",
@@ -62,10 +73,9 @@ export default function CheckoutQuickPage() {
     coords: null,
     geoLabel: "",
   });
-  const [payment, setPayment] = useState("cod");
-  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [payment, setPayment] = useState<PaymentMethod>("cod");
+  const [selectedAddressId, setSelectedAddressId] = useState<number | "new" | null>(null);
 
-  // Prepopulate form with user data when available
   useEffect(() => {
     if (user) {
       setFormData((prev) => ({
@@ -74,7 +84,6 @@ export default function CheckoutQuickPage() {
         mobile: user.phone || "",
       }));
 
-      // Select and populate first address by default
       if (user.addresses && user.addresses.length > 0) {
         const firstAddress = user.addresses[0];
         setSelectedAddressId(firstAddress.id);
@@ -88,14 +97,12 @@ export default function CheckoutQuickPage() {
           },
         }));
       } else {
-        // If no addresses, set to "new" mode
         setSelectedAddressId("new");
       }
     }
   }, [user]);
 
-  // Handle address selection
-  const handleAddressSelect = (address) => {
+  const handleAddressSelect = (address: AddressResponse | "new") => {
     if (address === "new") {
       setSelectedAddressId("new");
       setFormData((prev) => ({
@@ -118,15 +125,15 @@ export default function CheckoutQuickPage() {
       }));
     }
   };
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const submitBtnRef = useRef(null);
+  const submitBtnRef = useRef<HTMLButtonElement>(null);
 
-  // Use custom validation hook
   const {
     fieldErrors,
     validateField,
@@ -136,31 +143,28 @@ export default function CheckoutQuickPage() {
     setFieldError,
   } = useCheckoutValidation(lang);
 
-  const handleFieldChange = (field, value) => {
+  const handleFieldChange = (field: string, value: string | { lat: number; lng: number } | null) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (fieldErrors[field]) {
+    if ((fieldErrors as Record<string, string>)[field]) {
       clearFieldError(field);
     }
   };
 
-  const handleFieldBlur = (field, value) => {
+  const handleFieldBlur = (field: string, value: string) => {
     const error = validateField(field, value);
     setFieldError(field, error);
   };
 
-  // Validation: if using saved address, don't require address text field
   const isUsingSavedAddress = selectedAddressId && selectedAddressId !== "new";
   const valid = isUsingSavedAddress
-    ? formData.fullName.trim().length >= 2 && formData.mobile.trim().length >= 11 // Only validate name and mobile
+    ? formData.fullName.trim().length >= 2 && formData.mobile.trim().length >= 11
     : isFormValid(formData.fullName, formData.mobile, formData.address);
   const isDisabled = !valid || isSubmitting;
 
-  const placeOrder = async (e) => {
+  const placeOrder = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate required fields
     if (isUsingSavedAddress) {
-      // Only validate name and mobile for saved addresses
       const nameError = validateField("fullName", formData.fullName);
       if (nameError) {
         setErrorMessage(nameError);
@@ -174,7 +178,6 @@ export default function CheckoutQuickPage() {
         return;
       }
     } else {
-      // Validate all fields for new addresses
       const error = getValidationError(formData.fullName, formData.mobile, formData.address);
       if (error) {
         setErrorMessage(error);
@@ -183,10 +186,8 @@ export default function CheckoutQuickPage() {
       }
     }
 
-    // If wallet: take user to wallet payment step
     if (payment === "wallet") {
-      // Pass data via query params for Next.js
-      const params = new URLSearchParams({
+      const walletParams = new URLSearchParams({
         lang,
         total: total.toString(),
         mobile: formData.mobile,
@@ -194,33 +195,28 @@ export default function CheckoutQuickPage() {
         orderRef: `SFS-${Date.now()}`,
         walletNumber: "0100 000 0000",
       });
-      router.push(`/wallet-payment?${params.toString()}`);
+      router.push(`/wallet-payment?${walletParams.toString()}`);
       return;
     }
 
     setIsSubmitting(true);
 
-    // Map payment method to API format (matching backend allowed values)
-    // Backend accepts: WALLET, CREDIT_CARD, DEBIT_CARD, CASH_ON_DELIVERY, BANK_TRANSFER
-    const paymentTypeMap = {
+    const paymentTypeMap: Record<PaymentMethod, CreateOrderApiRequest["paymentType"]> = {
       cod: "CASH_ON_DELIVERY",
-      card: "CREDIT_CARD", // Changed from CARD to CREDIT_CARD
+      card: "CREDIT_CARD",
       wallet: "WALLET",
     };
 
-    // Prepare order data for the API
-    const orderData = {
+    const orderData: CreateOrderApiRequest = {
       customerName: formData.fullName,
       customerMobile: formData.mobile,
       deliveryNotes: formData.notes || undefined,
-      paymentType: paymentTypeMap[payment] || "CASH_ON_DELIVERY",
+      paymentType: paymentTypeMap[payment],
     };
 
-    // If using a saved address, send only the address ID
     if (selectedAddressId && selectedAddressId !== "new") {
-      orderData.addressId = selectedAddressId;
+      orderData.addressId = selectedAddressId as number;
     } else {
-      // For new addresses, send full address details
       orderData.customerAddress = formData.address;
       orderData.latitude = formData.coords?.lat?.toString() || "0";
       orderData.longitude = formData.coords?.lng?.toString() || "0";
@@ -239,16 +235,11 @@ export default function CheckoutQuickPage() {
         item_count: cart?.items?.length,
       });
 
-      // Refetch cart since it's cleared on the backend
       await dispatch(fetchCart());
 
-      // Show success notification
-      setSuccessMessage(
-        lang === "ar" ? "تم إنشاء الطلب بنجاح 🎉" : "Order placed successfully 🎉"
-      );
+      setSuccessMessage(t('messages.orderSuccess'));
       setShowSuccess(true);
 
-      // Navigate to home after a short delay
       setTimeout(() => {
         router.push("/");
       }, 2000);
@@ -257,14 +248,10 @@ export default function CheckoutQuickPage() {
       posthog.capture('order_placement_failed', {
         payment_method: payment,
         total,
-        error_message: error?.message || String(error),
+        error_message: (error as Error)?.message || String(error),
       });
       console.error("Order creation failed:", error);
-      setErrorMessage(
-        lang === "ar"
-          ? "فشل إنشاء الطلب. حاول مرة أخرى"
-          : "Failed to create order. Please try again"
-      );
+      setErrorMessage(t('messages.orderFailed'));
       setShowError(true);
     } finally {
       setIsSubmitting(false);
@@ -287,8 +274,11 @@ export default function CheckoutQuickPage() {
         />
       )}
 
-      <PromoBar text={T.promo} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} />
+      <PromoBar
+        text={tHome('promo') as string}
+        brand={BRAND}
+      />
+      <Header brand={BRAND} searchPlaceholder={tHome('search') as string} />
 
       <form onSubmit={placeOrder} className="max-w-7xl mx-auto px-4 py-6 grid gap-6 md:grid-cols-[minmax(0,1fr),420px]">
         {/* LEFT */}
@@ -325,6 +315,7 @@ export default function CheckoutQuickPage() {
             discount={0}
             shipping={shipping}
             total={total}
+            onCheckout={undefined}
             checkoutButton={
               <button
                 type="submit"
@@ -333,10 +324,10 @@ export default function CheckoutQuickPage() {
                 style={{ background: BRAND.primary }}
               >
                 {isSubmitting || isCreatingOrder
-                  ? (lang === "ar" ? "جاري المعالجة..." : "Processing...")
+                  ? t('button.processing')
                   : payment === "wallet"
-                  ? (lang === "ar" ? "الدفع بالمحفظة" : "Wallet payment")
-                  : (lang === "ar" ? "إتمام الشراء" : "Checkout")}
+                  ? t('button.walletPay')
+                  : t('button.checkout')}
               </button>
             }
           />
@@ -352,7 +343,6 @@ export default function CheckoutQuickPage() {
         />
       </form>
 
-      {/* SINGLE sticky CTA on mobile (same submit handler) */}
       <MobileCheckoutButton
         lang={lang}
         brand={BRAND}
