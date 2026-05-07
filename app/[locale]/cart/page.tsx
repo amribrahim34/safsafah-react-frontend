@@ -141,7 +141,6 @@ export default function CartPage() {
 
               <aside className="self-start">
                 <OrderSummary
-                  lang={lang}
                   brand={BRAND}
                   fmt={fmt}
                   subtotal={subtotal}
@@ -154,7 +153,7 @@ export default function CartPage() {
                       cart_total: total,
                       item_count: items.length,
                     });
-                    router.push("/checkout");
+                    router.push(`/${locale}/checkout`);
                   }}
                 />
               </aside>
@@ -183,7 +182,7 @@ export default function CartPage() {
                   cart_total: total,
                   item_count: items.length,
                 });
-                router.push("/checkout");
+                router.push(`/${locale}/checkout`);
               }}
               className="px-5 py-3 rounded-2xl text-white font-semibold"
               style={{ background: BRAND.primary }}

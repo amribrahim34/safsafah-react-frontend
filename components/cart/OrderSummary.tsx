@@ -1,7 +1,30 @@
+'use client';
 import React from "react";
+import { useParams } from "next/navigation";
 import DeliveryETA from "../product_details/DeliveryETA";
 
-export default function OrderSummary({ lang, brand, fmt, subtotal, discount, shipping, total, onCheckout, checkoutButton }) {
+interface OrderSummaryProps {
+  brand: { primary: string };
+  fmt: (n: number) => string;
+  subtotal: number;
+  discount: number;
+  shipping: number;
+  total: number;
+  onCheckout?: () => void;
+  checkoutButton?: React.ReactNode;
+}
+
+interface RowProps {
+  label: string;
+  value: string;
+  bold?: boolean;
+}
+
+export default function OrderSummary({ brand, fmt, subtotal, discount, shipping, total, onCheckout, checkoutButton }: OrderSummaryProps) {
+  const params = useParams();
+  const locale = params?.locale as string | undefined;
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+
   return (
     <div className="rounded-3xl border border-neutral-200 p-4 bg-neutral-50">
       <div className="font-bold text-lg mb-3">
@@ -42,7 +65,7 @@ export default function OrderSummary({ lang, brand, fmt, subtotal, discount, shi
   );
 }
 
-function Row({ label, value, bold }) {
+function Row({ label, value, bold }: RowProps) {
   return (
     <div className={`flex items-center justify-between ${bold ? "font-extrabold" : ""}`}>
       <span>{label}</span>

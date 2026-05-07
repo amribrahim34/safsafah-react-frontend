@@ -308,7 +308,6 @@ export default function CheckoutQuickPage() {
           "
         >
           <OrderSummary
-            lang={lang}
             brand={BRAND}
             fmt={fmt}
             subtotal={subtotal}
