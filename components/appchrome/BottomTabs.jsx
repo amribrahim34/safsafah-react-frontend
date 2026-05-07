@@ -12,7 +12,7 @@ export default function BottomTabs() {
   const labels = {
     home:    isAr ? "الرئيسية" : "Home",
     cats:    isAr ? "المنتجات" : "Catalog",
-    cart:    isAr ? "السلة"    : "Bag",
+    cart:    isAr ? "السلة"    : "Cart",
     account: isAr ? "حسابي"   : "Account",
   };
 
