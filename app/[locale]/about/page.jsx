@@ -13,7 +13,6 @@ import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
 import VisionMission from './_components/VisionMission';
-import ServiceCommitments from './_components/ServiceCommitments';
 import QuickFAQ from '@/components/QuickFAQ';
 import ContactPanel from './_components/ContactPanel';
 
@@ -62,7 +61,6 @@ export default function AboutPage() {
 
         <VisionMission brand={BRAND} t={t('visionMission', { returnObjects: true })} />
 
-        {/* <ServiceCommitments brand={BRAND} t={t('serviceCommitments', { returnObjects: true })} /> */}
 
         <QuickFAQ  t={t('faq', { returnObjects: true })} />
 

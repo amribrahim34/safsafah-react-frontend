@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ShieldCheck, Truck, RotateCcw, HandCoins } from "lucide-react";
-import BrandCard from "../../common/BrandCard";
+import BrandCard from "@/components/common/BrandCard";
 import type { HomeBrand } from "@/types";
 
 interface BrandTrustProps {
@@ -13,7 +13,6 @@ interface BrandTrustProps {
   };
   lang?: 'ar' | 'en';
 }
-
 
 export default function BrandTrust({ brand, lang = "ar" }: BrandTrustProps) {
   const [brands, setBrands] = useState<HomeBrand[]>([]);
@@ -50,11 +49,9 @@ export default function BrandTrust({ brand, lang = "ar" }: BrandTrustProps) {
         {lang === 'ar' ? 'العلامات التجارية الموثوقة' : 'Trusted Brands'}
       </h3>
 
-      {/* Brands Logos */}
       <div className="relative -mx-4 md:mx-0">
         <div className="flex md:grid md:grid-cols-4 gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory px-4">
           {brands.length > 0 ? (
-            // Display brands (limit to 4 for mobile/desktop grid)
             brands.slice(0, 4).map((brandItem) => (
               <BrandCard
                 key={brandItem.id}
@@ -65,7 +62,6 @@ export default function BrandTrust({ brand, lang = "ar" }: BrandTrustProps) {
               />
             ))
           ) : (
-            // Empty state - show placeholder cards
             Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
@@ -81,23 +77,22 @@ export default function BrandTrust({ brand, lang = "ar" }: BrandTrustProps) {
         </div>
       </div>
 
-      {/* Trust Badges */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-        <Badge 
-          icon={ShieldCheck} 
-          label={lang === 'ar' ? 'منتجات أصلية' : 'Authentic Products'} 
+        <Badge
+          icon={ShieldCheck}
+          label={lang === 'ar' ? 'منتجات أصلية' : 'Authentic Products'}
         />
-        <Badge 
-          icon={Truck} 
-          label={lang === 'ar' ? 'شحن سريع' : 'Fast Delivery'} 
+        <Badge
+          icon={Truck}
+          label={lang === 'ar' ? 'شحن سريع' : 'Fast Delivery'}
         />
-        <Badge 
-          icon={HandCoins} 
-          label={lang === 'ar' ? 'الدفع عند الاستلام' : 'Cash on Delivery'} 
+        <Badge
+          icon={HandCoins}
+          label={lang === 'ar' ? 'الدفع عند الاستلام' : 'Cash on Delivery'}
         />
-        <Badge 
-          icon={RotateCcw} 
-          label={lang === 'ar' ? 'إرجاع سهل' : 'Easy Returns'} 
+        <Badge
+          icon={RotateCcw}
+          label={lang === 'ar' ? 'إرجاع سهل' : 'Easy Returns'}
         />
       </div>
     </section>

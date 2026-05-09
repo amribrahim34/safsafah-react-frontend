@@ -8,15 +8,14 @@ import type { HomeCategory } from "@/types";
 import { useParams } from "next/navigation";
 import { getLocalizedPath } from '@/lib/locale-navigation';
 
-
 export default function CategoriesSection() {
   const [categories, setCategories] = useState<HomeCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const params = useParams();
   const locale = params?.locale as string | undefined;
-  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
- 
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {

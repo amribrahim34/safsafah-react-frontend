@@ -3,14 +3,13 @@ import { IMG } from "@/content/images";
 // import { COPY } from "@/content/copy";
 
 import ClientWrapper from "@/components/ClientWrapper";
-import BrandTrust from "@/components/home/trust/BrandTrust";
-import Banners from "@/components/home/banners/Banners";
-import NewArrivals from "@/components/home/arrivals/NewArrivals";
-import BestSellers from "@/components/home/bestsellers/BestSellers";
-import CategoriesSection from "@/components/home/categories/CategoriesSection";
-import BrandsSection from "@/components/home/brands/BrandsSection";
-// import MoreBanners from "@/components/home/banners/ExtraBanners";
 import Footer from "@/components/footer/Footer";
+import BrandTrust from "./_components/BrandTrust";
+import Banners from "./_components/Banners";
+import NewArrivals from "./_components/NewArrivals";
+import BestSellers from "./_components/BestSellers";
+import CategoriesSection from "./_components/CategoriesSection";
+import BrandsSection from "./_components/BrandsSection";
 
 
 type PageProps = {

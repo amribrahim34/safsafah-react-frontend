@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import ProductGrid from "../../products/ProductGrid";
+import ProductGrid from "@/components/products/ProductGrid";
 import { homeService } from "@/lib/api/services";
 import type { HomeProduct } from "@/types";
 import { getLocalizedPath } from '@/lib/locale-navigation';
@@ -21,7 +21,7 @@ interface NewArrivalsProps {
 export default function NewArrivals({ brand }: NewArrivalsProps) {
   const params = useParams();
   const locale = params?.locale as string | undefined;
-  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
   const { t } = useTranslation('home');
   const [products, setProducts] = useState<HomeProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +94,7 @@ export default function NewArrivals({ brand }: NewArrivalsProps) {
             {t('newArrivals.viewAll')}
           </Link>
         </div>
-        <ProductGrid products={products}  brand={brand} />
+        <ProductGrid products={products} brand={brand} />
       </div>
     </section>
   );

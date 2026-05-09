@@ -2,9 +2,19 @@
 
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import { buildUrlWithParams, getCtaFilters } from "../../../lib/navigation";
+import { buildUrlWithParams } from "@/lib/navigation";
 
-export default function Banners({ imgWide, imgTall, brand }) {
+interface BannersProps {
+  imgWide: string;
+  imgTall: string;
+  brand: {
+    primary: string;
+    light?: string;
+    dark?: string;
+  };
+}
+
+export default function Banners({ imgWide, imgTall, brand }: BannersProps) {
   const { t } = useTranslation('home');
 
   return (

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import ProductGrid from "../../products/ProductGrid";
+import ProductGrid from "@/components/products/ProductGrid";
 import { homeService } from "@/lib/api/services";
 import type { HomeProduct } from "@/types";
 import { useParams } from "next/navigation";
@@ -24,8 +24,8 @@ export default function BestSellers({ brand }: BestSellersProps) {
   const [error, setError] = useState<string | null>(null);
   const params = useParams();
   const locale = params?.locale as string | undefined;
-  const lang =  (locale === 'en' || locale === 'ar') ? locale : 'ar';
- 
+  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+
   useEffect(() => {
     const fetchBestSellers = async () => {
       try {
