@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useMemo, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import '@/lib/i18n';
 import { BRAND } from "@/content/brand";
-import { COPY } from "@/content/copy";
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
@@ -22,7 +23,8 @@ function WalletPaymentContent() {
   const searchParams = useSearchParams();
   const langFromParams = searchParams.get('lang') || "ar";
   const [lang, setLang] = useState(langFromParams);
-  const T = useMemo(() => COPY[lang], [lang]);
+  const { t, i18n } = useTranslation('home');
+  if (i18n.language !== lang) i18n.changeLanguage(lang);
 
   const walletNumber = searchParams.get('walletNumber') || "0100 000 0000";
   const orderRef = searchParams.get('orderRef') || `SFS-${Date.now()}`;
@@ -56,8 +58,8 @@ function WalletPaymentContent() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={T.promo} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} />
+      <PromoBar text={t('promo')} lang={lang} onToggleLang={() => setLang(lang === "ar" ? "en" : "ar")} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={t('search')} />
 
       <main className="max-w-3xl mx-auto px-4 py-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-1">

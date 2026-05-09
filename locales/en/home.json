@@ -1,5 +1,11 @@
 {
   "promo": "10% off your first order — use code: GLOW10",
+  "nav": {
+    "shop": "Shop",
+    "bestsellers": "Bestsellers",
+    "new": "New",
+    "contact": "Contact"
+  },
   "search": "Search serums, SPF, makeup…",
   "slider": {
     "0": {

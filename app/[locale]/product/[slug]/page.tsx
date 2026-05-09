@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import enHome from "@/locales/en/home.json";
+import arHome from "@/locales/ar/home.json";
 import { BRAND } from "@/content/brand";
-import { COPY } from "@/content/copy";
 import { productsService } from "@/lib/api/services/products.service";
 import type { Language } from "@/types/models/common";
 import type { BrandColors } from "@/types/models/brand";
@@ -97,11 +98,11 @@ function ErrorState({
   brand: BrandColors;
   error?: string | null;
 }) {
-  const T = COPY[lang];
+  const homeT = lang === 'ar' ? arHome : enHome;
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={T.promo} brand={brand} />
-      <Header brand={brand} searchPlaceholder={T.search} />
+      <PromoBar text={homeT.promo} brand={brand} />
+      <Header brand={brand} searchPlaceholder={homeT.search} />
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
         <div className="text-xl text-red-600">
           {lang === "ar" ? "فشل تحميل المنتج" : "Failed to load product"}
@@ -121,7 +122,7 @@ export default async function ProductPage({
 }) {
   const { slug, locale } = await params;
   const lang = (locale === "en" ? "en" : "ar") as Language;
-  const T = COPY[lang];
+  const homeT = lang === 'ar' ? arHome : enHome;
 
   let product;
   try {
@@ -148,8 +149,8 @@ export default async function ProductPage({
       {/* Structured data for Google rich results (price, stock, rating) */}
       <ProductJsonLd product={product} locale={locale} slug={slug} />
 
-      <PromoBar text={T.promo} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} />
+      <PromoBar text={homeT.promo} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={homeT.search} />
 
       {/* Server-rendered hero — h1, price, badges in initial HTML for SEO */}
       <ProductHero product={product} brand={BRAND} lang={lang} reviews={reviews} />

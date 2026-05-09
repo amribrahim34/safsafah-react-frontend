@@ -4,8 +4,9 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { Language } from "@/types";
 import posthog from "posthog-js";
+import { useTranslation } from "react-i18next";
+import '@/lib/i18n';
 import { BRAND } from "@/content/brand";
-import { COPY } from "@/content/copy";
 import { useDir } from "@/hooks/useDir";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchCart, updateCartItem, removeFromCart, applyPromoCode } from "@/store/slices/cartsSlice";
@@ -31,7 +32,8 @@ export default function CartPage() {
   const locale = params?.locale as string | undefined;
   const lang: Language = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
-  const T = useMemo(() => COPY[lang], [lang]);
+  const { t, i18n } = useTranslation('home');
+  if (i18n.language !== lang) i18n.changeLanguage(lang);
   useDir();
 
   const [promo, setPromo] = useState("");
@@ -98,8 +100,8 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={T.promo} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} />
+      <PromoBar text={t('promo')} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={t('search')} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-4">

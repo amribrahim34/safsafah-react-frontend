@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import '@/lib/i18n';
 import { BRAND } from "@/content/brand";
-import { COPY } from "@/content/copy";
 import { useDir } from "@/hooks/useDir";
 
 import PromoBar from "@/components/header/PromoBar";
@@ -14,7 +15,8 @@ import Footer from "@/components/footer/Footer";
 export default function RefundPolicy({ lastUpdated }) {
   // Default Arabic
   const [lang, setLang] = useState("ar");
-  const t = useMemo(() => COPY[lang] || {}, [lang]);
+  const { t: tHome, i18n } = useTranslation('home');
+  if (i18n.language !== lang) i18n.changeLanguage(lang);
   const isRTL = lang === "ar";
   useDir();
 
@@ -207,12 +209,12 @@ export default function RefundPolicy({ lastUpdated }) {
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       <PromoBar
-        text={t.promo}
+        text={tHome('promo')}
         lang={lang}
         onToggleLang={() => setLang((prev) => (prev === "en" ? "ar" : "en"))}
         brand={BRAND}
       />
-      <Header brand={BRAND} searchPlaceholder={t.search} lang={lang} />
+      <Header brand={BRAND} searchPlaceholder={tHome('search')} lang={lang} />
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Page header */}

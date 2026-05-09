@@ -1,10 +1,11 @@
 'use client';
 
-import { useMemo, Suspense } from 'react';
+import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
+import '@/lib/i18n';
 import { useLocale } from '@/lib/locale-navigation';
 import { useDir } from '@/hooks/useDir';
 import { BRAND } from '@/content/brand';
-import { COPY } from '@/content/copy';
 
 import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
@@ -32,7 +33,8 @@ export default function CatalogPage() {
 function CatalogPageContent() {
   const locale = useLocale();
   const isRTL = locale === 'ar';
-  const T = useMemo(() => COPY[locale], [locale]);
+  const { t, i18n } = useTranslation('home');
+  if (i18n.language !== locale) i18n.changeLanguage(locale);
   useDir();
 
   const {
@@ -57,8 +59,8 @@ function CatalogPageContent() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={T.promo} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} />
+      <PromoBar text={t('promo')} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={t('search')} />
 
       {/* Page title + sort */}
       <section className="max-w-7xl mx-auto px-4 pt-6">

@@ -3,8 +3,9 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { createThemedSwal } from '@/lib/swal';
+import { useTranslation } from 'react-i18next';
+import '@/lib/i18n';
 import { BRAND } from '@/content/brand';
-import { COPY } from '@/content/copy';
 import enQuize from '@/locales/en/quize.json';
 import arQuize from '@/locales/ar/quize.json';
 import { useDir } from '@/hooks/useDir';
@@ -43,7 +44,8 @@ export default function SkinCareQuize() {
   const locale = params?.locale as string | undefined;
   const lang: Lang = locale === 'en' || locale === 'ar' ? locale : 'ar';
 
-  const T = useMemo(() => COPY[lang], [lang]);
+  const { t: tHome, i18n } = useTranslation('home');
+  if (i18n.language !== lang) i18n.changeLanguage(lang);
   const t = lang === 'en' ? enQuize : arQuize;
   useDir();
 
@@ -142,8 +144,8 @@ export default function SkinCareQuize() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={T.promo} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={T.search} />
+      <PromoBar text={tHome('promo')} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={tHome('search')} />
 
       <section className="max-w-5xl mx-auto px-4 pt-8 pb-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-neutral-900">

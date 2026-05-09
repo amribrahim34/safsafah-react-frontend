@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useMemo, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import '@/lib/i18n';
 import { BRAND } from "@/content/brand";
-import { COPY } from "@/content/copy";
 import { useDir } from "@/hooks/useDir";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchPaginatedOrders } from "@/store/slices/ordersSlice";
@@ -76,7 +77,8 @@ const mapApiOrderToUI = (apiOrder, lang) => {
 
 export default function OrdersPage() {
   const [lang, setLang] = useState("ar");
-  const t = useMemo(() => COPY[lang], [lang]);
+  const { t: tHome, i18n } = useTranslation('home');
+  if (i18n.language !== lang) i18n.changeLanguage(lang);
   useDir();
   const isRTL = lang === "ar";
   const dispatch = useAppDispatch();
@@ -128,8 +130,8 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={t.promo} lang={lang} onToggleLang={() => setLang(isRTL ? "en" : "ar")} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={t.search} lang={lang} />
+      <PromoBar text={tHome('promo')} lang={lang} onToggleLang={() => setLang(isRTL ? "en" : "ar")} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={tHome('search')} lang={lang} />
 
       <main className="max-w-7xl mx-auto">
         <header className="px-4 pt-6 pb-3">
