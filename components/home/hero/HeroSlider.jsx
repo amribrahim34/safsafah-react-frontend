@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { buildUrlWithParams, getCtaFilters } from "../../../lib/navigation";
-import { IMG } from "../../../content/images";
 import "../../../lib/i18n";
 
 // Import Swiper styles
@@ -21,9 +20,9 @@ export default function HeroSlider({ brand }) {
 
   // Prepare slider data with translations and images
   const slides = [
-    { ...t('slider.0', { returnObjects: true }), img: IMG.hero1 },
-    { ...t('slider.1', { returnObjects: true }), img: IMG.hero2 },
-    { ...t('slider.2', { returnObjects: true }), img: IMG.hero3 },
+    { ...t('slider.0', { returnObjects: true }), img: "/hero/hero1.jpeg" },
+    { ...t('slider.1', { returnObjects: true }), img: "/hero/hero2.jpeg" },
+    { ...t('slider.2', { returnObjects: true }), img: "/hero/hero3.jpeg" },
   ];
 
   return (

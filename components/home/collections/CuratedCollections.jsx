@@ -1,15 +1,13 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { IMG } from "../../../content/images";
-
 export default function CuratedCollections({ brand, lang = "ar" }) {
   const { t } = useTranslation('home');
 
   const cols = [
-    { key: "bright",  label: t('curatedCollections.items.0.label'), img: IMG.bannerWide,  href: "/catalog?tag=brightening" },
-    { key: "acne",    label: t('curatedCollections.items.1.label'), img: IMG.serum,       href: "/catalog?tag=acne" },
-    { key: "barrier", label: t('curatedCollections.items.2.label'), img: IMG.cream,       href: "/catalog?tag=barrier" },
-    { key: "spf",     label: t('curatedCollections.items.3.label'), img: IMG.hero1, href: "/catalog?tag=spf" },
+    { key: "bright",  label: t('curatedCollections.items.0.label'), img: "https://images.unsplash.com/photo-1556228453-efd1a5f58e8a?q=80&w=2400&auto=format&fit=crop",  href: "/catalog?tag=brightening" },
+    { key: "acne",    label: t('curatedCollections.items.1.label'), img: "/products/some by mi retinol intense anti-age eye cream.png",       href: "/catalog?tag=acne" },
+    { key: "barrier", label: t('curatedCollections.items.2.label'), img: "/products/retinol-eye-cream-1.jpg",       href: "/catalog?tag=barrier" },
+    { key: "spf",     label: t('curatedCollections.items.3.label'), img: "/hero/hero1.jpeg", href: "/catalog?tag=spf" },
   ];
 
   return (

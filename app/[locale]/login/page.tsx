@@ -6,8 +6,6 @@ import { clearError } from '@/store/slices/authSlice';
 import { useLocale, useLocaleRouter, getOppositeLocale } from '@/lib/locale-navigation';
 import { useDir } from '@/hooks/useDir';
 import { BRAND } from '@/content/brand';
-import { IMG } from '@/content/images';
-
 import AuthHeroPanel from '@/components/auth/AuthHeroPanel';
 import LoginModePills from './_components/LoginModePills';
 import PasswordInput from './_components/PasswordInput';
@@ -67,7 +65,7 @@ export default function LoginPage() {
     <div className="md:min-h-screen bg-white text-neutral-900">
       <div className="grid md:min-h-screen md:grid-cols-2">
         <AuthHeroPanel
-          imageSrc={IMG.login}
+          imageSrc="/pages/login.png"
           subtitle={isRTL ? 'اكتشف أحدث العروض، تتبع طلباتك، واستمتع بتجربة تسوق سريعة وآمنة.' : 'Discover exclusive deals, track your orders, and enjoy a seamless shopping experience.'}
         />
 
@@ -176,7 +174,7 @@ export default function LoginPage() {
         {/* Mobile hero strip */}
         {/* <div className="md:hidden relative h-48">
           <img
-            src={IMG.bannerTall}
+            src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=2000&auto=format&fit=crop"
             alt="Skincare"
             className="absolute inset-0 w-full h-full object-cover"
           />

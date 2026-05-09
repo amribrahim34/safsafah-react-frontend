@@ -1,12 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Star } from "lucide-react";
-import { IMG } from "../../../content/images";
-
 const DATA = [
-  { name: "Nour", city: "Cairo", rating: 5, img: IMG.bannerTall, textIndex: 0 },
-  { name: "Omar", city: "Giza", rating: 4, img: IMG.cream, textIndex: 1 },
-  { name: "Mariam", city: "Alex", rating: 5, img: IMG.hero2, textIndex: 2 },
+  { name: "Nour", city: "Cairo", rating: 5, img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=2000&auto=format&fit=crop", textIndex: 0 },
+  { name: "Omar", city: "Giza", rating: 4, img: "/products/retinol-eye-cream-1.jpg", textIndex: 1 },
+  { name: "Mariam", city: "Alex", rating: 5, img: "/hero/hero2.jpeg", textIndex: 2 },
 ];
 
 export default function Testimonials({ brand, lang = "ar" }) {

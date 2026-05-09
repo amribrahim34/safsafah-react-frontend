@@ -2,11 +2,9 @@
 import React from "react";
 // import ProductGrid from "../products/ProductGrid";
 import ProductGrid from "../products/ProductGrid";
-import { IMG } from "../../content/images";
-
 const BUNDLE = [
-  { id: 301, name:{en:"Ceramide Barrier Cream", ar:"كريم حاجز السيراميد"}, price:760, rating:4.8, img: IMG.cream },
-  { id: 401, name:{en:"SPF 50 PA++++ Fluid", ar:"واقي شمس سائل 50"}, price:880, rating:4.4, img: IMG.hero1 },
+  { id: 301, name:{en:"Ceramide Barrier Cream", ar:"كريم حاجز السيراميد"}, price:760, rating:4.8, img: "/products/retinol-eye-cream-1.jpg" },
+  { id: 401, name:{en:"SPF 50 PA++++ Fluid", ar:"واقي شمس سائل 50"}, price:880, rating:4.4, img: "/hero/hero1.jpeg" },
 ];
 
 export default function BundleOffers({ brand, lang, baseProduct, onAdd }){

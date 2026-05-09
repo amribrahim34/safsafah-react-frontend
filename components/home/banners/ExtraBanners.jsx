@@ -2,15 +2,13 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { IMG } from "../../../content/images";
-
 export default function MoreBanners({ brand, lang = "ar" }) {
   const { t } = useTranslation('home');
 
   const cards = [
-    { img: IMG.bannerTall,  title: t('extraBanners.items.0.title'), href: "/catalog?tag=derm" },
-    { img: IMG.oils,        title: t('extraBanners.items.1.title'), href: "/catalog?tag=oil-free" },
-    { img: IMG.cleanser,    title: t('extraBanners.items.2.title'), href: "/catalog?cat=cleansers" },
+    { img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=2000&auto=format&fit=crop",  title: t('extraBanners.items.0.title'), href: "/catalog?tag=derm" },
+    { img: "/products/cosrx advanced snail 96 mucin power essence 100ml.avif",        title: t('extraBanners.items.1.title'), href: "/catalog?tag=oil-free" },
+    { img: "/products/acids-serum-1.jpg",    title: t('extraBanners.items.2.title'), href: "/catalog?cat=cleansers" },
   ];
 
   return (

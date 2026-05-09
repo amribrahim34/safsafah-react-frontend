@@ -1,5 +1,4 @@
 import { BRAND } from "@/content/brand";
-import { IMG } from "@/content/images";
 // import { COPY } from "@/content/copy";
 
 import ClientWrapper from "@/components/ClientWrapper";
@@ -34,14 +33,14 @@ export default async function Home({ params }: PageProps) {
       <BrandTrust brand={BRAND} lang={lang} />
 
       <section className="max-w-7xl mx-auto px-4 pb-6">
-        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND}  />
+        <Banners imgWide="https://images.unsplash.com/photo-1556228453-efd1a5f58e8a?q=80&w=2400&auto=format&fit=crop" imgTall="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=2000&auto=format&fit=crop" brand={BRAND}  />
       </section>
       {/* <MoreBanners brand={BRAND} lang={lang} /> */}
 
       <NewArrivals brand={BRAND} />
 
       <section className="max-w-7xl mx-auto px-4 pb-6">
-        <Banners imgWide={IMG.bannerWide} imgTall={IMG.bannerTall} brand={BRAND}  />
+        <Banners imgWide="https://images.unsplash.com/photo-1556228453-efd1a5f58e8a?q=80&w=2400&auto=format&fit=crop" imgTall="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=2000&auto=format&fit=crop" brand={BRAND}  />
       </section>
 
       <section id="categories">

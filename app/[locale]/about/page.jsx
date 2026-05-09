@@ -7,8 +7,6 @@ import { useLocale } from '@/lib/locale-navigation';
 import { useDir } from '@/hooks/useDir';
 import Image from 'next/image';
 import { BRAND } from '@/content/brand';
-import { IMG } from '@/content/images';
-
 import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
@@ -54,7 +52,7 @@ export default function AboutPage() {
           </div>
           <div className="md:col-span-5">
             <div className="relative h-64 rounded-3xl overflow-hidden border">
-              <Image src={IMG.cream} alt={t('imgAlt')} fill className="object-cover" />
+              <Image src="/products/retinol-eye-cream-1.jpg" alt={t('imgAlt')} fill className="object-cover" />
             </div>
           </div>
         </section>

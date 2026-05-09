@@ -1,13 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { settingsService } from "@/lib/api/services";
 import { HelpCircle, MessageCircle, FileText, RotateCcw, XCircle, RefreshCcw, Star, Truck } from "lucide-react";
-import { IMG } from "../../content/images";
-
 const IMG_MAP = {
-  bannerTall: IMG.bannerTall,
-  cleanser: IMG.cleanser,
-  cream: IMG.cream,
-  hero1: IMG.hero1,
+  bannerTall: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=2000&auto=format&fit=crop",
+  cleanser: "/products/acids-serum-1.jpg",
+  cream: "/products/retinol-eye-cream-1.jpg",
+  hero1: "/hero/hero1.jpeg",
 };
 
 export default function OrderCard({ lang = "ar", brand, order }) {

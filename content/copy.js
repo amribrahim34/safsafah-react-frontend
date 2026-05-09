@@ -1,14 +1,12 @@
-import { IMG } from "./images";
-
 export const COPY = {
   en: {
     promo: "10% off your first order — use code: GLOW10",
     nav: { shop: "Shop", bestsellers: "Bestsellers", new: "New", contact: "Contact" },
     search: "Search serums, SPF, makeup…",
     slider: [
-      { title: "SPF that loves Cairo sun", sub: "Light textures. High protection. Zero white cast.", cta1: "Shop SPF", cta2: "Learn more", img: IMG.hero1 },
-      { title: "Hydration for desert air", sub: "Ceramides + HA to rebuild your barrier.", cta1: "Moisturizers", cta2: "Serums", img: IMG.hero2 },
-      { title: "Makeup that lets skin breathe", sub: "Clean formulas. Wear all day.", cta1: "Shop Makeup", cta2: "Starter Kits", img: IMG.hero3 },
+      { title: "SPF that loves Cairo sun", sub: "Light textures. High protection. Zero white cast.", cta1: "Shop SPF", cta2: "Learn more", img: "/hero/hero1.jpeg" },
+      { title: "Hydration for desert air", sub: "Ceramides + HA to rebuild your barrier.", cta1: "Moisturizers", cta2: "Serums", img: "/hero/hero2.jpeg" },
+      { title: "Makeup that lets skin breathe", sub: "Clean formulas. Wear all day.", cta1: "Shop Makeup", cta2: "Starter Kits", img: "/hero/hero3.jpeg" },
     ],
     sections: {
       categories: "Shop by category",
@@ -26,9 +24,9 @@ export const COPY = {
     nav: { shop: "المتجر", bestsellers: "الأكثر مبيعًا", new: "جديد", contact: "تواصل" },
     search: "ابحث عن سيروم، واقي شمس، مكياج…",
     slider: [
-      { title: "واقي شمس يحب شمس القاهرة", sub: "ملمس خفيف، حماية عالية، بدون طبقة بيضاء.", cta1: "تسوق الواقي", cta2: "اعرف المزيد", img: IMG.hero1 },
-      { title: "ترطيب لجوّ صحراوي", sub: "سيراميد + هيالورونيك لإصلاح الحاجز.", cta1: "مرطبات", cta2: "سيرومات", img: IMG.hero2 },
-      { title: "مكياج يسمح للبشرة بالتنفس", sub: "مكوّنات نظيفة وثبات طوال اليوم.", cta1: "تسوق المكياج", cta2: "أطقم البداية", img: IMG.hero3 },
+      { title: "واقي شمس يحب شمس القاهرة", sub: "ملمس خفيف، حماية عالية، بدون طبقة بيضاء.", cta1: "تسوق الواقي", cta2: "اعرف المزيد", img: "/hero/hero1.jpeg" },
+      { title: "ترطيب لجوّ صحراوي", sub: "سيراميد + هيالورونيك لإصلاح الحاجز.", cta1: "مرطبات", cta2: "سيرومات", img: "/hero/hero2.jpeg" },
+      { title: "مكياج يسمح للبشرة بالتنفس", sub: "مكوّنات نظيفة وثبات طوال اليوم.", cta1: "تسوق المكياج", cta2: "أطقم البداية", img: "/hero/hero3.jpeg" },
     ],
     sections: {
       categories: "تسوق حسب الفئة",

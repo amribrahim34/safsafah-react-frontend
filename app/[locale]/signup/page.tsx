@@ -6,8 +6,6 @@ import { clearError } from '@/store/slices/authSlice';
 import { useLocale, useLocaleRouter, getOppositeLocale } from '@/lib/locale-navigation';
 import { useDir } from '@/hooks/useDir';
 import { BRAND } from '@/content/brand';
-import { IMG } from '@/content/images';
-
 import AuthHeroPanel from '@/components/auth/AuthHeroPanel';
 import PasswordInput from './_components/PasswordInput';
 import TermsCheckbox from './_components/TermsCheckbox';
@@ -76,7 +74,7 @@ export default function SignupPage() {
     <div className="md:min-h-screen bg-white text-neutral-900">
       <div className="grid md:min-h-screen md:grid-cols-2">
         <AuthHeroPanel
-          imageSrc={IMG.signup}
+          imageSrc="/pages/signup.png"
           subtitle={isRTL ? 'انضمي إلى مجتمع الجمال في مصر.' : "Join Egypt's beauty community."}
         />
 
@@ -216,7 +214,7 @@ export default function SignupPage() {
         {/* Mobile hero strip */}
         {/* <div className="md:hidden relative h-40">
           <img
-            src={IMG.bannerTall}
+            src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=2000&auto=format&fit=crop"
             alt="Skincare"
             className="absolute inset-0 w-full h-full object-cover"
           />
