@@ -89,7 +89,6 @@ export default function ProfilePage() {
             <OrdersList brand={BRAND} lang={lang} t={ordersT} />
             <WishlistGrid brand={BRAND} lang={lang} t={wishlistT} />
             <BeautyProfileCard brand={BRAND} lang={lang} t={beautyT} />
-            {/* <RecentlyViewedStrip brand={BRAND} lang={lang} t={recentlyViewedT} /> */}
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-24">
