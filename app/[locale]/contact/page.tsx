@@ -11,7 +11,7 @@ import { settingsService, type SiteSettings } from '@/lib/api/services';
 import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
-import QuickFAQ from '@/components/about/QuickFAQ';
+import QuickFAQ from '@/components/QuickFAQ';
 import ContactCards from './_components/ContactCards';
 import ContactForm, { type ContactFormTranslations } from './_components/ContactForm';
 import ResponseHoursPanel from './_components/ResponseHoursPanel';
@@ -71,7 +71,7 @@ export default function ContactPage() {
         </section>
 
         <section className="px-4 pb-10">
-          <QuickFAQ brand={BRAND} t={t('faq', { returnObjects: true })} />
+          <QuickFAQ  t={t('faq', { returnObjects: true })} />
         </section>
       </main>
 

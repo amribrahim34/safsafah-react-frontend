@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function QuickFAQ({ brand, t }) {
+export default function QuickFAQ({  t }) {
   return (
     <section className="py-8 md:py-10">
       <h3 className="text-xl md:text-2xl font-extrabold mb-4">{t.heading}</h3>

@@ -14,7 +14,7 @@ import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
 import VisionMission from './_components/VisionMission';
 import ServiceCommitments from './_components/ServiceCommitments';
-import QuickFAQ from '@/components/about/QuickFAQ';
+import QuickFAQ from '@/components/QuickFAQ';
 import ContactPanel from './_components/ContactPanel';
 
 export default function AboutPage() {
@@ -62,9 +62,9 @@ export default function AboutPage() {
 
         <VisionMission brand={BRAND} t={t('visionMission', { returnObjects: true })} />
 
-        <ServiceCommitments brand={BRAND} t={t('serviceCommitments', { returnObjects: true })} />
+        {/* <ServiceCommitments brand={BRAND} t={t('serviceCommitments', { returnObjects: true })} /> */}
 
-        <QuickFAQ brand={BRAND} t={t('faq', { returnObjects: true })} />
+        <QuickFAQ  t={t('faq', { returnObjects: true })} />
 
         <ContactPanel brand={BRAND} siteSettings={siteSettings} t={t('contact', { returnObjects: true })} />
       </main>
