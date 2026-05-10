@@ -20,7 +20,7 @@ export default async function Home({ params }: PageProps) {
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
   
   return (
-    <ClientWrapper lang={lang} className="mx-10">
+    <ClientWrapper lang={lang} className="mx-2 lg:mx-10">
       <h1 className="sr-only">
         {lang === 'ar' 
           ? 'صفصافه - أفضل منتجات العناية بالبشرة والتجميل' 
