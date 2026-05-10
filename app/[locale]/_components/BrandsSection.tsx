@@ -45,7 +45,7 @@ export default function BrandsSection() {
 
   if (error) {
     return (
-      <section className="max-w-7xl mx-auto px-4 py-6">
+      <section className=" mx-auto px-4 py-6">
         <div className="text-center text-red-600">
           {lang === "ar" ? "فشل تحميل العلامات التجارية" : "Failed to load brands"}
         </div>
@@ -55,7 +55,7 @@ export default function BrandsSection() {
 
   if (isLoading) {
     return (
-      <section className="max-w-7xl mx-auto px-4 py-6">
+      <section className=" mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl md:text-2xl font-extrabold">
             {lang === "ar" ? "تسوق حسب العلامة التجارية" : "Shop by brand"}
@@ -78,7 +78,7 @@ export default function BrandsSection() {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-6">
+    <section className=" mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl md:text-2xl font-extrabold">
           {lang === "ar" ? "تسوق حسب العلامة التجارية" : "Shop by brand"}

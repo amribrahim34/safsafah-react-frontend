@@ -45,7 +45,7 @@ export default function CategoriesSection() {
 
   if (error) {
     return (
-      <section className="max-w-7xl mx-auto px-4 py-4">
+      <section className="mx-auto px-4 py-4">
         <div className="text-center text-red-600">
           {lang === "ar" ? "فشل تحميل الفئات" : "Failed to load categories"}
         </div>
@@ -55,7 +55,7 @@ export default function CategoriesSection() {
 
   if (isLoading) {
     return (
-      <section className="max-w-7xl mx-auto px-4 py-4">
+      <section className="mx-auto px-4 py-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl md:text-2xl font-extrabold">
             {lang === "ar" ? "تسوق حسب الفئة" : "Shop by category"}
@@ -78,7 +78,7 @@ export default function CategoriesSection() {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-4">
+    <section className="mx-auto px-4 py-4">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl md:text-2xl font-extrabold">
           {lang === "ar" ? "تسوق حسب الفئة" : "Shop by category"}
@@ -87,7 +87,7 @@ export default function CategoriesSection() {
           {lang === "ar" ? "الكل" : "View all"}
         </Link>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
         {categories.map((category) => {
           const categoryName = lang === "ar" ? category.nameAr : category.nameEn;
           const imageUrl = getImageUrl(category.image);

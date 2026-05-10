@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import ProductGrid from "@/components/products/ProductGrid";
+import ProductGrid from "./ProductGrid";
 import { homeService } from "@/lib/api/services";
 import type { HomeProduct } from "@/types";
 import { useParams } from "next/navigation";
@@ -47,7 +47,7 @@ export default function BestSellers({ brand }: BestSellersProps) {
   if (error) {
     return (
       <section className="bg-neutral-50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className=" mx-auto px-4 py-8">
           <div className="text-center text-red-600">
             {lang === "ar" ? "فشل تحميل الأكثر مبيعاً" : "Failed to load best sellers"}
           </div>
@@ -59,7 +59,7 @@ export default function BestSellers({ brand }: BestSellersProps) {
   if (isLoading) {
     return (
       <section className="bg-neutral-50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className=" mx-auto px-4 py-8">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xl md:text-2xl font-extrabold">
               {t('sections.trending')}
@@ -84,7 +84,7 @@ export default function BestSellers({ brand }: BestSellersProps) {
 
   return (
     <section className="bg-neutral-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className=" mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl md:text-2xl font-extrabold">
             {t('sections.trending')}

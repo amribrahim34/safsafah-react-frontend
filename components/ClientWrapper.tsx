@@ -11,11 +11,12 @@ import HeroSlider from './home/hero/HeroSlider';
 import FloatingCart from './appchrome/FloatingCart';
 
 interface ClientWrapperProps {
-  lang?: 'en' | 'ar'; // Keep for backward compatibility but make optional
+  lang?: 'en' | 'ar';
+  className?: string;
   children: React.ReactNode;
 }
 
-export default function ClientWrapper({ children }: ClientWrapperProps) {
+export default function ClientWrapper({ children, className }: ClientWrapperProps) {
   const { t, i18n } = useTranslation('home');
   const lang = useLocale(); // Get locale from URL
   // Sync language synchronously (before render) so SSR and client agree on
@@ -25,7 +26,7 @@ export default function ClientWrapper({ children }: ClientWrapperProps) {
   }
 
   return (
-    <div id="home" className="min-h-screen bg-white text-neutral-900">
+    <div id="home" className={`min-h-screen bg-white text-neutral-900${className ? ` ${className}` : ''}`}>
       <PromoBar text={t('promo')} brand={BRAND} />
       <Header brand={BRAND} searchPlaceholder={t('search')} />
       <HeroSlider brand={BRAND} />

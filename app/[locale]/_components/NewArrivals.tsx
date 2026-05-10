@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import ProductGrid from "@/components/products/ProductGrid";
+import ProductGrid from "./ProductGrid";
 import { homeService } from "@/lib/api/services";
 import type { HomeProduct } from "@/types";
 import { getLocalizedPath } from '@/lib/locale-navigation';
@@ -85,7 +85,7 @@ export default function NewArrivals({ brand }: NewArrivalsProps) {
 
   return (
     <section className="bg-neutral-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="px-4 py-8">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl md:text-2xl font-extrabold">
             {t('newArrivals.title')}

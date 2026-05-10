@@ -26,7 +26,7 @@ export default function HeroSlider({ brand }) {
   ];
 
   return (
-    <div className="relative">
+    <div className="relative  ">
       <Swiper
         key={i18n.language} // Force re-render when language changes
         modules={[Autoplay, Pagination, Navigation]}
@@ -44,13 +44,13 @@ export default function HeroSlider({ brand }) {
           bulletActiveClass: 'swiper-pagination-bullet-active !bg-white',
         }}
         loop={true}
-        className="w-full h-[68vh] md:h-[78vh]"
+        className="w-full h-full"
       >
         {slides.map((s, idx) => (
           <SwiperSlide key={idx}>
             <div className="relative w-full h-full">
-              <img src={s.img} alt="hero" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black/40" />
+              <img src={s.img} alt={`${s.title}`} className="w-full h-full object-cover" />
+              {/* <div className="absolute inset-0 bg-black/40" /> */}
               <div className="absolute inset-0 flex items-end md:items-center">
                 <div className="px-4 md:px-8 lg:px-12 pb-10 md:pb-0 w-full max-w-7xl mx-auto">
                   <div className="max-w-xl text-white">
