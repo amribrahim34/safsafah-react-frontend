@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ hostname: '**' }],
   },
-  // allowedDevOrigins: ['127.0.0.1'],
+  allowedDevOrigins: ['127.0.0.1'],
   experimental: {
     optimizeCss: true,
   },
