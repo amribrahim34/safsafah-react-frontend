@@ -1,6 +1,7 @@
 'use client';
 
 import { ShoppingBag, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -96,70 +97,80 @@ export default function CartDropdown({
             <>
               {/* Items List */}
               <div className="max-h-80 overflow-y-auto p-4 space-y-3">
-                {cart.items.map((item) => (
-                  <div key={item.id} className="flex gap-3 p-2 rounded-xl hover:bg-neutral-50 transition-colors">
-                    {item.productImage && (
-                      <img
-                        src={getImageUrl(item.productImage)}
-                        alt={lang === 'ar' ? item.productNameAr : item.productNameEn}
-                        className=" md:block w-14 h-14 object-cover rounded-lg flex-shrink-0"
-                      />
-                    )}
+                {cart.items.map((item) => {
+                  const slug = lang === 'ar' ? item.productSlugAr : item.productSlugEn;
+                  const productHref = slug ? getLocalizedPath(`/product/${slug}`, lang) : '#';
+                  return (
+                    <div key={item.id} className="flex gap-3 p-2 rounded-xl hover:bg-neutral-50 transition-colors">
+                      {item.productImage && (
+                        <Link href={productHref} onClick={onToggle} className="flex-shrink-0">
+                          <Image
+                            src={getImageUrl(item.productImage)}
+                            alt={lang === 'ar' ? item.productNameAr : item.productNameEn}
+                            width={56}
+                            height={56}
+                            className="w-14 h-14 object-cover rounded-lg"
+                          />
+                        </Link>
+                      )}
 
-                    {/* Product Name */}
-                    <div className="flex-1 min-w-0 flex items-start">
-                      <h4 className="font-semibold text-sm truncate leading-snug">
-                        {lang === 'ar' ? item.productNameAr : item.productNameEn}
-                      </h4>
-                    </div>
+                      {/* Product Name */}
+                      <div className="flex-1 min-w-0 flex items-start">
+                        <Link href={productHref} onClick={onToggle} className="hover:underline">
+                          <h4 className="font-semibold text-sm truncate leading-snug">
+                            {lang === 'ar' ? item.productNameAr : item.productNameEn}
+                          </h4>
+                        </Link>
+                      </div>
 
-                    {/* Price + Qty Controls */}
-                    <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                      <span className="font-bold text-sm whitespace-nowrap" style={{ color: brandPrimary }}>
-                        {formatPrice(item.subtotal, lang)}
-                      </span>
-
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          disabled={isCartLoading}
-                          onClick={() =>
-                            item.quantity <= 1
-                              ? handleRemove(item.id)
-                              : handleUpdateQty(item.id, item.quantity - 1)
-                          }
-                          aria-label={
-                            item.quantity <= 1
-                              ? (lang === 'ar' ? 'إزالة' : 'Remove')
-                              : (lang === 'ar' ? 'تقليل' : 'Decrease')
-                          }
-                          className="w-7 h-7 rounded-md flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                          style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}
-                        >
-                          {item.quantity <= 1
-                            ? <Trash2 size={12} strokeWidth={2.5} />
-                            : <span className="text-sm font-bold leading-none select-none">−</span>
-                          }
-                        </button>
-
-                        <span className="w-7 text-center text-sm font-bold tabular-nums select-none">
-                          {item.quantity}
+                      {/* Price + Qty Controls */}
+                      <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                        <span className="font-bold text-sm whitespace-nowrap" style={{ color: brandPrimary }}>
+                          {formatPrice(item.subtotal, lang)}
                         </span>
 
-                        <button
-                          type="button"
-                          disabled={isCartLoading}
-                          onClick={() => handleUpdateQty(item.id, item.quantity + 1)}
-                          aria-label={lang === 'ar' ? 'زيادة' : 'Increase'}
-                          className="w-7 h-7 rounded-md flex items-center justify-center text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                          style={{ backgroundColor: brandPrimary }}
-                        >
-                          <span className="text-sm font-bold leading-none select-none">+</span>
-                        </button>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            disabled={isCartLoading}
+                            onClick={() =>
+                              item.quantity <= 1
+                                ? handleRemove(item.id)
+                                : handleUpdateQty(item.id, item.quantity - 1)
+                            }
+                            aria-label={
+                              item.quantity <= 1
+                                ? (lang === 'ar' ? 'إزالة' : 'Remove')
+                                : (lang === 'ar' ? 'تقليل' : 'Decrease')
+                            }
+                            className="w-7 h-7 rounded-md flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}
+                          >
+                            {item.quantity <= 1
+                              ? <Trash2 size={12} strokeWidth={2.5} />
+                              : <span className="text-sm font-bold leading-none select-none">−</span>
+                            }
+                          </button>
+
+                          <span className="w-7 text-center text-sm font-bold tabular-nums select-none">
+                            {item.quantity}
+                          </span>
+
+                          <button
+                            type="button"
+                            disabled={isCartLoading}
+                            onClick={() => handleUpdateQty(item.id, item.quantity + 1)}
+                            aria-label={lang === 'ar' ? 'زيادة' : 'Increase'}
+                            className="w-7 h-7 rounded-md flex items-center justify-center text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ backgroundColor: brandPrimary }}
+                          >
+                            <span className="text-sm font-bold leading-none select-none">+</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Cart Footer */}
