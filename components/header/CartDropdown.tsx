@@ -116,7 +116,7 @@ export default function CartDropdown({
 
                       {/* Product Name */}
                       <div className="flex-1 min-w-0 flex items-start">
-                        <Link href={productHref} onClick={onToggle} className="hover:underline">
+                        <Link href={productHref} onClick={onToggle} className="hover:underline block min-w-0">
                           <h4 className="font-semibold text-sm truncate leading-snug">
                             {lang === 'ar' ? item.productNameAr : item.productNameEn}
                           </h4>
