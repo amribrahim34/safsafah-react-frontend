@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  // Disable static export to prevent SSR issues with browser-only code
   output: 'standalone',
+  images: {
+    remotePatterns: [{ hostname: '**' }],
+  },
   // allowedDevOrigins: ['127.0.0.1'],
   experimental: {
     optimizeCss: true,
