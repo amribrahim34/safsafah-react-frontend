@@ -147,13 +147,15 @@ export default function ProductCard({
       {/* Product image */}
       <Link href={productUrl}>
         <div className="relative h-36 sm:h-56">
-          <Image
-            src={image}
-            alt={lang === "ar" ? nameAr : nameEn}
-            fill
-            className="object-contain"
-            loading="lazy"
-          />
+          {image ? (
+            <Image
+              src={image}
+              alt={lang === "ar" ? nameAr : nameEn}
+              fill
+              className="object-contain"
+              loading="lazy"
+            />
+          ) : null}
 
           {isRecommended && (
             <div
