@@ -2,13 +2,56 @@
 
 import React, { useState } from "react";
 import { Trash2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { getLocalizedPath } from "@/lib/locale-navigation";
+import type { Language } from "@/types";
 
-export default function CartItem({ lang, brand, item, onQty, onRemove }) {
+interface CartItemData {
+  id: number;
+  name: { en: string; ar: string };
+  price: number;
+  productId: number;
+  img: string;
+  slugEn?: string;
+  slugAr?: string;
+  brand?: string;
+  variant?: string;
+  qty: number;
+  stock: number;
+}
+
+interface Brand {
+  primary?: string;
+}
+
+interface ConditionalLinkProps {
+  href: string | null;
+  className: string;
+  children: React.ReactNode;
+}
+
+function ConditionalLink({ href, className, children }: ConditionalLinkProps) {
+  if (href) return <Link href={href} className={className}>{children}</Link>;
+  return <div className={className}>{children}</div>;
+}
+
+interface CartItemProps {
+  lang: Language;
+  brand: Brand;
+  item: CartItemData;
+  onQty?: (qty: number) => void;
+  onRemove?: () => void;
+}
+
+export default function CartItem({ lang, brand, item, onQty, onRemove }: CartItemProps) {
   const [busy, setBusy] = useState(false);
 
   const primary = brand?.primary ?? "#288880";
   const isAr = lang === "ar";
   const isAtMin = item.qty <= 1;
+  const slug = isAr ? item.slugAr : item.slugEn;
+  const productHref = slug ? getLocalizedPath(`/product/${slug}`, lang) : null;
 
   const fmt = new Intl.NumberFormat(isAr ? "ar-EG" : "en-EG", {
     style: "currency",
@@ -16,7 +59,7 @@ export default function CartItem({ lang, brand, item, onQty, onRemove }) {
     maximumFractionDigits: 0,
   }).format;
 
-  const withBusy = (fn) => async () => {
+  const withBusy = (fn: () => void | Promise<void>) => async () => {
     if (busy) return;
     setBusy(true);
     try { await fn(); }
@@ -34,20 +77,22 @@ export default function CartItem({ lang, brand, item, onQty, onRemove }) {
       className="rounded-2xl border border-neutral-200 p-3 flex gap-3 bg-white transition-opacity duration-200"
       style={{ opacity: busy ? 0.55 : 1 }}
     >
-      <div className="w-20 h-20 rounded-xl overflow-hidden border border-neutral-100 flex-shrink-0 bg-neutral-50">
-        <img
+      <ConditionalLink href={productHref} className="w-20 h-20 rounded-xl overflow-hidden border border-neutral-100 flex-shrink-0 bg-neutral-50">
+        <Image
           src={item.img}
           alt={isAr ? item.name.ar : item.name.en}
+          width={80}
+          height={80}
           className="w-full h-full object-cover"
         />
-      </div>
+      </ConditionalLink>
 
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <div className="font-semibold text-sm leading-snug text-wrap">
+            <ConditionalLink href={productHref} className="font-semibold text-sm leading-snug text-wrap hover:underline">
               {isAr ? item.name.ar : item.name.en}
-            </div>
+            </ConditionalLink>
             {item.brand && (
               <div className="text-xs text-neutral-500 mt-0.5">
                 {item.brand}{item.variant ? ` · ${item.variant}` : ""}

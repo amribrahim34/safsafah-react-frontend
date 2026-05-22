@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { Language } from "@/types";
 import posthog from "posthog-js";
@@ -53,6 +53,8 @@ export default function CartPage() {
       price: item.productPrice,
       productId: item.productId,
       img: item.productImage,
+      slugEn: item.productSlugEn,
+      slugAr: item.productSlugAr,
       variant: "30ml",
       qty: item.quantity,
       stock: 10,
@@ -131,14 +133,14 @@ export default function CartPage() {
                   />
                 ))}
 
-                <PromoCode
+                {/* <PromoCode
                   lang={lang}
                   brand={BRAND}
                   value={promo}
                   onChange={setPromo}
                   onApply={handleApplyPromo}
                   hint={lang === "ar" ? "جرّب GLOW10 للحصول على 10%" : "Try GLOW10 for 10% off"}
-                />
+                /> */}
               </section>
 
               <aside className="self-start">
