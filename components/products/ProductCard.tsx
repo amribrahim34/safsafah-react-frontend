@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, Plus, Minus, Trash2, Sparkles, Heart } from "lucide-react";
+import { Star, Plus, Minus, Trash2, Sparkles, Heart, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -204,36 +204,37 @@ export default function ProductCard({
         <div className="mt-auto pt-2">
           {/* Stars */}
           <div className="flex items-center gap-1 text-amber-500 mb-1">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                className={`w-4 h-4 ${i < Math.round(rating) ? "fill-current" : "opacity-30"}`}
-              />
-            ))}
+            {rating ? <><Star className={`w-4 h-4 fill-current `} /> 
             <span className="ms-1 text-xs text-neutral-600">{rating}</span>
+            </>
+            : null}
+            
           </div>
 
+          <div className="flex justify-between ">
           {/* Price */}
-          <div className="font-extrabold mb-2">{priceFmt}</div>
+          <div className="font-extrabold ">{priceFmt}</div>
 
           {!cartItem ? (
-            <button
-              onClick={handleAddToCart}
-              disabled={isLoading}
-              className="w-full rounded-xl text-white text-sm px-3 py-2 hover:opacity-90 transition-opacity disabled:opacity-50"
-              style={{ background: brand.primary }}
-            >
-              {isLoading ? "..." : (lang === "ar" ? "أضف" : <><span className="sm:hidden">Add</span><span className="hidden sm:inline">Add to cart</span></>)}
-            </button>
+            <div className="flex justify-end">
+              <button
+                onClick={handleAddToCart}
+                disabled={isLoading}
+                className="rounded text-white md:px-3 md:py-2 px-2 py-1 hover:opacity-90 transition-opacity disabled:opacity-50 flex"
+                style={{ background: brand.primary }}
+              >
+                {isLoading ? "..." : (<Plus className="" />)}
+              </button>
+            </div>
           ) : (
             <div
-              className="flex items-center gap-2 border rounded-xl overflow-hidden w-full justify-between"
+              className="flex items-center lg:gap-2 border rounded-xl overflow-hidden justify-between"
               style={{ borderColor: brand.primary }}
             >
               <button
                 onClick={handleDecrement}
                 disabled={isLoading}
-                className="p-2 hover:bg-neutral-100 transition-colors disabled:opacity-50"
+                className=" p-1 lg:p-2 hover:bg-neutral-100 transition-colors disabled:opacity-50"
                 style={{ color: (cartItem?.quantity || 0) <= 1 ? '#ef4444' : brand.primary }}
               >
                 {(cartItem?.quantity || 0) <= 1 ? (
@@ -257,13 +258,14 @@ export default function ProductCard({
               <button
                 onClick={handleIncrement}
                 disabled={isLoading}
-                className="p-2 hover:bg-neutral-100 transition-colors disabled:opacity-50"
+                className="p-1 lg:p-2 hover:bg-neutral-100 transition-colors disabled:opacity-50"
                 style={{ color: brand.primary }}
               >
                 <Plus className="w-4 h-4" />
               </button>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>
