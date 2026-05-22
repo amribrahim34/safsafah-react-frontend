@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { Star, Plus, Minus, Trash2, Sparkles, Heart, PlusCircle } from "lucide-react";
+import { Star, Plus, Check, Sparkles, Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addToCart, updateCartItem, removeFromCart } from "@/store/slices/cartsSlice";
+import { addToCart } from "@/store/slices/cartsSlice";
 import { useParams } from "next/navigation";
 import { getLocalizedPath } from "@/lib/locale-navigation";
 
@@ -55,10 +54,6 @@ export default function ProductCard({
     (item: { productId: number; id: number; quantity: number }) => item.productId === id
   );
 
-  // null means "show cartItem.quantity"; non-null means user is actively typing
-  const [pendingQuantity, setPendingQuantity] = useState<number | null>(null);
-  const inputValue = pendingQuantity !== null ? pendingQuantity : (cartItem?.quantity ?? 1);
-
   const priceFmt = new Intl.NumberFormat(
     lang === "ar" ? "ar-EG" : "en-EG",
     { style: "currency", currency: "EGP", maximumFractionDigits: 0 }
@@ -69,67 +64,8 @@ export default function ProductCard({
   const handleAddToCart = async () => {
     try {
       await dispatch(addToCart({ productId: id, quantity: 1 })).unwrap();
-      setPendingQuantity(null);
     } catch (error) {
       console.error('Failed to add to cart:', error);
-    }
-  };
-
-  const handleIncrement = async () => {
-    if (!cartItem) return;
-    const newQuantity = (cartItem.quantity || 0) + 1;
-    try {
-      await dispatch(updateCartItem({ itemId: cartItem.id, quantity: newQuantity })).unwrap();
-      setPendingQuantity(null);
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!cartItem) return;
-    try {
-      await dispatch(removeFromCart(cartItem.id)).unwrap();
-      setPendingQuantity(null);
-    } catch (error) {
-      console.error('Failed to remove from cart:', error);
-    }
-  };
-
-  const handleDecrement = async () => {
-    if (!cartItem) return;
-    if ((cartItem.quantity || 0) <= 1) {
-      await handleDelete();
-      return;
-    }
-    const newQuantity = (cartItem.quantity || 0) - 1;
-    try {
-      await dispatch(updateCartItem({ itemId: cartItem.id, quantity: newQuantity })).unwrap();
-      setPendingQuantity(null);
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    }
-  };
-
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    if (isNaN(value) || value < 1) return;
-    setPendingQuantity(value);
-  };
-
-  const handleQuantityBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    if (!cartItem) return;
-    const value = parseInt(e.target.value);
-    if (isNaN(value) || value < 1 || value === cartItem.quantity) {
-      setPendingQuantity(null);
-      return;
-    }
-    try {
-      await dispatch(updateCartItem({ itemId: cartItem.id, quantity: value })).unwrap();
-      setPendingQuantity(null);
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-      setPendingQuantity(null);
     }
   };
 
@@ -194,8 +130,8 @@ export default function ProductCard({
         )}
 
         {/* Name */}
-        <div className="flex-1">
-          <Link href={productUrl} className="font-bold">
+        <div className="flex-1 min-w-0">
+          <Link href={productUrl} className="font-bold line-clamp-2">
             {lang === "ar" ? nameAr : nameEn}
           </Link>
         </div>
@@ -204,67 +140,39 @@ export default function ProductCard({
         <div className="mt-auto pt-2">
           {/* Stars */}
           <div className="flex items-center gap-1 text-amber-500 mb-1">
-            {rating ? <><Star className={`w-4 h-4 fill-current `} /> 
-            <span className="ms-1 text-xs text-neutral-600">{rating}</span>
-            </>
-            : null}
-            
+            {rating ? (
+              <>
+                <Star className="w-4 h-4 fill-current" />
+                <span className="ms-1 text-xs text-neutral-600">{rating}</span>
+              </>
+            ) : null}
           </div>
 
-          <div className="flex justify-between ">
-          {/* Price */}
-          <div className="font-extrabold ">{priceFmt}</div>
+          <div className="flex justify-between items-center">
+            {/* Price */}
+            <div className="font-extrabold">{priceFmt}</div>
 
-          {!cartItem ? (
-            <div className="flex justify-end">
+            {!cartItem ? (
               <button
                 onClick={handleAddToCart}
                 disabled={isLoading}
                 className="rounded text-white md:px-3 md:py-2 px-2 py-1 hover:opacity-90 transition-opacity disabled:opacity-50 flex"
                 style={{ background: brand.primary }}
               >
-                {isLoading ? "..." : (<Plus className="" />)}
+                {isLoading ? "..." : <Plus className="w-4 h-4" />}
               </button>
-            </div>
-          ) : (
-            <div
-              className="flex items-center lg:gap-2 border rounded-xl overflow-hidden justify-between"
-              style={{ borderColor: brand.primary }}
-            >
-              <button
-                onClick={handleDecrement}
-                disabled={isLoading}
-                className=" p-1 lg:p-2 hover:bg-neutral-100 transition-colors disabled:opacity-50"
-                style={{ color: (cartItem?.quantity || 0) <= 1 ? '#ef4444' : brand.primary }}
+            ) : (
+              <Link
+                href={getLocalizedPath('/cart', lang)}
+                className="flex items-center gap-1 rounded text-white md:px-3 md:py-2 px-2 py-1 text-xs font-semibold hover:opacity-90 transition-opacity"
+                style={{ background: '#8DA78A' }}
               >
-                {(cartItem?.quantity || 0) <= 1 ? (
-                  <Trash2 className="w-4 h-4" />
-                ) : (
-                  <Minus className="w-4 h-4" />
-                )}
-              </button>
-
-              <input
-                type="number"
-                min="1"
-                value={inputValue}
-                onChange={handleQuantityChange}
-                onBlur={handleQuantityBlur}
-                disabled={isLoading}
-                className="w-10 text-center font-semibold text-sm border-0 focus:outline-none appearance-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                style={{ color: brand.primary }}
-              />
-
-              <button
-                onClick={handleIncrement}
-                disabled={isLoading}
-                className="p-1 lg:p-2 hover:bg-neutral-100 transition-colors disabled:opacity-50"
-                style={{ color: brand.primary }}
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-            </div>
-          )}
+                <Check className="w-4 h-4" />
+                <span className="hidden sm:inline">
+                  {lang === 'ar' ? 'في السلة' : 'In Cart'}
+                </span>
+              </Link>
+            )}
           </div>
         </div>
       </div>
