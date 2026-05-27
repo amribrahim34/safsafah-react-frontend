@@ -117,7 +117,7 @@ export default function ProductCard({
           brandId ? (
             <Link
               href={getLocalizedPath(`/catalog?brandIds=${brandId}`, lang)}
-              className="text-xs lg:text-base lg:font-bold mb-0.5 "
+              className="text-xs lg:text-base font-semibold lg:font-bold mb-0.5 "
               style={{ color: brand.primary }}
             >
               {lang === "ar" ? brandNameAr : brandNameEn}

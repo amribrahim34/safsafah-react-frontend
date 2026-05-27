@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { homeService } from "@/lib/api/services";
+import SectionHeader from "./SectionHeader";
 import { env } from "@/config/env";
 import type { HomeCategory } from "@/types";
 import { useParams } from "next/navigation";
@@ -56,11 +57,7 @@ export default function CategoriesSection() {
   if (isLoading) {
     return (
       <section className="mx-auto px-4 py-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base md:text-2xl font-extrabold">
-            {lang === "ar" ? "تسوق حسب الفئة" : "Shop by category"}
-          </h2>
-        </div>
+        <SectionHeader title={lang === "ar" ? "تسوق حسب الفئة" : "Shop by category"} titleSize="base" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[1, 2, 3, 4].map((i) => (
             <div
@@ -79,14 +76,7 @@ export default function CategoriesSection() {
 
   return (
     <section className="mx-auto px-4 py-4">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base md:text-2xl font-extrabold">
-          {lang === "ar" ? "تسوق حسب الفئة" : "Shop by category"}
-        </h2>
-        <Link href={getLocalizedPath('/catalog', lang)} className="font-semibold">
-          {lang === "ar" ? "الكل" : "View all"}
-        </Link>
-      </div>
+      <SectionHeader title={lang === "ar" ? "تسوق حسب الفئة" : "Shop by category"} titleSize="base" viewAllHref={getLocalizedPath('/catalog', lang)} viewAllText={lang === "ar" ? "الكل" : "View all"} />
       <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
         {categories.map((category) => {
           const categoryName = lang === "ar" ? category.nameAr : category.nameEn;

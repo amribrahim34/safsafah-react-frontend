@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import Link from "next/link";
 import ProductGrid from "./ProductGrid";
+import SectionHeader from "./SectionHeader";
 import { homeService } from "@/lib/api/services";
 import type { HomeProduct } from "@/types";
 import { useParams } from "next/navigation";
@@ -60,11 +60,7 @@ export default function BestSellers({ brand }: BestSellersProps) {
     return (
       <section className="bg-neutral-50">
         <div className=" mx-auto px-4 py-8">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xl md:text-2xl font-extrabold">
-              {t('sections.trending')}
-            </h2>
-          </div>
+          <SectionHeader title={t('sections.trending')} titleSize="base" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div
@@ -85,14 +81,7 @@ export default function BestSellers({ brand }: BestSellersProps) {
   return (
     <section className="bg-neutral-50">
       <div className=" mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xl md:text-2xl font-extrabold">
-            {t('sections.trending')}
-          </h2>
-          <Link href={getLocalizedPath('/catalog', lang)} className="font-semibold" style={{ color: brand.primary }}>
-            {t('sections.viewAll')}
-          </Link>
-        </div>
+        <SectionHeader title={t('sections.trending')} titleSize="base" viewAllHref={getLocalizedPath('/catalog', lang)} viewAllText={t('sections.viewAll')} viewAllColor={brand.primary} />
         <ProductGrid products={products} brand={brand} />
       </div>
     </section>
