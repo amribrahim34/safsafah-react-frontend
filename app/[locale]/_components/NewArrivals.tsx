@@ -87,7 +87,7 @@ export default function NewArrivals({ brand }: NewArrivalsProps) {
     <section className="bg-neutral-50">
       <div className="px-4 py-8">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xl md:text-2xl font-extrabold">
+          <h2 className="text-base md:text-2xl font-extrabold">
             {t('newArrivals.title')}
           </h2>
           <Link href={getLocalizedPath('/catalog', lang)} className="font-semibold" style={{ color: brand.primary }}>

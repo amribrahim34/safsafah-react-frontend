@@ -71,13 +71,13 @@ export default function ProductCard({
 
   return (
     <div
-      className="flex flex-col rounded-2xl bg-white overflow-hidden hover:shadow-lg transition-shadow duration-200"
+      className="flex flex-col rounded-2xl bg-white overflow-hidden shadow-lg "
       style={{
         border: isRecommended
           ? `2px solid ${brand.primary}`
           : isInWishlist
           ? "2px solid #ef4444"
-          : "1px solid #e5e7eb",
+          : "",
       }}
     >
       {/* Product image */}
@@ -117,13 +117,13 @@ export default function ProductCard({
           brandId ? (
             <Link
               href={getLocalizedPath(`/catalog?brandIds=${brandId}`, lang)}
-              className="text-xs mb-0.5 font-bold"
+              className="text-xs lg:text-base lg:font-bold mb-0.5 "
               style={{ color: brand.primary }}
             >
               {lang === "ar" ? brandNameAr : brandNameEn}
             </Link>
           ) : (
-            <div className="text-xs mb-0.5 font-bold" style={{ color: brand.primary }}>
+            <div className="text-xs mb-0.5 " style={{ color: brand.primary }}>
               {lang === "ar" ? brandNameAr : brandNameEn}
             </div>
           )
@@ -131,7 +131,7 @@ export default function ProductCard({
 
         {/* Name */}
         <div className="flex-1 min-w-0">
-          <Link href={productUrl} className="font-bold line-clamp-2">
+          <Link href={productUrl} className=" text-xs lg:text-base font-bold line-clamp-2">
             {lang === "ar" ? nameAr : nameEn}
           </Link>
         </div>
@@ -150,7 +150,7 @@ export default function ProductCard({
 
           <div className="flex justify-between items-center">
             {/* Price */}
-            <div className="font-extrabold">{priceFmt}</div>
+            <div className="text-sm lg:text-base font-bold">{priceFmt}</div>
 
             {!cartItem ? (
               <button

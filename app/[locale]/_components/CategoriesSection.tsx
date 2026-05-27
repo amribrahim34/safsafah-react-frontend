@@ -57,7 +57,7 @@ export default function CategoriesSection() {
     return (
       <section className="mx-auto px-4 py-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xl md:text-2xl font-extrabold">
+          <h2 className="text-base md:text-2xl font-extrabold">
             {lang === "ar" ? "تسوق حسب الفئة" : "Shop by category"}
           </h2>
         </div>
@@ -80,7 +80,7 @@ export default function CategoriesSection() {
   return (
     <section className="mx-auto px-4 py-4">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-xl md:text-2xl font-extrabold">
+        <h2 className="text-base md:text-2xl font-extrabold">
           {lang === "ar" ? "تسوق حسب الفئة" : "Shop by category"}
         </h2>
         <Link href={getLocalizedPath('/catalog', lang)} className="font-semibold">
@@ -102,7 +102,7 @@ export default function CategoriesSection() {
                 <img
                   src={imageUrl}
                   alt={categoryName}
-                  className="w-full h-44 object-cover"
+                  className="w-full h-28 lg:h-44 object-cover"
                 />
               ) : (
                 <div className="w-full h-44 bg-neutral-200 flex items-center justify-center">
@@ -112,7 +112,7 @@ export default function CategoriesSection() {
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-              <div className="absolute bottom-3 inset-x-3 text-white font-semibold text-lg">
+              <div className="absolute bottom-3 inset-x-3 text-white font-semibold text-sm lg:text-lg">
                 {categoryName}
               </div>
             </Link>
