@@ -1,6 +1,8 @@
 'use client';
 import React from "react";
 import { useParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import '@/lib/i18n';
 import DeliveryETA from "../product_details/DeliveryETA";
 
 interface OrderSummaryProps {
@@ -25,20 +27,21 @@ export default function OrderSummary({ brand, fmt, subtotal, discount, shipping,
   const locale = params?.locale as string | undefined;
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
+  const { t, i18n } = useTranslation('cart');
+  if (i18n.language !== lang) i18n.changeLanguage(lang);
+
   return (
     <div className="rounded-3xl border border-neutral-200 p-4 bg-neutral-50">
-      <div className="font-bold text-lg mb-3">
-        {lang === "ar" ? "ملخص الطلب" : "Order Summary"}
-      </div>
+      <div className="font-bold text-lg mb-3">{t('order_summary')}</div>
 
       <div className="space-y-2 text-sm">
-        <Row label={lang === "ar" ? "المجموع الفرعي" : "Subtotal"} value={fmt(subtotal)} />
+        <Row label={t('subtotal')} value={fmt(subtotal)} />
         {discount > 0 && (
-          <Row label={lang === "ar" ? "خصم" : "Discount"} value={`– ${fmt(discount)}`} />
+          <Row label={t('discount')} value={`– ${fmt(discount)}`} />
         )}
-        <Row label={lang === "ar" ? "الشحن" : "Shipping"} value={shipping === 0 ? (lang === "ar" ? "مجاني" : "Free") : fmt(shipping)} />
+        <Row label={t('shipping')} value={shipping === 0 ? t('free') : fmt(shipping)} />
         <div className="h-px bg-neutral-200 my-2" />
-        <Row bold label={lang === "ar" ? "الإجمالي" : "Total"} value={fmt(total)} />
+        <Row bold label={t('total')} value={fmt(total)} />
       </div>
 
       {checkoutButton && (
@@ -50,10 +53,10 @@ export default function OrderSummary({ brand, fmt, subtotal, discount, shipping,
       {onCheckout && !checkoutButton && (
         <div className="mt-4">
           <button onClick={onCheckout} className="w-full px-5 py-3 rounded-2xl text-white font-semibold" style={{ background: brand.primary }}>
-            {lang === "ar" ? "إتمام الشراء" : "Checkout"}
+            {t('checkout')}
           </button>
           <div className="text-xs text-neutral-500 mt-2">
-            {lang === "ar" ? "الدفع عند الاستلام متاح • إرجاع مجاني خلال 14 يوم" : "Cash on delivery available • Free returns within 14 days"}
+            {t('payment_info')}
           </div>
         </div>
       )}

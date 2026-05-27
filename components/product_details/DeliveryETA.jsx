@@ -7,7 +7,7 @@ export default function DeliveryETA({ brand, lang }){
     // simple local ETA: Cairo 1-2d, others 2-4d
     const now = new Date();
     const addDays = (d)=>{ const t = new Date(now); t.setDate(t.getDate()+d); return t.toLocaleDateString('en-GB'); };
-    setEta(`${addDays(2)}`);
+    setEta(`${addDays(7)}`);
   },[]);
   return (
     <div className="rounded-2xl border border-neutral-200 p-3 text-sm bg-white">

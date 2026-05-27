@@ -32,7 +32,8 @@ export default function CartPage() {
   const locale = params?.locale as string | undefined;
   const lang: Language = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
-  const { t, i18n } = useTranslation('home');
+  const { t, i18n } = useTranslation('cart');
+  const { t: tHome } = useTranslation('home');
   if (i18n.language !== lang) i18n.changeLanguage(lang);
   useDir();
 
@@ -103,12 +104,12 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={t('promo')} brand={BRAND} />
-      <Header brand={BRAND} searchPlaceholder={t('search')} />
+      <PromoBar text={tHome('promo')} brand={BRAND} />
+      <Header brand={BRAND} searchPlaceholder={tHome('search')} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-4">
-          {lang === "ar" ? "سلة المشتريات" : "Your Cart"}
+          {t('title')}
         </h1>
 
         {isLoading ? (
@@ -116,10 +117,10 @@ export default function CartPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neutral-900"></div>
           </div>
         ) : items.length === 0 ? (
-          <EmptyCart lang={lang} brand={BRAND} />
+          <EmptyCart brand={BRAND} />
         ) : (
           <>
-            <FreeShippingBar brand={BRAND} lang={lang} subtotal={subtotal} target={freeShippingThreshold} />
+            <FreeShippingBar brand={BRAND} subtotal={subtotal} target={freeShippingThreshold} />
 
             <div className="grid gap-6 md:grid-cols-[minmax(0,1fr),380px]">
               <section className="space-y-3">
@@ -135,12 +136,11 @@ export default function CartPage() {
                 ))}
 
                 {/* <PromoCode
-                  lang={lang}
                   brand={BRAND}
                   value={promo}
                   onChange={setPromo}
                   onApply={handleApplyPromo}
-                  hint={lang === "ar" ? "جرّب GLOW10 للحصول على 10%" : "Try GLOW10 for 10% off"}
+                  hint={t('promo_hint')}
                 /> */}
               </section>
 
@@ -175,7 +175,7 @@ export default function CartPage() {
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
             <div className="flex-1">
               <div className="text-xs text-neutral-600">
-                {lang === "ar" ? "الإجمالي" : "Total"}
+                {t('total')}
               </div>
               <div className="font-extrabold">
                 {fmt(total)}
@@ -192,7 +192,7 @@ export default function CartPage() {
               className="px-5 py-3 rounded-2xl text-white font-semibold"
               style={{ background: BRAND.primary }}
             >
-              {lang === "ar" ? "إتمام الشراء" : "Checkout"}
+              {t('checkout')}
             </button>
           </div>
         </div>

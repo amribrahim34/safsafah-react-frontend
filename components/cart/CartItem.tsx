@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import '@/lib/i18n';
 import { getLocalizedPath } from "@/lib/locale-navigation";
 import type { Language } from "@/types";
 
@@ -46,6 +48,8 @@ interface CartItemProps {
 
 export default function CartItem({ lang, brand, item, onQty, onRemove }: CartItemProps) {
   const [busy, setBusy] = useState(false);
+  const { t, i18n } = useTranslation('cart');
+  if (i18n.language !== lang) i18n.changeLanguage(lang);
 
   const primary = brand?.primary ?? "#288880";
   const isAr = lang === "ar";
@@ -110,7 +114,7 @@ export default function CartItem({ lang, brand, item, onQty, onRemove }: CartIte
               type="button"
               disabled={busy}
               onClick={handleDecrease}
-              aria-label={isAtMin ? (isAr ? "إزالة" : "Remove") : (isAr ? "تقليل الكمية" : "Decrease quantity")}
+              aria-label={isAtMin ? t('remove') : t('decrease_qty')}
               className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed"
               style={{ backgroundColor: "#fee2e2", color: "#dc2626" }}
               onMouseEnter={(e) => { if (!busy) e.currentTarget.style.backgroundColor = "#fecaca"; }}
@@ -130,7 +134,7 @@ export default function CartItem({ lang, brand, item, onQty, onRemove }: CartIte
               type="button"
               disabled={busy}
               onClick={handleIncrease}
-              aria-label={isAr ? "زيادة الكمية" : "Increase quantity"}
+              aria-label={t('increase_qty')}
               className="w-8 h-8 rounded-lg flex items-center justify-center text-white transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-not-allowed"
               style={{ backgroundColor: primary }}
               onMouseEnter={(e) => { if (!busy) e.currentTarget.style.filter = "brightness(0.88)"; }}
@@ -141,7 +145,7 @@ export default function CartItem({ lang, brand, item, onQty, onRemove }: CartIte
           </div>
 
           <span className="text-xs text-neutral-400">
-            {fmt(item.price)} {isAr ? "/ قطعة" : "/ each"}
+            {fmt(item.price)} {t('per_item')}
           </span>
         </div>
       </div>
