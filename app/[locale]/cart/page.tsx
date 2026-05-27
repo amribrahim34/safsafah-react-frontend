@@ -98,7 +98,7 @@ export default function CartPage() {
 
   const freeShippingThreshold = 2000;
   const subtotal = cart?.totalPrice || 0;
-  const discount = promo.trim().toUpperCase() === "GLOW10" ? Math.round(subtotal * 0.1) : 0;
+  const discount = cart?.discountAmount || 0;
   const shipping = subtotal - discount >= freeShippingThreshold ? 0 : 50;
   const total = Math.max(0, subtotal - discount + shipping);
 
@@ -135,13 +135,13 @@ export default function CartPage() {
                   />
                 ))}
 
-                {/* <PromoCode
+                <PromoCode
                   brand={BRAND}
                   value={promo}
                   onChange={setPromo}
                   onApply={handleApplyPromo}
                   hint={t('promo_hint')}
-                /> */}
+                />
               </section>
 
               <aside className="self-start">

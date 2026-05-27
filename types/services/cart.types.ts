@@ -22,6 +22,7 @@ export interface CartResponse {
   items: CartItemResponse[];
   totalItems: number;
   totalPrice: number;
+  discountAmount?: number;
 }
 
 export interface AddToCartRequest {
