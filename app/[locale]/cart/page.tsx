@@ -95,9 +95,10 @@ export default function CartPage() {
     }
   };
 
+  const freeShippingThreshold = 2000;
   const subtotal = cart?.totalPrice || 0;
   const discount = promo.trim().toUpperCase() === "GLOW10" ? Math.round(subtotal * 0.1) : 0;
-  const shipping = subtotal - discount >= 500 ? 0 : 49;
+  const shipping = subtotal - discount >= freeShippingThreshold ? 0 : 50;
   const total = Math.max(0, subtotal - discount + shipping);
 
   return (
@@ -118,7 +119,7 @@ export default function CartPage() {
           <EmptyCart lang={lang} brand={BRAND} />
         ) : (
           <>
-            <FreeShippingBar brand={BRAND} lang={lang} subtotal={subtotal} target={500} />
+            <FreeShippingBar brand={BRAND} lang={lang} subtotal={subtotal} target={freeShippingThreshold} />
 
             <div className="grid gap-6 md:grid-cols-[minmax(0,1fr),380px]">
               <section className="space-y-3">
