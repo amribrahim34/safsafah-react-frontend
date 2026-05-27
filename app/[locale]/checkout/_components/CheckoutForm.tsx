@@ -153,7 +153,7 @@ export default function CheckoutForm({
       )}
 
       {/* Only show map picker for new addresses */}
-      {(selectedAddressId === "new" || selectedAddressId === null || addresses.length === 0) && (
+      {/* {(selectedAddressId === "new" || selectedAddressId === null || addresses.length === 0) && (
         <>
           <MapPicker
             lang={lang}
@@ -173,7 +173,7 @@ export default function CheckoutForm({
             </div>
           )}
         </>
-      )}
+      )} */}
 
       <FormTextarea
         label={t('form.notes')}

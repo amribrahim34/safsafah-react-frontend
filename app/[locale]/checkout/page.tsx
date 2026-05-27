@@ -56,7 +56,7 @@ export default function CheckoutQuickPage() {
 
   const subtotal = cart?.totalPrice || 0;
   const discount = 0;
-  const shipping = subtotal >= 500 ? 0 : 49;
+  const shipping = subtotal >= 2000 ? 0 : 50;
   const total = Math.max(0, subtotal - discount + shipping);
   const fmt = (n: number): string =>
     new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", {
