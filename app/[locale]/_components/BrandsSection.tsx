@@ -95,7 +95,7 @@ export default function BrandsSection() {
           return (
             <Link
               key={brand.id}
-              href={getLocalizedPath(`/catalog?brandId=${brand.id}`, lang)}
+              href={getLocalizedPath(`/catalog?brandIds=${brand.id}`, lang)}
               className="bg-white rounded-lg border border-neutral-200 p-4 hover:shadow-md transition-shadow flex items-center justify-center"
             >
               {logoUrl ? (
