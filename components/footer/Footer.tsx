@@ -60,7 +60,7 @@ function FooterSection({ title, children, defaultOpen = false }: FooterSectionPr
       </button>
       
       {/* Desktop: Static header */}
-      <div className="hidden sm:block font-semibold mb-3 text-neutral-900">
+      <div className="hidden sm:block font-semibold mb-4 text-neutral-900 uppercase text-xs tracking-widest">
         {title}
       </div>
       
@@ -123,35 +123,35 @@ export default function Footer({ brand }: FooterProps) {
   const t = translations[locale];
 
   return (
-    <footer className="bg-neutral-100 border-t border-neutral-200">
-      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+    <footer className="bg-neutral-100 border-t-4" style={{ borderTopColor: brand.primary }}>
+      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
         {/* Brand block */}
         <div>
           <div className="flex items-center gap-3">
-            <img src="/safsafah-logo.png" alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
-            <div className="font-extrabold text-xl tracking-tight">SAFSAFAH</div>
+            <img src="/safsafah-logo.png" alt="SAFSAFAH" className="w-11 h-11 rounded-2xl object-contain" />
+            <div className="font-extrabold text-xl tracking-tight pb-0.5 border-b-2" style={{ borderColor: brand.primary }}>SAFSAFAH</div>
           </div>
           <p className="mt-4 text-neutral-600 text-sm leading-relaxed">{t.about}</p>
           {settings && (
-            <div className="flex gap-3 mt-4">
+            <div className="flex gap-1 mt-4">
               {settings.facebook && (
-                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                  <FaFacebook className="w-5 h-5 hover:opacity-80 transition-opacity" style={{ color: brand.primary }} />
+                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:bg-neutral-200 rounded-full p-1.5 transition-colors">
+                  <FaFacebook className="w-5 h-5" style={{ color: brand.primary }} />
                 </a>
               )}
               {settings.instagram && (
-                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                  <FaInstagram className="w-5 h-5 hover:opacity-80 transition-opacity" style={{ color: brand.primary }} />
+                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:bg-neutral-200 rounded-full p-1.5 transition-colors">
+                  <FaInstagram className="w-5 h-5" style={{ color: brand.primary }} />
                 </a>
               )}
               {settings.tiktok && (
-                <a href={settings.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-                  <FaTiktok className="w-5 h-5 hover:opacity-80 transition-opacity" style={{ color: brand.primary }} />
+                <a href={settings.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="hover:bg-neutral-200 rounded-full p-1.5 transition-colors">
+                  <FaTiktok className="w-5 h-5" style={{ color: brand.primary }} />
                 </a>
               )}
               {settings.whatsapp && (
-                <a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                  <FaWhatsapp className="w-5 h-5 hover:opacity-80 transition-opacity" style={{ color: brand.primary }} />
+                <a href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="hover:bg-neutral-200 rounded-full p-1.5 transition-colors">
+                  <FaWhatsapp className="w-5 h-5" style={{ color: brand.primary }} />
                 </a>
               )}
             </div>
@@ -164,7 +164,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/catalog', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {isRTL ? "المنتجات" : "Products"}
@@ -173,7 +173,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/catalog?sort=bestsellers', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {isRTL ? "الأكثر مبيعًا" : "Bestsellers"}
@@ -182,7 +182,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/catalog', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {isRTL ? "الفئات" : "Categories"}
@@ -191,7 +191,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/quize', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {t.skinQuiz}
@@ -200,7 +200,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/about', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {t.aboutUs}
@@ -209,7 +209,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/contact', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {t.contactUs}
@@ -224,7 +224,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/account', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {t.myAccount}
@@ -233,7 +233,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/orders', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {t.myOrders}
@@ -242,7 +242,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/cart', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {t.shoppingCart}
@@ -251,7 +251,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/checkout', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {t.checkout}
@@ -260,7 +260,7 @@ export default function Footer({ brand }: FooterProps) {
             <li>
               <Link 
                 href={getLocalizedPath('/refund-policy', locale)} 
-                className="text-neutral-600 hover:opacity-80 transition-opacity" 
+                className="hover:underline transition-colors"
                 style={{ color: brand.primary }}
               >
                 {t.refundPolicy}
@@ -270,7 +270,7 @@ export default function Footer({ brand }: FooterProps) {
         </FooterSection>
 
         {/* Trust badges */}
-        <div className="flex flex-col gap-3">
+        {/* <div className="flex flex-col gap-3">
           <div className="rounded-2xl bg-white border border-neutral-200 p-4 flex items-center gap-3 shadow-sm hover:shadow-md transition-shadow">
             <Leaf className="w-5 h-5 flex-shrink-0" style={{ color: brand.primary }} />
             <div className="text-sm text-neutral-700">{t.ecoPackaging}</div>
@@ -279,12 +279,12 @@ export default function Footer({ brand }: FooterProps) {
             <ShieldCheck className="w-5 h-5 flex-shrink-0" style={{ color: brand.primary }} />
             <div className="text-sm text-neutral-700">{t.secureCheckout}</div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Copyright - with extra bottom padding for mobile bottom tabs */}
-      <div className="text-center text-sm text-neutral-500 pb-24 md:pb-8">
-        © {new Date().getFullYear()} SAFSAFAH — {t.rights}
+      <div className="border-t border-neutral-200 text-center text-sm text-neutral-500 pt-5 pb-24 md:pb-8">
+        © {new Date().getFullYear()} <span className="font-semibold text-neutral-700">SAFSAFAH</span> — {t.rights}
       </div>
     </footer>
   );

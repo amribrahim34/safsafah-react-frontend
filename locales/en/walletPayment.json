@@ -1,0 +1,15 @@
+{
+  "title": "Wallet Payment",
+  "orderRef": "Order Ref: {{ref}}",
+  "amountDue": "Amount due",
+  "timeRemaining": "Time remaining",
+  "transferTo": "Transfer to",
+  "transferNote": "Write your Order Ref in the transfer note to speed up verification.",
+  "uploadProof": "Upload payment proof",
+  "confirmAccuracy": "I confirm the payment details are accurate",
+  "confirmPayment": "Confirm payment",
+  "autoCancelNote": "If payment isn't received within the time window, the order will be auto-cancelled.",
+  "alertMissingProof": "Upload the transfer receipt and confirm accuracy.",
+  "alertProofReceived": "Payment proof received. We'll verify and confirm.",
+  "loading": "Loading payment..."
+}

@@ -26,6 +26,7 @@ import CheckoutForm, { CheckoutFormData } from "./_components/CheckoutForm";
 import MobileCheckoutButton from "./_components/MobileCheckoutButton";
 import SuccessToast from "@/components/notifications/SuccessToast";
 import ErrorToast from "@/components/notifications/ErrorToast";
+import { settingsService, SiteSettings } from '@/lib/api/services/settings.service';
 
 type PaymentMethod = "cod" | "card" | "wallet";
 
@@ -53,6 +54,14 @@ export default function CheckoutQuickPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+    const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
+    useEffect(() => {
+      settingsService.getSettings().then(setSiteSettings).catch(() => {});
+    }, []);
+  
+    const walletNumber =  siteSettings?.mobile || "—";
+    
 
   const subtotal = cart?.totalPrice || 0;
   const discount = 0;
@@ -193,7 +202,7 @@ export default function CheckoutQuickPage() {
         mobile: formData.mobile,
         fullName: formData.fullName,
         orderRef: `SFS-${Date.now()}`,
-        walletNumber: "0100 000 0000",
+        walletNumber: walletNumber ||"0100 000 0000",
       });
       router.push(`/wallet-payment?${walletParams.toString()}`);
       return;

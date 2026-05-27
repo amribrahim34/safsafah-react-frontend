@@ -19,7 +19,7 @@ export default function PaymentMethodsLite({ lang, brand, value, onChange }: Pay
   const options: { id: PaymentMethod; label: string }[] = [
     { id: "cod",    label: t('payment.cod') },
     // { id: "card",   label: t('payment.card') },
-    { id: "wallet", label: t('payment.wallet') },
+    // { id: "wallet", label: t('payment.wallet') },
   ];
 
   return (
