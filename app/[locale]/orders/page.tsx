@@ -7,7 +7,7 @@ import '@/lib/i18n';
 import { BRAND } from '@/content/brand';
 import { useDir } from '@/hooks/useDir';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { fetchPaginatedOrders } from '@/store/slices/ordersSlice';
+import { fetchPaginatedOrders, cancelOrder } from '@/store/slices/ordersSlice';
 import type { PaginatedOrderItem } from '@/store/slices/ordersSlice';
 import type { UIOrder, UIOrderStatus, UIStage, TabCounts } from './_components/_types';
 
@@ -46,6 +46,7 @@ const mapApiOrderToUI = (apiOrder: PaginatedOrderItem, lang: string): UIOrder =>
 
   return {
     id: `EG-${apiOrder.id}`,
+    rawId: apiOrder.id,
     date: new Date(apiOrder.createdAt).toISOString().split('T')[0],
     addrShort: apiOrder.address?.details || (lang === 'ar' ? 'العنوان غير متوفر' : 'Address unavailable'),
     payment: 'COD',
@@ -87,6 +88,19 @@ export default function OrdersPage() {
   const pageSize = 10;
 
   const { paginatedOrders, pagination, isLoading } = useAppSelector((state) => state.orders);
+
+  const apiStatusMap: Record<string, string> = {
+    progress: 'PENDING',
+    shipped: 'SHIPPED',
+    delivered: 'DELIVERED',
+    canceled: 'CANCELED',
+  };
+
+  const handleCancel = async (rawId: number) => {
+    await dispatch(cancelOrder({ orderId: String(rawId) })).unwrap();
+    const status = tab === 'all' ? undefined : apiStatusMap[tab];
+    dispatch(fetchPaginatedOrders({ page: currentPage, size: pageSize, status }));
+  };
 
   useEffect(() => {
     const statusMap: Record<string, string> = {
@@ -178,7 +192,7 @@ export default function OrdersPage() {
               <>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
                   {orders.map((o) => (
-                    <OrderCard key={o.id} lang={lang} brand={BRAND} order={o} />
+                    <OrderCard key={o.id} lang={lang} brand={BRAND} order={o} onCancel={handleCancel} />
                   ))}
                 </div>
 

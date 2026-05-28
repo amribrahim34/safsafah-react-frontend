@@ -3,11 +3,13 @@ import Image from 'next/image';
 import { settingsService } from '@/lib/api/services';
 import { HelpCircle, MessageCircle, FileText, RotateCcw, XCircle, RefreshCcw, Star, Truck } from 'lucide-react';
 import type { UIOrder, UIOrderStatus, BrandConfig } from './_types';
+import { createThemedSwal, showProductToast } from '@/lib/swal';
 
 interface OrderCardProps {
   lang?: string;
   brand: BrandConfig;
   order: UIOrder;
+  onCancel?: (rawId: number) => Promise<void>;
 }
 
 interface Settings {
@@ -19,11 +21,16 @@ interface RenderActionsParams {
   isRTL: boolean;
   brand: BrandConfig;
   settings: Settings | null;
+  onCancel?: (rawId: number) => Promise<void>;
+  isCanceling: boolean;
+  setIsCanceling: (v: boolean) => void;
+  fmt: (n: number) => string;
 }
 
-export default function OrderCard({ lang = 'ar', brand, order }: OrderCardProps) {
+export default function OrderCard({ lang = 'ar', brand, order, onCancel }: OrderCardProps) {
   const isRTL = lang === 'ar';
   const [settings, setSettings] = useState<Settings | null>(null);
+  const [isCanceling, setIsCanceling] = useState(false);
 
   useEffect(() => {
     settingsService.getSettings().then(setSettings).catch(() => {});
@@ -131,7 +138,7 @@ export default function OrderCard({ lang = 'ar', brand, order }: OrderCardProps)
 
       {/* actions (contextual) */}
       <div className="mt-2 border-t border-neutral-100 pt-2 grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-        {renderActions({ order, isRTL, brand, settings })}
+        {renderActions({ order, isRTL, brand, settings, onCancel, isCanceling, setIsCanceling, fmt })}
         <a
           href="https://wa.me/201000000000"
           className="sm:ms-auto inline-flex items-center gap-1 text-[11px] text-neutral-600"
@@ -154,7 +161,7 @@ export default function OrderCard({ lang = 'ar', brand, order }: OrderCardProps)
   );
 }
 
-function renderActions({ order, isRTL, brand, settings }: RenderActionsParams) {
+function renderActions({ order, isRTL, brand, settings, onCancel, isCanceling, setIsCanceling, fmt }: RenderActionsParams) {
   const primary = 'px-3 py-1 rounded-xl text-white font-semibold text-xs md:text-sm';
   const outline = 'px-3 py-1 rounded-xl border font-semibold text-xs md:text-sm';
 
@@ -164,8 +171,48 @@ function renderActions({ order, isRTL, brand, settings }: RenderActionsParams) {
     case 'In Progress':
       return (
         <>
-          <button className={outline}>
-            <XCircle className="inline w-4 h-4 me-1" /> {isRTL ? 'إلغاء' : 'Cancel'}
+          <button
+            className={outline}
+            disabled={isCanceling}
+            onClick={async () => {
+              if (!onCancel) return;
+              const swal = createThemedSwal(isRTL);
+              const result = await swal.fire({
+                title: isRTL ? 'إلغاء الطلب' : 'Cancel Order',
+                text: isRTL
+                  ? 'هل أنت متأكدة من إلغاء هذا الطلب؟'
+                  : 'Are you sure you want to cancel this order?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: isRTL ? 'نعم، إلغاء' : 'Yes, cancel it',
+                cancelButtonText: isRTL ? 'لا، ارجع' : 'No, go back',
+              });
+              if (!result.isConfirmed) return;
+              setIsCanceling(true);
+              try {
+                await onCancel(order.rawId);
+                showProductToast(
+                  isRTL ? 'تم إلغاء الطلب بنجاح' : 'Order cancelled successfully',
+                  isRTL
+                );
+              } catch (err: unknown) {
+                const msg =
+                  err instanceof Error
+                    ? err.message
+                    : isRTL
+                    ? 'تعذّر إلغاء الطلب'
+                    : 'Failed to cancel order';
+                createThemedSwal(isRTL).fire({ icon: 'error', title: msg });
+              } finally {
+                setIsCanceling(false);
+              }
+            }}
+          >
+            {isCanceling ? (
+              isRTL ? 'جاري الإلغاء...' : 'Cancelling...'
+            ) : (
+              <><XCircle className="inline w-4 h-4 me-1" />{isRTL ? 'إلغاء' : 'Cancel'}</>
+            )}
           </button>
         </>
       );
@@ -222,7 +269,60 @@ function renderActions({ order, isRTL, brand, settings }: RenderActionsParams) {
     default:
       return (
         <>
-          <button className={primary} style={{ background: brand.primary }}>
+          <button
+            className={primary}
+            style={{ background: brand.primary }}
+            onClick={() => {
+              const itemsHtml = order.items
+                .map(
+                  (item) => `
+                  <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:13px;">
+                    <span style="flex:1;text-align:${isRTL ? 'right' : 'left'}">
+                      ${isRTL ? item.name.ar : item.name.en} × ${item.qty}
+                    </span>
+                    <span style="white-space:nowrap;margin-${isRTL ? 'right' : 'left'}:12px;font-weight:600;">
+                      ${fmt(item.price * item.qty)}
+                    </span>
+                  </div>`
+                )
+                .join('');
+
+              const totalsHtml = `
+                <div style="margin-top:10px;padding-top:8px;border-top:2px solid #e5e7eb;font-size:13px;">
+                  <div style="display:flex;justify-content:space-between;padding:3px 0;">
+                    <span>${isRTL ? 'المجموع الفرعي' : 'Subtotal'}</span><span>${fmt(order.subtotal)}</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;padding:3px 0;">
+                    <span>${isRTL ? 'الشحن' : 'Shipping'}</span><span>${fmt(order.shipping)}</span>
+                  </div>
+                  ${order.discount > 0 ? `
+                  <div style="display:flex;justify-content:space-between;padding:3px 0;color:#16a34a;">
+                    <span>${isRTL ? 'خصم' : 'Discount'}</span><span>− ${fmt(order.discount)}</span>
+                  </div>` : ''}
+                  <div style="display:flex;justify-content:space-between;padding:5px 0;font-weight:700;font-size:15px;">
+                    <span>${isRTL ? 'الإجمالي' : 'Total'}</span><span>${fmt(order.total)}</span>
+                  </div>
+                </div>`;
+
+              createThemedSwal(isRTL).fire({
+                title: `${isRTL ? 'طلب رقم' : 'Order'} #${order.id}`,
+                html: `
+                  <div style="direction:${isRTL ? 'rtl' : 'ltr'};text-align:${isRTL ? 'right' : 'left'};">
+                    <div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+                      📅 ${new Date(order.date).toLocaleDateString(isRTL ? 'ar-EG' : 'en-EG')}
+                      &nbsp;·&nbsp; 📍 ${order.addrShort}
+                      &nbsp;·&nbsp; 💳 ${order.payment}
+                    </div>
+                    <div style="font-weight:600;margin-bottom:6px;">${isRTL ? 'المنتجات' : 'Items'}</div>
+                    ${itemsHtml}
+                    ${totalsHtml}
+                  </div>`,
+                showConfirmButton: false,
+                showCloseButton: true,
+                width: 480,
+              });
+            }}
+          >
             {isRTL ? 'تفاصيل' : 'Details'}
           </button>
         </>

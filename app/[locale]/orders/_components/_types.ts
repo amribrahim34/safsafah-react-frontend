@@ -19,6 +19,7 @@ export interface UIReturnInfo {
 
 export interface UIOrder {
   id: string;
+  rawId: number;
   date: string;
   addrShort: string;
   payment: string;

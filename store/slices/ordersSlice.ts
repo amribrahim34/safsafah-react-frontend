@@ -291,15 +291,8 @@ const ordersSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(cancelOrder.fulfilled, (state, action) => {
+      .addCase(cancelOrder.fulfilled, (state) => {
         state.isLoading = false;
-        if (state.currentOrder?.id === action.payload.id) {
-          state.currentOrder = action.payload;
-        }
-        const index = state.orders.findIndex((o) => o.id === action.payload.id);
-        if (index !== -1) {
-          state.orders[index] = action.payload;
-        }
         state.error = null;
       })
       .addCase(cancelOrder.rejected, (state, action) => {
