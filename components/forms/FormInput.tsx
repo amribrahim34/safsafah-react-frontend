@@ -1,8 +1,17 @@
 import React from "react";
 
-/**
- * Reusable form input component with validation support
- */
+interface FormInputProps {
+  label: string;
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  error?: string;
+  placeholder?: string;
+  type?: React.HTMLInputTypeAttribute;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  className?: string;
+}
+
 export default function FormInput({
   label,
   value,
@@ -13,7 +22,7 @@ export default function FormInput({
   type = "text",
   inputMode,
   className = "",
-}) {
+}: FormInputProps) {
   return (
     <label className="block mb-3">
       <div className="text-sm font-semibold mb-1">{label}</div>

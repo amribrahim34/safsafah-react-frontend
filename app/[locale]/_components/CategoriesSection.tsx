@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { homeService } from "@/lib/api/services";
@@ -86,13 +87,15 @@ export default function CategoriesSection() {
             <Link
               key={category.id}
               href={getLocalizedPath(`/catalog?categoryId=${category.id}`, lang)}
-              className="relative rounded-2xl overflow-hidden border border-neutral-200"
+              className="relative rounded-2xl overflow-hidden border border-neutral-200 h-28 lg:h-44"
             >
               {imageUrl ? (
-                <img
+                <Image
                   src={imageUrl}
                   alt={categoryName}
-                  className="w-full h-28 lg:h-44 object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 33vw, 16vw"
                 />
               ) : (
                 <div className="w-full h-44 bg-neutral-200 flex items-center justify-center">

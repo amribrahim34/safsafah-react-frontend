@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { homeService } from "@/lib/api/services";
@@ -89,10 +90,12 @@ export default function BrandsSection() {
               className="bg-white rounded-lg border border-neutral-200 p-4 hover:shadow-md transition-shadow flex items-center justify-center"
             >
               {logoUrl ? (
-                <img
+                <Image
                   src={logoUrl}
                   alt={brandName}
-                  className="max-w-full max-h-16 object-contain"
+                  width={120}
+                  height={64}
+                  className="object-contain max-h-16 max-w-full"
                 />
               ) : (
                 <span className="text-sm font-semibold text-neutral-700">

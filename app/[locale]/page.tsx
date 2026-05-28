@@ -1,8 +1,8 @@
+import Image from "next/image";
 import { BRAND } from "@/content/brand";
 // import { COPY } from "@/content/copy";
 
 import ClientWrapper from "@/components/ClientWrapper";
-import Footer from "@/components/footer/Footer";
 import NewArrivals from "./_components/NewArrivals";
 import BestSellers from "./_components/BestSellers";
 import CategoriesSection from "./_components/CategoriesSection";
@@ -27,27 +27,16 @@ export default async function Home({ params }: PageProps) {
             ? 'صفصافه - أفضل منتجات العناية بالبشرة والتجميل' 
             : 'Safsafah - Premium Skincare & Cosmetics'}
         </h1>
-
         {/* Server-rendered content */}
-
-        
-        {/* <MoreBanners brand={BRAND} lang={lang} /> */}
-
         <NewArrivals brand={BRAND} />
-
         <section id="categories">
           <CategoriesSection />
         </section>
-
-
         <section id="banner_1" className="py-4"> 
           <div className=" ">
-            <img src="/banners/discover_cleanser.jpeg" alt="Discover Cleanser" className="h-full w-full" />
+            <Image src="/banners/discover_cleanser.jpeg" alt="Discover Cleanser" width={1920} height={600} className="w-full h-auto" />
           </div>
-        </section>
-
-        
-        
+        </section>  
         <section id="brands">
           <BrandsSection />
         </section>
