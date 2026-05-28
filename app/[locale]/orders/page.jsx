@@ -8,9 +8,6 @@ import { useDir } from "@/hooks/useDir";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchPaginatedOrders } from "@/store/slices/ordersSlice";
 
-import PromoBar from "@/components/header/PromoBar";
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
 import OrdersTabs from "@/components/orders/OrdersTabs";
 import OrderCard from "@/components/orders/OrderCard";
 
@@ -130,9 +127,6 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar   />
-      <Header brand={BRAND} searchPlaceholder={tHome('search')} lang={lang} />
-
       <main className="max-w-7xl mx-auto">
         <header className="px-4 pt-6 pb-3">
           <h1 className="text-2xl md:text-3xl font-extrabold">{isRTL ? "طلباتي 🛍️" : "My Orders 🛍️"}</h1>
@@ -223,8 +217,6 @@ export default function OrdersPage() {
           </div>
         </section>
       </main>
-
-      <Footer brand={BRAND} />
     </div>
   );
 }

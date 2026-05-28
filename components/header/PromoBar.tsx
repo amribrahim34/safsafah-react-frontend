@@ -1,6 +1,7 @@
 'use client';
 import Marquee from 'react-fast-marquee';
 import { useTranslation } from 'react-i18next';
+import '@/lib/i18n';
 
 
 

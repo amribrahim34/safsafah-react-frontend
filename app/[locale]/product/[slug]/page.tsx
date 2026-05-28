@@ -7,10 +7,6 @@ import type { Language } from "@/types/models/common";
 import type { BrandColors } from "@/types/models/brand";
 import type { LocalReview } from "./types";
 
-// Shared site chrome
-import PromoBar from "@/components/header/PromoBar";
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
 
 // Page-scoped components
 import ProductDescription from "./_components/ProductDescription";
@@ -91,25 +87,20 @@ export async function generateMetadata({
 // ─── Error fallback ────────────────────────────────────────────────────────────
 function ErrorState({
   lang,
-  brand,
   error,
 }: {
   lang: Language;
   brand: BrandColors;
   error?: string | null;
 }) {
-  const homeT = lang === 'ar' ? arHome : enHome;
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar />
-      <Header brand={brand} searchPlaceholder={homeT.search} />
-      <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
         <div className="text-xl text-red-600">
           {lang === "ar" ? "فشل تحميل المنتج" : "Failed to load product"}
         </div>
         {error && <div className="text-sm text-neutral-600 mt-2">{error}</div>}
       </div>
-      <Footer brand={brand} />
     </div>
   );
 }
@@ -149,9 +140,6 @@ export default async function ProductPage({
       {/* Structured data for Google rich results (price, stock, rating) */}
       <ProductJsonLd product={product} locale={locale} slug={slug} />
 
-      <PromoBar />
-      <Header brand={BRAND} searchPlaceholder={homeT.search} />
-
       {/* Server-rendered hero — h1, price, badges in initial HTML for SEO */}
       <ProductHero product={product} brand={BRAND} lang={lang} reviews={reviews} />
 
@@ -164,7 +152,6 @@ export default async function ProductPage({
       {/* Client chrome — analytics, reviews toggle, sticky bar, modals */}
       <ProductPageClient product={product} reviews={reviews} brand={BRAND} lang={lang} />
 
-      <Footer brand={BRAND} />
     </div>
   );
 }

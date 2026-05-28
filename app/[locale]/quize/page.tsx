@@ -11,9 +11,6 @@ import arQuize from '@/locales/ar/quize.json';
 import { useDir } from '@/hooks/useDir';
 import { useBeautyQuestionnaire, useBeautyProfileSubmit } from './_hooks/useBeautyQuestionnaire';
 
-import PromoBar from '@/components/header/PromoBar';
-import Header from '@/components/header/Header';
-import Footer from '@/components/footer/Footer';
 import FloatingCart from '@/components/appchrome/FloatingCart';
 
 import {
@@ -144,9 +141,6 @@ export default function SkinCareQuize() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar  />
-      <Header brand={BRAND} searchPlaceholder={tHome('search')} />
-
       <section className="max-w-5xl mx-auto px-4 pt-8 pb-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-neutral-900">
           {t.pageTitle}
@@ -215,8 +209,6 @@ export default function SkinCareQuize() {
           )}
         </div>
       </section>
-
-      <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
     </div>
   );

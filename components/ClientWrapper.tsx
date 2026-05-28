@@ -5,8 +5,6 @@ import '../lib/i18n';
 import { useLocale } from '@/lib/locale-navigation';
 import { BRAND } from '../content/brand';
 
-import PromoBar from './header/PromoBar';
-import Header from './header/Header';
 import HeroSlider from './home/hero/HeroSlider';
 import FloatingCart from './appchrome/FloatingCart';
 
@@ -27,8 +25,6 @@ export default function ClientWrapper({ children, className }: ClientWrapperProp
 
   return (
     <div id="home" className={`min-h-screen bg-white text-neutral-900${className ? ` ${className}` : ''}`}>
-      <PromoBar  />
-      <Header brand={BRAND} searchPlaceholder={t('search')} />
       <HeroSlider brand={BRAND} />
       
       {/* Server-rendered content passed as children */}

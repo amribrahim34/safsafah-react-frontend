@@ -1,7 +1,10 @@
 import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
 import BottomTabs from '@/components/appchrome/BottomTabs';
-
+import Footer from '@/components/footer/Footer';
+import { BRAND } from '@/content/brand';
+import PromoBar from '@/components/header/PromoBar';
+import Header from '@/components/header/Header';
 const inter = Inter({ subsets: ['latin'] });
 
 const metadataByLocale: Record<string, { title: string; description: string }> = {
@@ -41,7 +44,10 @@ type LayoutProps = {
 export default function LocaleLayout({ children }: LayoutProps) {
   return (
     <>
+      <PromoBar  />
+      <Header brand={BRAND} />
       {children}
+      <Footer brand={BRAND} />
       <BottomTabs />
     </>
   );

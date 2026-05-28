@@ -7,9 +7,6 @@ import { useLocale } from '@/lib/locale-navigation';
 import { useDir } from '@/hooks/useDir';
 import Image from 'next/image';
 import { BRAND } from '@/content/brand';
-import PromoBar from '@/components/header/PromoBar';
-import Header from '@/components/header/Header';
-import Footer from '@/components/footer/Footer';
 import VisionMission from './_components/VisionMission';
 import QuickFAQ from '@/components/QuickFAQ';
 import ContactPanel from './_components/ContactPanel';
@@ -17,7 +14,6 @@ import ContactPanel from './_components/ContactPanel';
 export default function AboutPage() {
   const lang = useLocale();
   const { t, i18n } = useTranslation('about');
-  const { t: tHome } = useTranslation('home');
   const [siteSettings, setSiteSettings] = useState(null);
 
   useDir();
@@ -40,9 +36,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900" dir={dir}>
-      <PromoBar />
-      <Header brand={BRAND} searchPlaceholder={tHome('search')} />
-
+      
       <main className="max-w-7xl mx-auto px-4">
         <section className="py-8 md:py-12 grid md:grid-cols-12 gap-6 items-start">
           <div className="md:col-span-7">
@@ -65,7 +59,6 @@ export default function AboutPage() {
         <ContactPanel brand={BRAND} siteSettings={siteSettings} t={t('contact', { returnObjects: true })} />
       </main>
 
-      <Footer brand={BRAND} />
     </div>
   );
 }

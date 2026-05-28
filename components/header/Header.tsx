@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -21,10 +22,9 @@ interface HeaderProps {
     dark: string;
     light: string;
   };
-  searchPlaceholder: string;
 }
 
-function HeaderContent({ brand, searchPlaceholder }: HeaderProps) {
+function HeaderContent({ brand }: HeaderProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
@@ -42,6 +42,8 @@ function HeaderContent({ brand, searchPlaceholder }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('searchQuery') ?? '');
 
   const isRTL = lang === 'ar';
+  const { t } = useTranslation('home');
+  const searchPlaceholder = t('search');
 
   // Keep search input in sync with URL params (e.g. on back/forward navigation)
   useEffect(() => {

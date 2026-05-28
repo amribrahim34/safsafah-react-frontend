@@ -11,9 +11,6 @@ import { useDir } from "@/hooks/useDir";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchCart, updateCartItem, removeFromCart, applyPromoCode } from "@/store/slices/cartsSlice";
 
-import PromoBar from "@/components/header/PromoBar";
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
 import FloatingCart from "@/components/appchrome/FloatingCart";
 
 import CartItem from "@/components/cart/CartItem";
@@ -33,7 +30,6 @@ export default function CartPage() {
   const lang: Language = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   const { t, i18n } = useTranslation('cart');
-  const { t: tHome } = useTranslation('home');
   if (i18n.language !== lang) i18n.changeLanguage(lang);
   useDir();
 
@@ -104,8 +100,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar />
-      <Header brand={BRAND} searchPlaceholder={tHome('search')} />
+     
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-4">
@@ -167,7 +162,6 @@ export default function CartPage() {
         )}
       </main>
 
-      <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
 
       {items.length > 0 && (

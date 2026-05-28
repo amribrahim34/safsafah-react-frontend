@@ -6,12 +6,8 @@ import '@/lib/i18n';
 import { useLocale } from '@/lib/locale-navigation';
 import { useDir } from '@/hooks/useDir';
 import { BRAND } from '@/content/brand';
-
-import PromoBar from '@/components/header/PromoBar';
-import Header from '@/components/header/Header';
 import ProductGrid from '@/components/products/ProductGrid';
 import FloatingCart from '@/components/appchrome/FloatingCart';
-import Footer from '@/components/footer/Footer';
 import SortBar from '@/components/catalog/sortbar/SortBar';
 import ResultsMeta from '@/components/catalog/resultmeta/ResultsMeta';
 import FilterPillBar from '@/components/catalog/filters/FilterPillBar';
@@ -33,7 +29,7 @@ export default function CatalogPage() {
 function CatalogPageContent() {
   const locale = useLocale();
   const isRTL = locale === 'ar';
-  const { t, i18n } = useTranslation('home');
+  const { i18n } = useTranslation('home');
   if (i18n.language !== locale) i18n.changeLanguage(locale);
   useDir();
 
@@ -59,8 +55,6 @@ function CatalogPageContent() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar  />
-      <Header brand={BRAND} searchPlaceholder={t('search')} />
 
       {/* Page title + sort */}
       <section className="max-w-7xl mx-auto px-4 pt-6">
@@ -150,8 +144,6 @@ function CatalogPageContent() {
           </main>
         </div>
       </section>
-
-      <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
     </div>
   );

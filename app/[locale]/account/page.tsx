@@ -6,9 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { BRAND } from '@/content/brand';
 import { useAppSelector } from '@/store/hooks';
 
-import PromoBar from '@/components/header/PromoBar';
-import Header from '@/components/header/Header';
-import Footer from '@/components/footer/Footer';
 import OverviewHeader from './_components/OverviewHeader';
 import OrdersList from './_components/OrdersList';
 import WishlistGrid from './_components/WishlistGrid';
@@ -31,7 +28,6 @@ export default function ProfilePage() {
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   const { t, i18n } = useTranslation('account');
-  const { t: tHome } = useTranslation('home');
   if (i18n.language !== lang) i18n.changeLanguage(lang);
 
   const user = useAppSelector((state) => state.auth.user);
@@ -45,8 +41,6 @@ export default function ProfilePage() {
   const supportT = t('support', { returnObjects: true }) as SupportTranslations;
 
   const pageLoading = t('page.loading');
-  const searchPlaceholder = tHome('search') as string;
-  const promoText = tHome('promo') as string;
 
   if (isLoading && !user) {
     return (
@@ -54,8 +48,6 @@ export default function ProfilePage() {
         className="min-h-screen bg-white text-neutral-900"
         dir={lang === 'ar' ? 'rtl' : 'ltr'}
       >
-        <PromoBar  />
-        <Header brand={BRAND} searchPlaceholder={searchPlaceholder} />
         <main className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
@@ -76,8 +68,6 @@ export default function ProfilePage() {
       className="min-h-screen bg-white text-neutral-900"
       dir={lang === 'ar' ? 'rtl' : 'ltr'}
     >
-      <PromoBar  />
-      <Header brand={BRAND} searchPlaceholder={searchPlaceholder} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         {user && (
@@ -100,7 +90,6 @@ export default function ProfilePage() {
         </div>
       </main>
 
-      <Footer brand={BRAND} />
     </div>
   );
 }

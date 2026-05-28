@@ -8,9 +8,6 @@ import { useDir } from '@/hooks/useDir';
 import { BRAND } from '@/content/brand';
 import { settingsService, type SiteSettings } from '@/lib/api/services';
 
-import PromoBar from '@/components/header/PromoBar';
-import Header from '@/components/header/Header';
-import Footer from '@/components/footer/Footer';
 import QuickFAQ from '@/components/QuickFAQ';
 import ContactCards from './_components/ContactCards';
 import ContactForm, { type ContactFormTranslations } from './_components/ContactForm';
@@ -22,7 +19,6 @@ export default function ContactPage() {
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   const { t, i18n } = useTranslation('contact');
-  const { t: tHome } = useTranslation('home');
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
 
   useDir();
@@ -37,9 +33,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900" dir={dir}>
-      <PromoBar />
-      <Header brand={BRAND} searchPlaceholder={tHome('search')} />
-
+     
       <main className="max-w-7xl mx-auto">
         <header className="px-4 pt-6 pb-4">
           <h1 className="text-2xl md:text-3xl font-extrabold">{t('pageTitle')}</h1>
@@ -75,7 +69,6 @@ export default function ContactPage() {
         </section>
       </main>
 
-      <Footer brand={BRAND} />
     </div>
   );
 }

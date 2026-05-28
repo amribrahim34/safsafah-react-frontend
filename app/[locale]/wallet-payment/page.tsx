@@ -7,7 +7,6 @@ import '@/lib/i18n';
 import { BRAND } from "@/content/brand";
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
 import FloatingCart from "@/components/appchrome/FloatingCart";
 import { settingsService, type SiteSettings } from '@/lib/api/services';
 import type { Language } from '@/types/models/common';
@@ -69,8 +68,6 @@ function WalletPaymentContent() {
   return (
     <div className="min-h-screen bg-white text-neutral-900" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <PromoBar  />
-      <Header brand={BRAND} searchPlaceholder={tHome('search')} />
-
       <main className="max-w-3xl mx-auto px-4 py-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-1">
           {t('title')}
@@ -117,8 +114,6 @@ function WalletPaymentContent() {
           </form>
         </section>
       </main>
-
-      <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
     </div>
   );

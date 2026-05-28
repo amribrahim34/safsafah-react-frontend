@@ -7,8 +7,6 @@ import { useDir } from '../hooks/useDir';
 import { useLocale } from '@/lib/locale-navigation';
 import { BRAND } from '../content/brand';
 
-import PromoBar from './header/PromoBar';
-import Header from './header/Header';
 import HeroSlider from './home/hero/HeroSlider';
 
 interface LocaleProviderProps {
@@ -16,7 +14,7 @@ interface LocaleProviderProps {
 }
 
 export default function LocaleProvider({ children }: LocaleProviderProps) {
-  const { t, i18n } = useTranslation('home');
+  const { i18n } = useTranslation('home');
   const lang = useLocale(); // Get locale from URL
   useDir(); // Automatically syncs with URL
 
@@ -29,8 +27,6 @@ export default function LocaleProvider({ children }: LocaleProviderProps) {
 
   return (
     <>
-      <PromoBar  />
-      <Header brand={BRAND} searchPlaceholder={t('search')} />
       <HeroSlider brand={BRAND} />
       
       {/* Server-rendered content passed as children */}

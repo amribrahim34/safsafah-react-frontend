@@ -3,21 +3,16 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import '@/lib/i18n';
-import { BRAND } from "@/content/brand";
 import { useDir } from "@/hooks/useDir";
 
-import PromoBar from "@/components/header/PromoBar";
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
 // ---- Return & Refund Policy Page ----
 // Default language is AR. No borders between blocks. Clean, consistent styling.
 
 export default function RefundPolicy({ lastUpdated }) {
   // Default Arabic
-  const [lang, setLang] = useState("ar");
-  const { t: tHome, i18n } = useTranslation('home');
+  const [lang] = useState("ar");
+  const {  i18n } = useTranslation('home');
   if (i18n.language !== lang) i18n.changeLanguage(lang);
-  const isRTL = lang === "ar";
   useDir();
 
   const updated = useMemo(() => {
@@ -208,9 +203,7 @@ export default function RefundPolicy({ lastUpdated }) {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar />
-      <Header brand={BRAND} searchPlaceholder={tHome('search')} lang={lang} />
-
+     
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Page header */}
         <header className="mb-6">
@@ -248,7 +241,6 @@ export default function RefundPolicy({ lastUpdated }) {
         </div>
       </main>
 
-      <Footer brand={BRAND} />
     </div>
   );
 }

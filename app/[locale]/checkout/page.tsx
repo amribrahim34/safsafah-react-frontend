@@ -15,9 +15,6 @@ import { fetchUserProfile } from "@/store/slices/authSlice";
 import { AddressResponse } from "@/types/models/common";
 import { CreateOrderApiRequest } from "@/types/models/order";
 
-import PromoBar from "@/components/header/PromoBar";
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
 import FloatingCart from "@/components/appchrome/FloatingCart";
 
 import OrderSummary from "@/components/cart/OrderSummary";
@@ -36,7 +33,6 @@ export default function CheckoutQuickPage() {
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   const { t, i18n } = useTranslation('checkout');
-  const { t: tHome } = useTranslation('home');
   if (i18n.language !== lang) i18n.changeLanguage(lang);
 
   useDir();
@@ -283,9 +279,6 @@ export default function CheckoutQuickPage() {
         />
       )}
 
-      <PromoBar />
-      <Header brand={BRAND} searchPlaceholder={tHome('search') as string} />
-
       <form onSubmit={placeOrder} className="max-w-7xl mx-auto px-4 py-6 grid gap-6 md:grid-cols-[minmax(0,1fr),420px]">
         {/* LEFT */}
         <section className="space-y-4">
@@ -360,7 +353,6 @@ export default function CheckoutQuickPage() {
         fmt={fmt}
       />
 
-      <Footer brand={BRAND} />
       <FloatingCart brand={BRAND} />
     </div>
   );
