@@ -283,10 +283,7 @@ export default function CheckoutQuickPage() {
         />
       )}
 
-      <PromoBar
-        text={tHome('promo') as string}
-        brand={BRAND}
-      />
+      <PromoBar />
       <Header brand={BRAND} searchPlaceholder={tHome('search') as string} />
 
       <form onSubmit={placeOrder} className="max-w-7xl mx-auto px-4 py-6 grid gap-6 md:grid-cols-[minmax(0,1fr),420px]">

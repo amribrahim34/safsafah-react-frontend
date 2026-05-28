@@ -208,12 +208,7 @@ export default function RefundPolicy({ lastUpdated }) {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar
-        text={tHome('promo')}
-        lang={lang}
-        onToggleLang={() => setLang((prev) => (prev === "en" ? "ar" : "en"))}
-        brand={BRAND}
-      />
+      <PromoBar />
       <Header brand={BRAND} searchPlaceholder={tHome('search')} lang={lang} />
 
       <main className="max-w-4xl mx-auto px-4 py-8">

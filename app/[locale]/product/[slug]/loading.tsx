@@ -7,7 +7,7 @@ import Footer from "@/components/footer/Footer";
 export default function ProductLoading() {
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={arHome.promo} brand={BRAND} />
+      <PromoBar />
       <Header brand={BRAND} searchPlaceholder={arHome.search} />
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
         <div className="text-xl text-neutral-500 animate-pulse">

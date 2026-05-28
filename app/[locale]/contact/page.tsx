@@ -37,7 +37,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900" dir={dir}>
-      <PromoBar text={tHome('promo')} brand={BRAND} />
+      <PromoBar />
       <Header brand={BRAND} searchPlaceholder={tHome('search')} />
 
       <main className="max-w-7xl mx-auto">

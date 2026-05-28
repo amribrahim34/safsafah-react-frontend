@@ -29,7 +29,7 @@ export default function LocaleProvider({ children }: LocaleProviderProps) {
 
   return (
     <>
-      <PromoBar text={t('promo')} brand={BRAND} />
+      <PromoBar  />
       <Header brand={BRAND} searchPlaceholder={t('search')} />
       <HeroSlider brand={BRAND} />
       

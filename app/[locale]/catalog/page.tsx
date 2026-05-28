@@ -59,7 +59,7 @@ function CatalogPageContent() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={t('promo')} brand={BRAND} />
+      <PromoBar  />
       <Header brand={BRAND} searchPlaceholder={t('search')} />
 
       {/* Page title + sort */}

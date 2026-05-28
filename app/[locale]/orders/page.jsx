@@ -130,7 +130,7 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={tHome('promo')} lang={lang} onToggleLang={() => setLang(isRTL ? "en" : "ar")} brand={BRAND} />
+      <PromoBar   />
       <Header brand={BRAND} searchPlaceholder={tHome('search')} lang={lang} />
 
       <main className="max-w-7xl mx-auto">

@@ -144,7 +144,7 @@ export default function SkinCareQuize() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={tHome('promo')} brand={BRAND} />
+      <PromoBar  />
       <Header brand={BRAND} searchPlaceholder={tHome('search')} />
 
       <section className="max-w-5xl mx-auto px-4 pt-8 pb-6">

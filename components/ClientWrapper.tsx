@@ -27,7 +27,7 @@ export default function ClientWrapper({ children, className }: ClientWrapperProp
 
   return (
     <div id="home" className={`min-h-screen bg-white text-neutral-900${className ? ` ${className}` : ''}`}>
-      <PromoBar text={t('promo')} brand={BRAND} />
+      <PromoBar  />
       <Header brand={BRAND} searchPlaceholder={t('search')} />
       <HeroSlider brand={BRAND} />
       

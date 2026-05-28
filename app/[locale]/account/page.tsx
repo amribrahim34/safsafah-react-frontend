@@ -54,7 +54,7 @@ export default function ProfilePage() {
         className="min-h-screen bg-white text-neutral-900"
         dir={lang === 'ar' ? 'rtl' : 'ltr'}
       >
-        <PromoBar text={promoText} brand={BRAND} />
+        <PromoBar  />
         <Header brand={BRAND} searchPlaceholder={searchPlaceholder} />
         <main className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-center min-h-[400px]">
@@ -76,7 +76,7 @@ export default function ProfilePage() {
       className="min-h-screen bg-white text-neutral-900"
       dir={lang === 'ar' ? 'rtl' : 'ltr'}
     >
-      <PromoBar text={promoText} brand={BRAND} />
+      <PromoBar  />
       <Header brand={BRAND} searchPlaceholder={searchPlaceholder} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">

@@ -104,7 +104,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={tHome('promo')} brand={BRAND} />
+      <PromoBar />
       <Header brand={BRAND} searchPlaceholder={tHome('search')} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">

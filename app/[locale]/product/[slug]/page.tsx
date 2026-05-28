@@ -101,7 +101,7 @@ function ErrorState({
   const homeT = lang === 'ar' ? arHome : enHome;
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <PromoBar text={homeT.promo} brand={brand} />
+      <PromoBar />
       <Header brand={brand} searchPlaceholder={homeT.search} />
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
         <div className="text-xl text-red-600">
@@ -149,7 +149,7 @@ export default async function ProductPage({
       {/* Structured data for Google rich results (price, stock, rating) */}
       <ProductJsonLd product={product} locale={locale} slug={slug} />
 
-      <PromoBar text={homeT.promo} brand={BRAND} />
+      <PromoBar />
       <Header brand={BRAND} searchPlaceholder={homeT.search} />
 
       {/* Server-rendered hero — h1, price, badges in initial HTML for SEO */}
