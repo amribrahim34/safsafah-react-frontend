@@ -33,7 +33,9 @@ export default function CheckoutQuickPage() {
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   const { t, i18n } = useTranslation('checkout');
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
+  useEffect(() => {
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
+  }, [lang, i18n]);
 
   useDir();
   const router = useRouter();

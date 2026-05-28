@@ -28,12 +28,12 @@ function WalletPaymentContent() {
 
   const { t, i18n } = useTranslation('walletPayment');
   const { t: tHome } = useTranslation('home');
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
 
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   useEffect(() => {
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
     settingsService.getSettings().then(setSiteSettings).catch(() => {});
-  }, []);
+  }, [lang, i18n]);
 
   const walletNumber = searchParams.get('walletNumber') || siteSettings?.mobile || "—";
   const [orderRef] = useState<string>(() => searchParams.get('orderRef') || `SFS-${Date.now()}`);

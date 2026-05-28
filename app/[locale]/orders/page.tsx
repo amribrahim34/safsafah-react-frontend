@@ -75,7 +75,9 @@ const mapApiOrderToUI = (apiOrder: PaginatedOrderItem, lang: string): UIOrder =>
 export default function OrdersPage() {
   const [lang, setLang] = useState('ar');
   const { i18n } = useTranslation('home');
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
+  useEffect(() => {
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
+  }, [lang, i18n]);
   useDir();
   const isRTL = lang === 'ar';
   const dispatch = useAppDispatch();

@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import '@/lib/i18n';
 import { useLocale } from '@/lib/locale-navigation';
@@ -30,7 +30,9 @@ function CatalogPageContent() {
   const locale = useLocale();
   const isRTL = locale === 'ar';
   const { i18n } = useTranslation('home');
-  if (i18n.language !== locale) i18n.changeLanguage(locale);
+  useEffect(() => {
+    if (i18n.language !== locale) i18n.changeLanguage(locale);
+  }, [locale, i18n]);
   useDir();
 
   const {

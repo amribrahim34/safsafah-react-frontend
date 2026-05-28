@@ -1,6 +1,7 @@
 'use client';
 
 import '@/lib/i18n';
+import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { BRAND } from '@/content/brand';
@@ -28,7 +29,9 @@ export default function ProfilePage() {
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   const { t, i18n } = useTranslation('account');
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
+  useEffect(() => {
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
+  }, [lang, i18n]);
 
   const user = useAppSelector((state) => state.auth.user);
   const isLoading = useAppSelector((state) => state.auth.isLoading);

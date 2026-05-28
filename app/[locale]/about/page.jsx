@@ -18,10 +18,9 @@ export default function AboutPage() {
 
   useDir();
 
-  // Sync i18next language with the URL locale before render to avoid hydration mismatch
-  if (i18n.language !== lang) {
-    i18n.changeLanguage(lang);
-  }
+  useEffect(() => {
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
+  }, [lang, i18n]);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/settings`, {

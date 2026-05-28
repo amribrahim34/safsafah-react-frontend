@@ -4,11 +4,15 @@ import { useAppSelector } from "@/store/hooks";
 import { Home, Grid2X2, ShoppingCart, User2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function BottomTabs() {
   const pathname = usePathname();
   const { locale } = useParams();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const authState = mounted ? isAuthenticated : false;
 
   const isAr = locale === 'ar';
   const labels = {
@@ -29,7 +33,7 @@ export default function BottomTabs() {
     <nav className="fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur border-t border-neutral-200 md:hidden">
       <div className="flex justify-around text-xs">
         {tabs.map((tab) => {
-          if (tab.auth && !isAuthenticated) return null;
+          if (tab.auth && !authState) return null;
           const Icon = tab.icon;
           const isActive = pathname === tab.path;
           return (

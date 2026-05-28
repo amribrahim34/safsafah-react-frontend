@@ -81,10 +81,14 @@ export default function Footer({ brand }: FooterProps) {
   const isRTL = locale === "ar";
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-  
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     settingsService.getSettings().then(setSettings).catch(() => {});
   }, []);
+
+  const authState = mounted ? isAuthenticated : false;
 
   // Translation mapping
   const translations: Record<"ar" | "en", FooterTranslations> = {
@@ -190,7 +194,7 @@ export default function Footer({ brand }: FooterProps) {
                 {isRTL ? "الفئات" : "Categories"}
               </Link>
             </li> */}
-            <li className={isAuthenticated ? '' : '!hidden'}>
+            <li className={authState ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/quize', locale)} 
                 className="hover:underline transition-colors"
@@ -223,7 +227,7 @@ export default function Footer({ brand }: FooterProps) {
         {/* Help & Account - Collapsible on mobile */}
         <FooterSection title={t.helpAccount}>
           <ul className="space-y-2 text-sm">
-            <li className={isAuthenticated ? '' : '!hidden'}>
+            <li className={authState ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/account', locale)} 
                 className="hover:underline transition-colors"
@@ -232,7 +236,7 @@ export default function Footer({ brand }: FooterProps) {
                 {t.myAccount}
               </Link>
             </li>
-            <li className={isAuthenticated ? '' : '!hidden'}>
+            <li className={authState ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/orders', locale)} 
                 className="hover:underline transition-colors"
@@ -241,7 +245,7 @@ export default function Footer({ brand }: FooterProps) {
                 {t.myOrders}
               </Link>
             </li>
-            <li className={isAuthenticated ? '' : '!hidden'}>
+            <li className={authState ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/cart', locale)} 
                 className="hover:underline transition-colors"
@@ -250,7 +254,7 @@ export default function Footer({ brand }: FooterProps) {
                 {t.shoppingCart}
               </Link>
             </li>
-            <li className={isAuthenticated ? '' : '!hidden'}>
+            <li className={authState ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/checkout', locale)} 
                 className="hover:underline transition-colors"

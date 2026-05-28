@@ -23,11 +23,10 @@ export default function ContactPage() {
 
   useDir();
 
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
-
   useEffect(() => {
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
     settingsService.getSettings().then(setSiteSettings).catch(() => {});
-  }, []);
+  }, [lang, i18n]);
 
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
 

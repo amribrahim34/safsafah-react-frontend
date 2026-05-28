@@ -30,7 +30,9 @@ export default function CartPage() {
   const lang: Language = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
   const { t, i18n } = useTranslation('cart');
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
+  useEffect(() => {
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
+  }, [lang, i18n]);
   useDir();
 
   const [promo, setPromo] = useState("");

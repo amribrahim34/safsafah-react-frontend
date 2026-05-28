@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import '@/lib/i18n';
 import { useDir } from "@/hooks/useDir";
@@ -11,8 +11,10 @@ import { useDir } from "@/hooks/useDir";
 export default function RefundPolicy({ lastUpdated }) {
   // Default Arabic
   const [lang] = useState("ar");
-  const {  i18n } = useTranslation('home');
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
+  const { i18n } = useTranslation('home');
+  useEffect(() => {
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
+  }, [lang, i18n]);
   useDir();
 
   const updated = useMemo(() => {
