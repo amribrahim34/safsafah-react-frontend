@@ -196,8 +196,8 @@ export function useCatalogFilters(lang: Locale) {
       }
     });
 
-    router.push(`/catalog?${params.toString()}`);
-  }, [priceRange, selectedCategoryIds, selectedBrandIds, selectedSkinTypeIds, selectedSkinConcernIds, searchQuery, recommended, router]);
+    router.push(`/${lang}/catalog?${params.toString()}`);
+  }, [priceRange, selectedCategoryIds, selectedBrandIds, selectedSkinTypeIds, selectedSkinConcernIds, searchQuery, recommended, router, lang]);
 
   /**
    * Handle page change
@@ -209,9 +209,9 @@ export function useCatalogFilters(lang: Locale) {
 
       const params = new URLSearchParams(searchParams.toString());
       params.set('page', String(newPage));
-      router.push(`/catalog?${params.toString()}`);
+      router.push(`/${lang}/catalog?${params.toString()}`);
     },
-    [localFilters, searchParams, router],
+    [localFilters, searchParams, router, lang],
   );
 
   /**
@@ -236,9 +236,9 @@ export function useCatalogFilters(lang: Locale) {
         params.delete('sortBy');
         params.delete('sortOrder');
       }
-      router.push(`/catalog?${params.toString()}`);
+      router.push(`/${lang}/catalog?${params.toString()}`);
     },
-    [localFilters, searchParams, router],
+    [localFilters, searchParams, router, lang],
   );
 
   /**
@@ -247,8 +247,8 @@ export function useCatalogFilters(lang: Locale) {
   const clearAllFilters = useCallback(() => {
     const resetFilters: ProductFilters = { page: 1, limit: 12 };
     setLocalFilters(resetFilters);
-    router.push('/catalog');
-  }, [router]);
+    router.push(`/${lang}/catalog`);
+  }, [router, lang]);
 
   /**
    * Clear specific filter
@@ -261,9 +261,9 @@ export function useCatalogFilters(lang: Locale) {
 
       const params = new URLSearchParams(searchParams.toString());
       params.delete(filterKey);
-      router.push(`/catalog?${params.toString()}`);
+      router.push(`/${lang}/catalog?${params.toString()}`);
     },
-    [localFilters, searchParams, router],
+    [localFilters, searchParams, router, lang],
   );
 
   /**
