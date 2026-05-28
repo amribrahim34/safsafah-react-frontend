@@ -1,10 +1,10 @@
 import { Star, Plus, Check, Sparkles, Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addToCart } from "@/store/slices/cartsSlice";
 import { useParams } from "next/navigation";
 import { getLocalizedPath } from "@/lib/locale-navigation";
+import { useCardCart } from "@/hooks/useCardCart";
+import { useCardWishlist } from "@/hooks/useCardWishlist";
 
 interface ProductCardProps {
   id: number;
@@ -41,48 +41,39 @@ export default function ProductCard({
   image,
   isRecommended = false,
   isInWishlist = false,
-  brand
+  brand,
 }: ProductCardProps) {
-  const dispatch = useAppDispatch();
-  const cart = useAppSelector((state) => state.cart.cart);
-  const isLoading = useAppSelector((state) => state.cart.isLoading);
   const params = useParams();
   const locale = params?.locale as string | undefined;
-  const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
+  const lang = (locale === "en" || locale === "ar") ? locale : "ar";
 
-  const cartItem = cart?.items?.find(
-    (item: { productId: number; id: number; quantity: number }) => item.productId === id
-  );
+  const { isInCart, isLoading: cartLoading, handleAddToCart } = useCardCart(id, lang);
+  const { isInWishlist: cardIsInWishlist, isLoading: wishlistLoading, handleToggle } = useCardWishlist(id, isInWishlist, lang);
 
   const priceFmt = new Intl.NumberFormat(
     lang === "ar" ? "ar-EG" : "en-EG",
     { style: "currency", currency: "EGP", maximumFractionDigits: 0 }
   ).format(price);
 
-  const productUrl = getLocalizedPath(`/product/${lang === 'ar' ? (slugAr ?? id) : (slugEn ?? id)}`, lang);
+  const productUrl = getLocalizedPath(
+    `/product/${lang === "ar" ? (slugAr ?? id) : (slugEn ?? id)}`,
+    lang
+  );
 
-  const handleAddToCart = async () => {
-    try {
-      await dispatch(addToCart({ productId: id, quantity: 1 })).unwrap();
-    } catch (error) {
-      console.error('Failed to add to cart:', error);
-    }
-  };
+  const borderStyle = isRecommended
+    ? { border: `2px solid ${brand.primary}` }
+    : cardIsInWishlist
+    ? { border: "2px solid #ef4444" }
+    : {};
 
   return (
     <div
-      className="flex flex-col rounded-2xl bg-white overflow-hidden shadow-lg "
-      style={{
-        border: isRecommended
-          ? `2px solid ${brand.primary}`
-          : isInWishlist
-          ? "2px solid #ef4444"
-          : "",
-      }}
+      className="flex flex-col rounded-2xl bg-white overflow-hidden shadow-lg"
+      style={borderStyle}
     >
       {/* Product image */}
-      <Link href={productUrl}>
-        <div className="relative h-36 sm:h-56">
+      <div className="relative h-36 sm:h-56">
+        <Link href={productUrl} className="block w-full h-full">
           {image ? (
             <Image
               src={image}
@@ -92,24 +83,35 @@ export default function ProductCard({
               loading="lazy"
             />
           ) : null}
+        </Link>
 
-          {isRecommended && (
-            <div
-              className="absolute top-2 end-2 flex items-center gap-1 text-white text-xs font-bold px-2 py-1 rounded-full shadow"
-              style={{ backgroundColor: brand.primary }}
-            >
-              <Sparkles className="w-3 h-3" />
-              <span>{lang === "ar" ? "موصى به" : "Recommended"}</span>
-            </div>
-          )}
+        {isRecommended && (
+          <div
+            className="absolute top-2 end-2 flex items-center gap-1 text-white text-xs font-bold px-2 py-1 rounded-full shadow"
+            style={{ backgroundColor: brand.primary }}
+          >
+            <Sparkles className="w-3 h-3" />
+            <span>{lang === "ar" ? "موصى به" : "Recommended"}</span>
+          </div>
+        )}
 
-          {isInWishlist && (
-            <div className="absolute top-2 start-2 bg-white rounded-full p-1.5 shadow">
-              <Heart className="w-4 h-4 fill-red-500 text-red-500" />
-            </div>
-          )}
-        </div>
-      </Link>
+        {/* Wishlist button — always visible, top-start */}
+        <button
+          onClick={handleToggle}
+          disabled={wishlistLoading}
+          aria-label={cardIsInWishlist
+            ? (lang === "ar" ? "إزالة من المفضلة" : "Remove from favorites")
+            : (lang === "ar" ? "إضافة إلى المفضلة" : "Add to favorites")
+          }
+          className="absolute top-2 start-2 bg-white rounded-full p-1.5 shadow transition-opacity hover:opacity-80 disabled:opacity-50"
+        >
+          <Heart
+            className={`w-4 h-4 ${
+              cardIsInWishlist ? "fill-red-500 text-red-500" : "text-gray-400"
+            }`}
+          />
+        </button>
+      </div>
 
       <div className="p-2 sm:p-3 flex flex-col flex-1">
         {/* Brand name */}
@@ -117,13 +119,13 @@ export default function ProductCard({
           brandId ? (
             <Link
               href={getLocalizedPath(`/catalog?brandIds=${brandId}`, lang)}
-              className="text-xs lg:text-base font-semibold lg:font-bold mb-0.5 "
+              className="text-xs lg:text-base font-semibold lg:font-bold mb-0.5"
               style={{ color: brand.primary }}
             >
               {lang === "ar" ? brandNameAr : brandNameEn}
             </Link>
           ) : (
-            <div className="text-xs mb-0.5 " style={{ color: brand.primary }}>
+            <div className="text-xs mb-0.5" style={{ color: brand.primary }}>
               {lang === "ar" ? brandNameAr : brandNameEn}
             </div>
           )
@@ -131,7 +133,7 @@ export default function ProductCard({
 
         {/* Name */}
         <div className="flex-1 min-w-0">
-          <Link href={productUrl} className=" text-xs lg:text-base font-bold line-clamp-2">
+          <Link href={productUrl} className="text-xs lg:text-base font-bold line-clamp-2">
             {lang === "ar" ? nameAr : nameEn}
           </Link>
         </div>
@@ -152,24 +154,24 @@ export default function ProductCard({
             {/* Price */}
             <div className="text-sm lg:text-base font-bold">{priceFmt}</div>
 
-            {!cartItem ? (
+            {!isInCart ? (
               <button
                 onClick={handleAddToCart}
-                disabled={isLoading}
+                disabled={cartLoading}
                 className="rounded text-white md:px-3 md:py-2 px-2 py-1 hover:opacity-90 transition-opacity disabled:opacity-50 flex"
                 style={{ background: brand.primary }}
               >
-                {isLoading ? "..." : <Plus className="w-4 h-4" />}
+                {cartLoading ? "..." : <Plus className="w-4 h-4" />}
               </button>
             ) : (
               <Link
-                href={getLocalizedPath('/cart', lang)}
+                href={getLocalizedPath("/cart", lang)}
                 className="flex items-center gap-1 rounded text-white md:px-3 md:py-2 px-2 py-1 text-xs font-semibold hover:opacity-90 transition-opacity"
-                style={{ background: '#8DA78A' }}
+                style={{ background: "#8DA78A" }}
               >
                 <Check className="w-4 h-4" />
                 <span className="hidden sm:inline">
-                  {lang === 'ar' ? 'في السلة' : 'In Cart'}
+                  {lang === "ar" ? "في السلة" : "In Cart"}
                 </span>
               </Link>
             )}

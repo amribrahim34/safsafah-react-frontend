@@ -11,3 +11,17 @@ export function createThemedSwal(isRtl = false) {
     },
   });
 }
+
+export function showProductToast(message: string, isRtl = false) {
+  Swal.mixin({
+    toast: true,
+    position: isRtl ? 'top-start' : 'top-end',
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true,
+    didOpen: (popup) => {
+      popup.style.fontFamily = 'var(--font-cairo), sans-serif';
+      if (isRtl) popup.style.direction = 'rtl';
+    },
+  }).fire({ icon: 'success', title: message });
+}

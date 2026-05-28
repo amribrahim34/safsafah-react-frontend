@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import { wishlistService } from '@/lib/api';
 import type { WishlistItemResponse } from '@/types';
 
@@ -77,6 +77,17 @@ const wishlistSlice = createSlice({
     setWishlistItems: (state, action) => {
       state.items = action.payload;
     },
+    /**
+     * Toggle a single item for guest users (no API call)
+     */
+    toggleLocalItem: (state, action: PayloadAction<number>) => {
+      const idx = state.items.indexOf(action.payload);
+      if (idx >= 0) {
+        state.items.splice(idx, 1);
+      } else {
+        state.items.push(action.payload);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -119,6 +130,6 @@ const wishlistSlice = createSlice({
   },
 });
 
-export const { clearError, clearWishlist, setWishlistItems } = wishlistSlice.actions;
+export const { clearError, clearWishlist, setWishlistItems, toggleLocalItem } = wishlistSlice.actions;
 
 export default wishlistSlice.reducer;
