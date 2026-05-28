@@ -3,6 +3,7 @@ import { BRAND } from "@/content/brand";
 // import { COPY } from "@/content/copy";
 
 import ClientWrapper from "@/components/ClientWrapper";
+import MoreBanners from "./_components/MoreBanners";
 import NewArrivals from "./_components/NewArrivals";
 import BestSellers from "./_components/BestSellers";
 import CategoriesSection from "./_components/CategoriesSection";
@@ -29,6 +30,7 @@ export default async function Home({ params }: PageProps) {
         </h1>
         {/* Server-rendered content */}
         <NewArrivals brand={BRAND} />
+        <MoreBanners />
         <section id="categories">
           <CategoriesSection />
         </section>

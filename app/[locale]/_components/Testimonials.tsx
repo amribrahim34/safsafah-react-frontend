@@ -1,13 +1,24 @@
-import React from "react";
+"use client";
+
+import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { Star } from "lucide-react";
-const DATA = [
+
+interface TestimonialItem {
+  name: string;
+  city: string;
+  rating: number;
+  img: string;
+  textIndex: number;
+}
+
+const DATA: TestimonialItem[] = [
   { name: "Nour", city: "Cairo", rating: 5, img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=2000&auto=format&fit=crop", textIndex: 0 },
   { name: "Omar", city: "Giza", rating: 4, img: "/products/retinol-eye-cream-1.jpg", textIndex: 1 },
   { name: "Mariam", city: "Alex", rating: 5, img: "/hero/hero2.jpeg", textIndex: 2 },
 ];
 
-export default function Testimonials({ brand, lang = "ar" }) {
+export default function Testimonials() {
   const { t } = useTranslation('home');
 
   return (
@@ -23,7 +34,7 @@ export default function Testimonials({ brand, lang = "ar" }) {
               className="snap-center min-w-[85%] max-w-sm md:min-w-[320px] rounded-2xl border border-neutral-200 bg-white p-4">
               <header className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden border">
-                  <img src={r.img} alt="avatar" className="w-full h-full object-cover" />
+                  <Image src={r.img} alt="avatar" width={40} height={40} className="w-full h-full object-cover" />
                 </div>
                 <div className="min-w-0">
                   <div className="font-semibold">{r.name} · {r.city}</div>
