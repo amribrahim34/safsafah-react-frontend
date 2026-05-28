@@ -6,6 +6,7 @@ import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa6";
 import Link from "next/link";
 import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
 import { settingsService, type SiteSettings } from "@/lib/api/services";
+import { useAppSelector } from '@/store/hooks';
 
 interface FooterProps {
   brand: {
@@ -79,7 +80,8 @@ export default function Footer({ brand }: FooterProps) {
   const locale = useLocale();
   const isRTL = locale === "ar";
   const [settings, setSettings] = useState<SiteSettings | null>(null);
-
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  
   useEffect(() => {
     settingsService.getSettings().then(setSettings).catch(() => {});
   }, []);
@@ -170,7 +172,7 @@ export default function Footer({ brand }: FooterProps) {
                 {isRTL ? "المنتجات" : "Products"}
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link 
                 href={getLocalizedPath('/catalog?sort=bestsellers', locale)} 
                 className="hover:underline transition-colors"
@@ -187,8 +189,8 @@ export default function Footer({ brand }: FooterProps) {
               >
                 {isRTL ? "الفئات" : "Categories"}
               </Link>
-            </li>
-            <li>
+            </li> */}
+            <li className={isAuthenticated ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/quize', locale)} 
                 className="hover:underline transition-colors"
@@ -221,7 +223,7 @@ export default function Footer({ brand }: FooterProps) {
         {/* Help & Account - Collapsible on mobile */}
         <FooterSection title={t.helpAccount}>
           <ul className="space-y-2 text-sm">
-            <li>
+            <li className={isAuthenticated ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/account', locale)} 
                 className="hover:underline transition-colors"
@@ -230,7 +232,7 @@ export default function Footer({ brand }: FooterProps) {
                 {t.myAccount}
               </Link>
             </li>
-            <li>
+            <li className={isAuthenticated ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/orders', locale)} 
                 className="hover:underline transition-colors"
@@ -239,7 +241,7 @@ export default function Footer({ brand }: FooterProps) {
                 {t.myOrders}
               </Link>
             </li>
-            <li>
+            <li className={isAuthenticated ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/cart', locale)} 
                 className="hover:underline transition-colors"
@@ -248,7 +250,7 @@ export default function Footer({ brand }: FooterProps) {
                 {t.shoppingCart}
               </Link>
             </li>
-            <li>
+            <li className={isAuthenticated ? '' : '!hidden'}>
               <Link 
                 href={getLocalizedPath('/checkout', locale)} 
                 className="hover:underline transition-colors"
