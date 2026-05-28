@@ -1,17 +1,13 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { fetchProducts, setFilters, fetchAllFilters } from '@/store/slices/productsSlice';
-import type { ProductFilters } from '@/types';
+import { fetchProducts, fetchAllFilters } from '@/store/slices/productsSlice';
+import type { Product, ProductFilters } from '@/types';
 import type { Locale } from '@/lib/locale-navigation';
 import type { FilterState } from '@/components/catalog/filters/Filters';
 
-/**
- * Custom hook for managing catalog filter state.
- *
- * Encapsulates all filter-related state, URL synchronization,
- * and Redux interactions for the catalog page.
- */
+type BaseFilters = Omit<ProductFilters, 'page' | 'limit'>;
+
 export function useCatalogFilters(lang: Locale) {
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
@@ -19,19 +15,20 @@ export function useCatalogFilters(lang: Locale) {
 
   const isSyncingFromUrl = useRef(false);
 
+  // Infinite scroll refs — no state re-renders needed for these
+  const filterGenerationRef = useRef<number>(0);
+  const infinitePageRef = useRef<number>(1);
+
   // Redux state
   const {
-    products,
     total,
-    page,
-    limit,
     catalogFilters,
     isLoading,
     isLoadingCatalogFilters,
     error,
   } = useAppSelector((state) => state.products);
 
-  // Local filter state for component UI
+  // Local filter UI state
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedBrandIds, setSelectedBrandIds] = useState<number[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
@@ -44,11 +41,16 @@ export function useCatalogFilters(lang: Locale) {
   const [sortValue, setSortValue] = useState<string>('relevance');
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
 
-  // Local filter state for API
-  const [localFilters, setLocalFilters] = useState<ProductFilters>({
-    page: 1,
-    limit: 12,
-  });
+  // URL is the single source of truth — baseFilters mirrors URL filter params (no page/limit)
+  const [baseFilters, setBaseFilters] = useState<BaseFilters>({});
+
+  // Accumulated product buffer — replaces on filter change, appends on scroll
+  const [accumulatedProducts, setAccumulatedProducts] = useState<Product[]>([]);
+
+  // Derived loading states
+  const isInitialLoading = isLoading && infinitePageRef.current === 1;
+  const isLoadingMore = isLoading && infinitePageRef.current > 1;
+  const hasMore = total > 0 && accumulatedProducts.length < total;
 
   /**
    * Initialize price range from hardcoded defaults (only when no URL price params)
@@ -68,7 +70,9 @@ export function useCatalogFilters(lang: Locale) {
   }, [dispatch]);
 
   /**
-   * Initialize filters from URL parameters
+   * URL sync — the single place that calls setBaseFilters.
+   * Reads all filter params from the URL and syncs UI + filter state.
+   * Does NOT read page/limit (infinite scroll always starts at page 1).
    */
   useEffect(() => {
     isSyncingFromUrl.current = true;
@@ -81,35 +85,32 @@ export function useCatalogFilters(lang: Locale) {
     const minPriceParam = searchParams.get('minPrice');
     const maxPriceParam = searchParams.get('maxPrice');
     const sortByParam = searchParams.get('sortBy');
+    const sortOrderParam = searchParams.get('sortOrder');
     const recommendedParam = searchParams.get('recommended');
 
     if (searchQueryParam) setSearchQuery(searchQueryParam);
     else setSearchQuery('');
 
     if (brandIdsParam) {
-      const brandIds = brandIdsParam.split(',').map((id) => Number(id.trim()));
-      setSelectedBrandIds(brandIds);
+      setSelectedBrandIds(brandIdsParam.split(',').map((id) => Number(id.trim())));
     } else {
       setSelectedBrandIds([]);
     }
 
     if (categoryIdsParam) {
-      const categoryIds = categoryIdsParam.split(',').map((id) => Number(id.trim()));
-      setSelectedCategoryIds(categoryIds);
+      setSelectedCategoryIds(categoryIdsParam.split(',').map((id) => Number(id.trim())));
     } else {
       setSelectedCategoryIds([]);
     }
 
     if (skinTypeIdsParam) {
-      const skinTypeIds = skinTypeIdsParam.split(',').map((id) => Number(id.trim()));
-      setSelectedSkinTypeIds(skinTypeIds);
+      setSelectedSkinTypeIds(skinTypeIdsParam.split(',').map((id) => Number(id.trim())));
     } else {
       setSelectedSkinTypeIds([]);
     }
 
     if (skinConcernIdsParam) {
-      const skinConcernIds = skinConcernIdsParam.split(',').map((id) => Number(id.trim()));
-      setSelectedSkinConcernIds(skinConcernIds);
+      setSelectedSkinConcernIds(skinConcernIdsParam.split(',').map((id) => Number(id.trim())));
     } else {
       setSelectedSkinConcernIds([]);
     }
@@ -125,9 +126,7 @@ export function useCatalogFilters(lang: Locale) {
       setPriceRange([min, max]);
     }
 
-    const filters: ProductFilters = {
-      page: Number(searchParams.get('page')) || 1,
-      limit: Number(searchParams.get('limit')) || 12,
+    const filters: BaseFilters = {
       categoryIds: categoryIdsParam ? categoryIdsParam.split(',').map(id => Number(id.trim())) : undefined,
       brandIds: brandIdsParam ? brandIdsParam.split(',').map(id => Number(id.trim())) : undefined,
       skinTypeIds: skinTypeIdsParam ? skinTypeIdsParam.split(',').map(id => Number(id.trim())) : undefined,
@@ -136,27 +135,58 @@ export function useCatalogFilters(lang: Locale) {
       minPrice: minPriceParam ? Number(minPriceParam) : undefined,
       maxPrice: maxPriceParam ? Number(maxPriceParam) : undefined,
       sortBy: sortByParam || undefined,
-      sortOrder: (searchParams.get('sortOrder') as 'asc' | 'desc') || undefined,
+      sortOrder: sortOrderParam as 'asc' | 'desc' | undefined,
       recommended: recommendedParam === 'true' ? true : undefined,
     };
 
-    setLocalFilters(filters);
-    dispatch(setFilters(filters));
+    setBaseFilters(filters);
 
     setTimeout(() => {
       isSyncingFromUrl.current = false;
     }, 0);
-  }, [searchParams, dispatch]);
+  }, [searchParams]);
 
   /**
-   * Fetch products when filters change
+   * Filter-change fetch effect.
+   * Fires whenever baseFilters changes (URL sync or direct action).
+   * Always resets to page 1 and replaces the accumulated buffer.
    */
   useEffect(() => {
-    dispatch(fetchProducts(localFilters));
-  }, [dispatch, localFilters]);
+    const generation = ++filterGenerationRef.current;
+    infinitePageRef.current = 1;
+
+    dispatch(fetchProducts({ ...baseFilters, page: 1, limit: 12 }))
+      .unwrap()
+      .then((result) => {
+        if (filterGenerationRef.current !== generation) return;
+        setAccumulatedProducts(result.products);
+      })
+      .catch(() => {});
+  }, [baseFilters, dispatch]);
 
   /**
-   * Apply filters — converts UI state to API filters and updates URL
+   * Load next page — called by IntersectionObserver in the page component.
+   */
+  const loadMore = useCallback(() => {
+    if (isLoading) return;
+    if (total > 0 && accumulatedProducts.length >= total) return;
+
+    const nextPage = infinitePageRef.current + 1;
+    const generation = filterGenerationRef.current;
+
+    dispatch(fetchProducts({ ...baseFilters, page: nextPage, limit: 12 }))
+      .unwrap()
+      .then((result) => {
+        if (filterGenerationRef.current !== generation) return;
+        infinitePageRef.current = nextPage;
+        setAccumulatedProducts((prev) => [...prev, ...result.products]);
+      })
+      .catch(() => {});
+  }, [isLoading, accumulatedProducts.length, total, baseFilters, dispatch]);
+
+  /**
+   * Apply filters — builds URL params and pushes to router.
+   * URL sync effect is the sole caller of setBaseFilters; no direct call here.
    */
   const applyFilters = useCallback(() => {
     const validMinPrice = !isNaN(priceRange[0]) && priceRange[0] >= 0 ? priceRange[0] : 0;
@@ -169,9 +199,7 @@ export function useCatalogFilters(lang: Locale) {
 
     const hasPriceChanged = validMinPrice !== 0 || validMaxPrice !== 5000;
 
-    const filters: ProductFilters = {
-      page: 1,
-      limit: 12,
+    const filters: BaseFilters = {
       searchQuery: searchQuery.trim() || undefined,
       brandIds,
       categoryIds,
@@ -182,12 +210,9 @@ export function useCatalogFilters(lang: Locale) {
       recommended: recommended || undefined,
     };
 
-    setLocalFilters(filters);
-
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {
-        // Handle arrays by joining with comma
         if (Array.isArray(value)) {
           params.set(key, value.join(','));
         } else {
@@ -200,35 +225,16 @@ export function useCatalogFilters(lang: Locale) {
   }, [priceRange, selectedCategoryIds, selectedBrandIds, selectedSkinTypeIds, selectedSkinConcernIds, searchQuery, recommended, router, lang]);
 
   /**
-   * Handle page change
-   */
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      const updatedFilters = { ...localFilters, page: newPage };
-      setLocalFilters(updatedFilters);
-
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('page', String(newPage));
-      router.push(`/${lang}/catalog?${params.toString()}`);
-    },
-    [localFilters, searchParams, router, lang],
-  );
-
-  /**
-   * Handle sort change
+   * Handle sort change — updates URL only.
    */
   const handleSortChange = useCallback(
     (value: string) => {
       setSortValue(value);
       const [sortBy, sortOrder] = value.split('-');
-      const filters = {
-        ...localFilters,
-        sortBy: sortBy === 'relevance' ? undefined : sortBy,
-        sortOrder: sortOrder as 'asc' | 'desc' | undefined,
-      };
-      setLocalFilters(filters);
 
       const params = new URLSearchParams(searchParams.toString());
+      params.delete('page');
+
       if (sortBy && sortBy !== 'relevance') {
         params.set('sortBy', sortBy);
         if (sortOrder) params.set('sortOrder', sortOrder);
@@ -236,34 +242,30 @@ export function useCatalogFilters(lang: Locale) {
         params.delete('sortBy');
         params.delete('sortOrder');
       }
+
       router.push(`/${lang}/catalog?${params.toString()}`);
     },
-    [localFilters, searchParams, router, lang],
+    [searchParams, router, lang],
   );
 
   /**
-   * Clear all filters
+   * Clear all filters — resets to clean catalog URL.
    */
   const clearAllFilters = useCallback(() => {
-    const resetFilters: ProductFilters = { page: 1, limit: 12 };
-    setLocalFilters(resetFilters);
     router.push(`/${lang}/catalog`);
   }, [router, lang]);
 
   /**
-   * Clear specific filter
+   * Clear a specific filter — removes it from URL.
    */
   const clearFilter = useCallback(
     (filterKey: keyof ProductFilters) => {
-      const updatedFilters = { ...localFilters };
-      delete updatedFilters[filterKey];
-      setLocalFilters(updatedFilters);
-
       const params = new URLSearchParams(searchParams.toString());
-      params.delete(filterKey);
+      params.delete(filterKey as string);
+      params.delete('page');
       router.push(`/${lang}/catalog?${params.toString()}`);
     },
-    [localFilters, searchParams, router, lang],
+    [searchParams, router, lang],
   );
 
   /**
@@ -273,15 +275,15 @@ export function useCatalogFilters(lang: Locale) {
     const pills: Array<{ key: string; label: string; value: any }> = [];
     const isRTL = lang === 'ar';
 
-    if (localFilters.searchQuery) {
+    if (baseFilters.searchQuery) {
       pills.push({
         key: 'searchQuery',
-        label: `${isRTL ? 'بحث' : 'Search'}: ${localFilters.searchQuery}`,
-        value: localFilters.searchQuery,
+        label: `${isRTL ? 'بحث' : 'Search'}: ${baseFilters.searchQuery}`,
+        value: baseFilters.searchQuery,
       });
     }
 
-    if (localFilters.categoryIds && localFilters.categoryIds.length > 0) {
+    if (baseFilters.categoryIds && baseFilters.categoryIds.length > 0) {
       const findCategory = (categories: any[], id: number): string | null => {
         for (const cat of categories) {
           if (cat.id === id) return isRTL ? cat.nameAr : cat.nameEn;
@@ -293,71 +295,71 @@ export function useCatalogFilters(lang: Locale) {
         return null;
       };
 
-      const categoryNames = localFilters.categoryIds
+      const categoryNames = baseFilters.categoryIds
         .map(id => findCategory(catalogFilters.categories, id))
         .filter(Boolean);
-      
+
       pills.push({
         key: 'categoryIds',
-        label: categoryNames.length > 0 
+        label: categoryNames.length > 0
           ? `${isRTL ? 'الفئات' : 'Categories'}: ${categoryNames.join(', ')}`
-          : `${isRTL ? 'الفئات' : 'Categories'}: ${localFilters.categoryIds.join(', ')}`,
-        value: localFilters.categoryIds,
+          : `${isRTL ? 'الفئات' : 'Categories'}: ${baseFilters.categoryIds.join(', ')}`,
+        value: baseFilters.categoryIds,
       });
     }
 
-    if (localFilters.brandIds && localFilters.brandIds.length > 0) {
-      const brandNames = localFilters.brandIds
+    if (baseFilters.brandIds && baseFilters.brandIds.length > 0) {
+      const brandNames = baseFilters.brandIds
         .map(id => {
           const brand = catalogFilters.brands.find((b: any) => b.id === id);
           return brand ? (isRTL ? brand.nameAr : brand.nameEn) : null;
         })
         .filter(Boolean);
-      
+
       pills.push({
         key: 'brandIds',
         label: brandNames.length > 0
           ? `${isRTL ? 'العلامات التجارية' : 'Brands'}: ${brandNames.join(', ')}`
-          : `${isRTL ? 'العلامات التجارية' : 'Brands'}: ${localFilters.brandIds.join(', ')}`,
-        value: localFilters.brandIds,
+          : `${isRTL ? 'العلامات التجارية' : 'Brands'}: ${baseFilters.brandIds.join(', ')}`,
+        value: baseFilters.brandIds,
       });
     }
 
-    if (localFilters.skinTypeIds && localFilters.skinTypeIds.length > 0) {
-      const skinTypeNames = localFilters.skinTypeIds
+    if (baseFilters.skinTypeIds && baseFilters.skinTypeIds.length > 0) {
+      const skinTypeNames = baseFilters.skinTypeIds
         .map(id => {
           const skinType = catalogFilters.skinTypes?.find((st: any) => st.id === id);
           return skinType ? (isRTL ? (skinType.nameAr || skinType.name_ar) : (skinType.nameEn || skinType.name_en)) : null;
         })
         .filter(Boolean);
-      
+
       pills.push({
         key: 'skinTypeIds',
         label: skinTypeNames.length > 0
           ? `${isRTL ? 'نوع البشرة' : 'Skin Type'}: ${skinTypeNames.join(', ')}`
-          : `${isRTL ? 'نوع البشرة' : 'Skin Type'}: ${localFilters.skinTypeIds.join(', ')}`,
-        value: localFilters.skinTypeIds,
+          : `${isRTL ? 'نوع البشرة' : 'Skin Type'}: ${baseFilters.skinTypeIds.join(', ')}`,
+        value: baseFilters.skinTypeIds,
       });
     }
 
-    if (localFilters.skinConcernIds && localFilters.skinConcernIds.length > 0) {
-      const skinConcernNames = localFilters.skinConcernIds
+    if (baseFilters.skinConcernIds && baseFilters.skinConcernIds.length > 0) {
+      const skinConcernNames = baseFilters.skinConcernIds
         .map(id => {
           const skinConcern = catalogFilters.skinConcerns?.find((sc: any) => sc.id === id);
           return skinConcern ? (isRTL ? (skinConcern.nameAr || skinConcern.name_ar) : (skinConcern.nameEn || skinConcern.name_en)) : null;
         })
         .filter(Boolean);
-      
+
       pills.push({
         key: 'skinConcernIds',
         label: skinConcernNames.length > 0
           ? `${isRTL ? 'مشاكل البشرة' : 'Skin Concern'}: ${skinConcernNames.join(', ')}`
-          : `${isRTL ? 'مشاكل البشرة' : 'Skin Concern'}: ${localFilters.skinConcernIds.join(', ')}`,
-        value: localFilters.skinConcernIds,
+          : `${isRTL ? 'مشاكل البشرة' : 'Skin Concern'}: ${baseFilters.skinConcernIds.join(', ')}`,
+        value: baseFilters.skinConcernIds,
       });
     }
 
-    if (localFilters.recommended) {
+    if (baseFilters.recommended) {
       pills.push({
         key: 'recommended',
         label: isRTL ? 'موصى به' : 'Recommended',
@@ -365,9 +367,9 @@ export function useCatalogFilters(lang: Locale) {
       });
     }
 
-    if (localFilters.minPrice || localFilters.maxPrice) {
-      const min = localFilters.minPrice || 0;
-      const max = localFilters.maxPrice || 5000;
+    if (baseFilters.minPrice || baseFilters.maxPrice) {
+      const min = baseFilters.minPrice || 0;
+      const max = baseFilters.maxPrice || 5000;
       pills.push({
         key: 'price',
         label: `${min}–${max} ${isRTL ? 'ج.م' : 'EGP'}`,
@@ -376,7 +378,7 @@ export function useCatalogFilters(lang: Locale) {
     }
 
     return pills;
-  }, [localFilters, catalogFilters, lang]);
+  }, [baseFilters, catalogFilters, lang]);
 
   /**
    * Handle pill removal
@@ -384,13 +386,16 @@ export function useCatalogFilters(lang: Locale) {
   const handlePillRemove = useCallback(
     (pill: { key: string; value: any }) => {
       if (pill.key === 'price') {
-        clearFilter('minPrice');
-        clearFilter('maxPrice');
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete('minPrice');
+        params.delete('maxPrice');
+        params.delete('page');
+        router.push(`/${lang}/catalog?${params.toString()}`);
       } else {
         clearFilter(pill.key as keyof ProductFilters);
       }
     },
-    [clearFilter],
+    [clearFilter, searchParams, router, lang],
   );
 
   /**
@@ -422,24 +427,24 @@ export function useCatalogFilters(lang: Locale) {
 
   return {
     filterState,
-    products,
+    products: accumulatedProducts,
     total,
-    page,
-    limit,
     catalogFilters,
     isLoading,
+    isInitialLoading,
+    isLoadingMore,
+    hasMore,
+    loadMore,
     isLoadingCatalogFilters,
     error,
     applyFilters,
     clearAllFilters,
     clearFilter,
-    handlePageChange,
     handleSortChange,
     filterPills,
     handlePillRemove,
     isFilterDrawerOpen,
     setIsFilterDrawerOpen,
-    localFilters,
     sortValue,
   };
 }

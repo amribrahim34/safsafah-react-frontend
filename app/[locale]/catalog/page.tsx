@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import '@/lib/i18n';
 import { useLocale } from '@/lib/locale-navigation';
@@ -15,7 +15,6 @@ import FilterPillBar from '@/components/catalog/filters/FilterPillBar';
 import { useCatalogFilters } from './_hooks/useCatalogFilters';
 import MobileFilterDrawer from './_components/MobileFilterDrawer';
 import DesktopFilterSidebar from './_components/DesktopFilterSidebar';
-import Pagination from './_components/Pagination';
 import CatalogLoading from './_components/CatalogLoading';
 
 export default function CatalogPage() {
@@ -39,14 +38,15 @@ function CatalogPageContent() {
     filterState,
     products,
     total,
-    page,
-    limit,
     catalogFilters,
     isLoading,
+    isInitialLoading,
+    isLoadingMore,
+    hasMore,
+    loadMore,
     error,
     applyFilters,
     clearAllFilters,
-    handlePageChange,
     handleSortChange,
     filterPills,
     handlePillRemove,
@@ -54,6 +54,25 @@ function CatalogPageContent() {
     setIsFilterDrawerOpen,
     sortValue,
   } = useCatalogFilters(locale);
+
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoading) {
+          loadMore();
+        }
+      },
+      { rootMargin: '200px' },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, isLoading, loadMore]);
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
@@ -110,7 +129,7 @@ function CatalogPageContent() {
           />
 
           <main>
-            {isLoading && (
+            {isInitialLoading && (
               <div className="text-center py-10">
                 <p className="text-lg">{isRTL ? 'جاري التحميل...' : 'Loading...'}</p>
               </div>
@@ -122,7 +141,7 @@ function CatalogPageContent() {
               </div>
             )}
 
-            {!isLoading && !error && (
+            {!isInitialLoading && !error && (
               <>
                 <ResultsMeta lang={locale} count={products.length} total={total} />
                 <FilterPillBar
@@ -133,14 +152,21 @@ function CatalogPageContent() {
                   lang={locale}
                 />
                 <ProductGrid products={products} brand={BRAND} />
-                <Pagination
-                  page={page}
-                  total={total}
-                  limit={limit}
-                  lang={locale}
-                  brand={BRAND}
-                  onPageChange={handlePageChange}
-                />
+
+                {/* Sentinel — IntersectionObserver triggers loadMore when this enters the viewport */}
+                <div ref={sentinelRef} className="h-4" />
+
+                {isLoadingMore && (
+                  <div className="flex justify-center py-6">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-900" />
+                  </div>
+                )}
+
+                {!hasMore && products.length > 0 && (
+                  <p className="text-center text-sm text-neutral-500 py-6">
+                    {isRTL ? 'لا توجد منتجات أخرى' : 'No more products'}
+                  </p>
+                )}
               </>
             )}
           </main>

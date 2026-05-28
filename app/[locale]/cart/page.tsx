@@ -2,14 +2,23 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import type { Language } from "@/types";
+import type { Language, Product } from "@/types";
 import posthog from "posthog-js";
 import { useTranslation } from "react-i18next";
 import '@/lib/i18n';
 import { BRAND } from "@/content/brand";
 import { useDir } from "@/hooks/useDir";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchCart, updateCartItem, removeFromCart, applyPromoCode } from "@/store/slices/cartsSlice";
+import {
+  fetchCart,
+  updateCartItem,
+  removeFromCart,
+  applyPromoCode,
+  updateLocalCartItemQuantity,
+  removeLocalCartItem,
+} from "@/store/slices/cartsSlice";
+import { localStorageManager } from "@/lib/localStorageManager";
+import { productsService } from "@/lib/api/services/products.service";
 
 import FloatingCart from "@/components/appchrome/FloatingCart";
 
@@ -21,9 +30,9 @@ import PromoCode from "@/components/cart/PromoCode";
 
 export default function CartPage() {
   const dispatch = useAppDispatch();
-  const { cart, isLoading } = useAppSelector((state) => state.cart);
+  const { cart, localItems, isLoading } = useAppSelector((state) => state.cart);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const router = useRouter();
-  
 
   const params = useParams();
   const locale = params?.locale as string | undefined;
@@ -36,29 +45,57 @@ export default function CartPage() {
   useDir();
 
   const [promo, setPromo] = useState("");
+  const [guestProducts, setGuestProducts] = useState<Product[]>([]);
+  const [guestLoading, setGuestLoading] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
+    if (isAuthenticated) dispatch(fetchCart());
+  }, [dispatch, isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated || localItems.length === 0) {
+      setGuestProducts([]);
+      return;
+    }
+    setGuestLoading(true);
+    Promise.all(localItems.map((li) => productsService.getProduct(li.productId)))
+      .then(setGuestProducts)
+      .finally(() => setGuestLoading(false));
+  }, [isAuthenticated, localItems]);
 
   const items = useMemo(() => {
-    if (!cart?.items) return [];
-    return cart.items.map((item) => ({
-      id: item.id,
-      name: {
-        en: item.productNameEn,
-        ar: item.productNameAr,
-      },
-      price: item.productPrice,
-      productId: item.productId,
-      img: item.productImage,
-      slugEn: item.productSlugEn,
-      slugAr: item.productSlugAr,
-      variant: "30ml",
-      qty: item.quantity,
-      stock: 10,
-    }));
-  }, [cart]);
+    if (isAuthenticated) {
+      if (!cart?.items) return [];
+      return cart.items.map((item) => ({
+        id: item.id,
+        name: { en: item.productNameEn, ar: item.productNameAr },
+        price: item.productPrice,
+        productId: item.productId,
+        img: item.productImage,
+        slugEn: item.productSlugEn,
+        slugAr: item.productSlugAr,
+        variant: "30ml",
+        qty: item.quantity,
+        stock: 10,
+      }));
+    }
+    return localItems.flatMap((li) => {
+      const p = guestProducts.find((prod) => prod.id === li.productId);
+      if (!p) return [];
+      return [{
+        id: li.productId,
+        name: { en: p.nameEn, ar: p.nameAr },
+        price: p.price,
+        productId: li.productId,
+        img: p.image,
+        slugEn: p.slugEn,
+        slugAr: p.slugAr,
+        variant: "30ml",
+        qty: li.quantity,
+        stock: p.stock ?? 10,
+      }];
+    });
+  }, [isAuthenticated, cart, localItems, guestProducts]);
 
   const fmt = (n: number): string =>
     new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", {
@@ -68,15 +105,31 @@ export default function CartPage() {
     }).format(n);
 
   const updateQty = (id: number, q: number): void => {
-    const item = items.find((it) => it.id === id);
-    if (item) {
-      const newQty = Math.max(1, Math.min(q, item.stock));
+    if (isAuthenticated) {
+      const item = items.find((it) => it.id === id);
+      const newQty = Math.max(1, Math.min(q, item?.stock ?? 10));
       dispatch(updateCartItem({ itemId: id, quantity: newQty }));
+    } else {
+      const item = items.find((it) => it.id === id);
+      if (!item) return;
+      const newQty = Math.max(1, Math.min(q, item.stock));
+      dispatch(updateLocalCartItemQuantity({ productId: id, quantity: newQty }));
+      const updated = localStorageManager.getCartItems().map((ci) =>
+        ci.productId === id ? { ...ci, quantity: newQty } : ci
+      );
+      localStorageManager.setCartItems(updated);
     }
   };
 
   const removeItem = (id: number): void => {
-    dispatch(removeFromCart(id));
+    if (isAuthenticated) {
+      dispatch(removeFromCart(id));
+    } else {
+      dispatch(removeLocalCartItem(id));
+      localStorageManager.setCartItems(
+        localStorageManager.getCartItems().filter((ci) => ci.productId !== id)
+      );
+    }
   };
 
   const handleApplyPromo = async (): Promise<void> => {
@@ -95,21 +148,25 @@ export default function CartPage() {
   };
 
   const freeShippingThreshold = 2000;
-  const subtotal = cart?.totalPrice || 0;
+  const subtotal = isAuthenticated
+    ? (cart?.totalPrice || 0)
+    : items.reduce((sum, it) => sum + it.price * it.qty, 0);
   const discount = cart?.discountAmount || 0;
   const shipping = subtotal - discount >= freeShippingThreshold ? 0 : 50;
   const total = Math.max(0, subtotal - discount + shipping);
 
+  const showLoading = isLoading || guestLoading;
+
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-     
+
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         <h1 className="text-2xl md:text-3xl font-extrabold mb-4">
           {t('title')}
         </h1>
 
-        {isLoading ? (
+        {showLoading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neutral-900"></div>
           </div>
@@ -127,8 +184,8 @@ export default function CartPage() {
                     lang={lang}
                     brand={BRAND}
                     item={it}
-                    onQty={(q: number) => updateQty(it.productId, q)}
-                    onRemove={() => removeItem(it.productId)}
+                    onQty={(q: number) => updateQty(it.id, q)}
+                    onRemove={() => removeItem(it.id)}
                   />
                 ))}
 

@@ -133,6 +133,12 @@ const cartsSlice = createSlice({
     removeLocalCartItem: (state, action: PayloadAction<number>) => {
       state.localItems = state.localItems.filter((i) => i.productId !== action.payload);
     },
+    updateLocalCartItemQuantity: (state, action: PayloadAction<{ productId: number; quantity: number }>) => {
+      const item = state.localItems.find((i) => i.productId === action.payload.productId);
+      if (item) {
+        item.quantity = action.payload.quantity;
+      }
+    },
     clearLocalCart: (state) => {
       state.localItems = [];
     },
@@ -154,7 +160,7 @@ const cartsSlice = createSlice({
       })
       .addCase(addToCart.pending, (state, action) => {
         state.isLoading = true;
-        state.loadingProductId = action.meta.arg.productId;
+        state.loadingProductId = Number(action.meta.arg.productId);
         state.error = null;
       })
       .addCase(addToCart.fulfilled, (state, action) => {
@@ -253,6 +259,7 @@ export const {
   setLocalCartItems,
   addLocalCartItem,
   removeLocalCartItem,
+  updateLocalCartItemQuantity,
   clearLocalCart,
 } = cartsSlice.actions;
 
