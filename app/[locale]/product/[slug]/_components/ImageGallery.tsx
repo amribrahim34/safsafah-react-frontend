@@ -37,7 +37,7 @@ export default function ImageGallery({ images, brand: _brand }: ImageGalleryProp
       {/* Main scroller */}
       <div
         ref={scroller}
-        className="w-full h-[56vh] md:h-[64vh] rounded-3xl overflow-hidden border border-neutral-200 snap-x snap-mandatory flex no-scrollbar relative"
+        className="w-full h-[56vh] md:h-[64vh] rounded-3xl overflow-hidden  snap-x snap-mandatory flex no-scrollbar relative"
       >
         {images.map((img, i) => (
           <div
