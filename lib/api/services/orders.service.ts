@@ -22,7 +22,7 @@ import type {
 export const ordersService = {
   async guestOrder(data: GuestOrderRequest): Promise<GuestOrderResponse> {
     const response = await post<GuestOrderResponse, GuestOrderRequest>('/orders/guest', data);
-    return response.data;
+    return (response as unknown) as GuestOrderResponse;
   },
 
   async createOrder(orderData: CreateOrderApiRequest): Promise<Order> {

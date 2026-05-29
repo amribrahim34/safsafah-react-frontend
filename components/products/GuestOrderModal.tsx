@@ -203,8 +203,8 @@ export default function GuestOrderModal({
             {isLoading ? t.submitting : t.submit}
           </button>
 
-          {/* Safe area spacer for mobile home indicator */}
-          <div className="pb-safe sm:hidden" />
+          {/* Spacer to clear the fixed BottomTabs nav on mobile */}
+          <div className="h-16 sm:hidden" />
         </form>
       </div>
     </div>

@@ -174,14 +174,19 @@ export function useCatalogFilters(lang: Locale) {
     const nextPage = infinitePageRef.current + 1;
     const generation = filterGenerationRef.current;
 
+    infinitePageRef.current = nextPage;
     dispatch(fetchProducts({ ...baseFilters, page: nextPage, limit: 12 }))
       .unwrap()
       .then((result) => {
         if (filterGenerationRef.current !== generation) return;
-        infinitePageRef.current = nextPage;
-        setAccumulatedProducts((prev) => [...prev, ...result.products]);
+        setAccumulatedProducts((prev) => {
+          const existingIds = new Set(prev.map(p => p.id));
+          return [...prev, ...result.products.filter(p => !existingIds.has(p.id))];
+        });
       })
-      .catch(() => {});
+      .catch(() => {
+        infinitePageRef.current = nextPage - 1;
+      });
   }, [isLoading, accumulatedProducts.length, total, baseFilters, dispatch]);
 
   /**
