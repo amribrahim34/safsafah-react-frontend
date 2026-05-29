@@ -10,6 +10,8 @@ import type {
   Order,
   CreateOrderRequest,
   CreateOrderApiRequest,
+  GuestOrderRequest,
+  GuestOrderResponse,
   UpdateOrderRequest,
   OrderFilters,
   OrderSearchResult,
@@ -18,11 +20,11 @@ import type {
 } from '@/types';
 
 export const ordersService = {
-  /**
-   * Creates a new order
-   * @param orderData - Order creation data
-   * @returns Created order details
-   */
+  async guestOrder(data: GuestOrderRequest): Promise<GuestOrderResponse> {
+    const response = await post<GuestOrderResponse, GuestOrderRequest>('/orders/guest', data);
+    return response.data;
+  },
+
   async createOrder(orderData: CreateOrderApiRequest): Promise<Order> {
     const response = await post<Order, CreateOrderApiRequest>('/orders', orderData);
     return response.data;

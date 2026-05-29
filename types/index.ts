@@ -48,6 +48,8 @@ export type {
   PaymentMethod,
   CreateOrderRequest,
   CreateOrderApiRequest,
+  GuestOrderRequest,
+  GuestOrderResponse,
 } from './models/order';
 
 export type {

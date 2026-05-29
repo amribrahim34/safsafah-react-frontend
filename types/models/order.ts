@@ -139,6 +139,30 @@ export interface CreateOrderApiRequest {
   addressId?: number; // Send this when using a saved address
 }
 
+export interface GuestOrderRequest {
+  customerName: string;
+  customerMobile: string;
+  customerAddress: string;
+  latitude?: number;
+  longitude?: number;
+  deliveryNotes?: string;
+  paymentType: 'CASH_ON_DELIVERY' | 'ONLINE';
+  items: Array<{ product_id: number; quantity: number }>;
+}
+
+export interface GuestOrderResponse {
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    mobile: string;
+    points: number;
+    addresses: any[];
+  };
+  order: Order;
+  token: string;
+}
+
 export interface UpdateOrderRequest {
   orderId: string;
   status?: OrderStatus;

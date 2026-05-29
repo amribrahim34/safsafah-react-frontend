@@ -130,6 +130,18 @@ const authSlice = createSlice({
     },
 
     /**
+     * Set full auth state after guest order (user + token + authenticated)
+     */
+    setAuthData: (state, action: PayloadAction<{ user: User; token: string }>) => {
+      const { user, token } = action.payload;
+      state.user = user;
+      state.token = token;
+      state.isAuthenticated = true;
+      state.error = null;
+      tokenManager.setToken(token);
+    },
+
+    /**
      * Restore auth state from storage (on app init)
      */
     restoreAuth: (state) => {
@@ -256,7 +268,7 @@ const authSlice = createSlice({
 /**
  * Export actions
  */
-export const { clearError, setUser, clearAuthState, restoreAuth } = authSlice.actions;
+export const { clearError, setUser, clearAuthState, restoreAuth, setAuthData } = authSlice.actions;
 
 /**
  * Export reducer
