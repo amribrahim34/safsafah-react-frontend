@@ -94,6 +94,7 @@ export interface ProductFilters {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
   recommended?: boolean;
+  sale?: boolean;
 }
 
 export interface ProductSearchResult {

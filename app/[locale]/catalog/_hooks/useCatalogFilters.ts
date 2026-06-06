@@ -87,6 +87,7 @@ export function useCatalogFilters(lang: Locale) {
     const sortByParam = searchParams.get('sortBy');
     const sortOrderParam = searchParams.get('sortOrder');
     const recommendedParam = searchParams.get('recommended');
+    const saleParam = searchParams.get('sale');
 
     if (searchQueryParam) setSearchQuery(searchQueryParam);
     else setSearchQuery('');
@@ -119,6 +120,7 @@ export function useCatalogFilters(lang: Locale) {
     else setSortValue('relevance');
 
     setRecommended(recommendedParam === 'true');
+    setOnSale(saleParam === 'true');
 
     if (minPriceParam || maxPriceParam) {
       const min = minPriceParam ? Number(minPriceParam) : 0;
@@ -137,6 +139,7 @@ export function useCatalogFilters(lang: Locale) {
       sortBy: sortByParam || undefined,
       sortOrder: sortOrderParam as 'asc' | 'desc' | undefined,
       recommended: recommendedParam === 'true' ? true : undefined,
+      sale: saleParam === 'true' ? true : undefined,
     };
 
     setBaseFilters(filters);
@@ -213,6 +216,7 @@ export function useCatalogFilters(lang: Locale) {
       minPrice: hasPriceChanged ? validMinPrice : undefined,
       maxPrice: hasPriceChanged ? validMaxPrice : undefined,
       recommended: recommended || undefined,
+      sale: onSale || undefined,
     };
 
     const params = new URLSearchParams();
@@ -368,6 +372,14 @@ export function useCatalogFilters(lang: Locale) {
       pills.push({
         key: 'recommended',
         label: isRTL ? 'موصى به' : 'Recommended',
+        value: true,
+      });
+    }
+
+    if (baseFilters.sale) {
+      pills.push({
+        key: 'sale',
+        label: isRTL ? 'خصومات فقط' : 'Discount only',
         value: true,
       });
     }

@@ -30,6 +30,9 @@ export const productsService = {
     if (typeof params.recommended === 'boolean') {
       params.recommended = params.recommended ? 1 : 0;
     }
+    if (typeof params.sale === 'boolean') {
+      params.sale = params.sale ? 1 : 0;
+    }
     const response = await get<Product[]>('/products', params) as any as {
       data: Product[];
       meta: {
