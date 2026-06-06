@@ -20,8 +20,8 @@ export default function HeroSlider({ brand }) {
 
   // Prepare slider data with translations and images
   const slides = [
-    { ...t('slider.0', { returnObjects: true }), img: "/hero/hero1.jpeg" },
-    { ...t('slider.1', { returnObjects: true }), img: "/hero/hero2.jpeg" },
+    { ...t('slider.0', { returnObjects: true }), img: "/hero/hero2.jpeg" },
+    { ...t('slider.1', { returnObjects: true }), img: "/hero/hero1.jpeg" },
     { ...t('slider.2', { returnObjects: true }), img: "/hero/hero3.jpeg" },
   ];
 
