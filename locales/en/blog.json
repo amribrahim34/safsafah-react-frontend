@@ -17,5 +17,21 @@
   "results": "articles",
   "showing": "Showing",
   "of": "of",
-  "heroReadMore": "Discover"
+  "heroReadMore": "Discover",
+  "breadcrumbHome": "Home",
+  "breadcrumbBlog": "The Journal",
+  "publishedOn": "Published",
+  "tableOfContents": "In This Article",
+  "tocToggle": "Show contents",
+  "shareArticle": "Share",
+  "shareCopy": "Copy link",
+  "shareCopied": "Copied!",
+  "shareWhatsApp": "WhatsApp",
+  "shareTwitter": "Twitter / X",
+  "shareFacebook": "Facebook",
+  "relatedPosts": "More from this category",
+  "recommendedProducts": "Recommended Products",
+  "backToBlog": "Back to The Journal",
+  "articleNotFound": "Article not found",
+  "articleNotFoundHint": "The article you are looking for may have been removed or renamed."
 }

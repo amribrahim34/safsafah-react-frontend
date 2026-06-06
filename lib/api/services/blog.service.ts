@@ -4,6 +4,19 @@ import type { BlogPost, BlogCategory, BlogFilters, BlogListResult } from '@/type
 const LIMIT = 9;
 
 export const blogService = {
+  async getBlogPostBySlug(slug: string): Promise<BlogPost> {
+    const response = await apiClient.get(`/blogs/${slug}`);
+    return (response.data?.data ?? response.data) as BlogPost;
+  },
+
+  async getRelatedPosts(categoryId: number, excludeSlug: string, limit = 4): Promise<BlogPost[]> {
+    const response = await apiClient.get('/blogs', {
+      params: { category_id: categoryId, limit, page: 1 },
+    });
+    const posts: BlogPost[] = response.data?.data ?? [];
+    return posts.filter((p) => p.slug !== excludeSlug).slice(0, limit);
+  },
+
   async getBlogPosts(filters: BlogFilters = {}): Promise<BlogListResult> {
     const params: Record<string, unknown> = {
       page: filters.page ?? 1,

@@ -17,5 +17,21 @@
   "results": "مقالة",
   "showing": "عرض",
   "of": "من",
-  "heroReadMore": "اكتشفي"
+  "heroReadMore": "اكتشفي",
+  "breadcrumbHome": "الرئيسية",
+  "breadcrumbBlog": "المدونة",
+  "publishedOn": "نُشر في",
+  "tableOfContents": "محتويات المقال",
+  "tocToggle": "عرض المحتويات",
+  "shareArticle": "مشاركة",
+  "shareCopy": "نسخ الرابط",
+  "shareCopied": "تم النسخ!",
+  "shareWhatsApp": "واتساب",
+  "shareTwitter": "تويتر / X",
+  "shareFacebook": "فيسبوك",
+  "relatedPosts": "المزيد من هذا التصنيف",
+  "recommendedProducts": "المنتجات الموصى بها",
+  "backToBlog": "العودة إلى المدونة",
+  "articleNotFound": "المقال غير موجود",
+  "articleNotFoundHint": "ربما تمت إزالة هذا المقال أو تغيير رابطه."
 }
