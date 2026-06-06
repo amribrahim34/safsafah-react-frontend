@@ -1,0 +1,21 @@
+{
+  "title": "المدونة",
+  "subtitle": "نصائح الجمال والعناية بالبشرة",
+  "searchPlaceholder": "ابحثي عن مقالات…",
+  "categories": "التصنيفات",
+  "allCategories": "الكل",
+  "readMore": "اقرأ المقال",
+  "minRead": "دقيقة للقراءة",
+  "noResults": "لا توجد مقالات",
+  "noResultsHint": "جربي بحثاً أو تصنيفاً مختلفاً",
+  "loadingMore": "جاري التحميل…",
+  "noMorePosts": "لقد قرأتِ كل شيء",
+  "recentPosts": "أحدث المقالات",
+  "featuredPost": "مميز",
+  "filters": "تصفية",
+  "clearAll": "مسح الكل",
+  "results": "مقالة",
+  "showing": "عرض",
+  "of": "من",
+  "heroReadMore": "اكتشفي"
+}

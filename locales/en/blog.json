@@ -1,0 +1,21 @@
+{
+  "title": "The Journal",
+  "subtitle": "Beauty tips & skincare rituals",
+  "searchPlaceholder": "Search articles…",
+  "categories": "Categories",
+  "allCategories": "All",
+  "readMore": "Read Article",
+  "minRead": "min read",
+  "noResults": "No articles found",
+  "noResultsHint": "Try a different search or category",
+  "loadingMore": "Loading more…",
+  "noMorePosts": "You've read it all",
+  "recentPosts": "Recent Posts",
+  "featuredPost": "Featured",
+  "filters": "Filter",
+  "clearAll": "Clear all",
+  "results": "articles",
+  "showing": "Showing",
+  "of": "of",
+  "heroReadMore": "Discover"
+}
