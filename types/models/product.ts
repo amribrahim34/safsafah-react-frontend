@@ -31,6 +31,10 @@ export interface Product {
   category: ProductCategory;
   brand: ProductBrand;
   price: number;
+  originalPrice?: number;
+  discount?: number;
+  discountPercentage?: number;
+  finalPrice?: number;
   image: string;
   sku: string;
   canAddRating?: boolean;

@@ -12,6 +12,10 @@ interface ProductGridItem {
   nameEn: string;
   image: string;
   price: number;
+  originalPrice?: number;
+  discount?: number;
+  discountPercentage?: number;
+  finalPrice?: number;
   brand?: {
     id?: number;
     nameAr?: string;

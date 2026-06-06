@@ -22,6 +22,10 @@ interface ProductCardProps {
   brandNameAr?: string;
   brandNameEn?: string;
   price: number;
+  originalPrice?: number;
+  discount?: number;
+  discountPercentage?: number;
+  finalPrice?: number;
   rating?: number;
   image: string;
   isRecommended?: boolean;
@@ -43,6 +47,10 @@ export default function ProductCard({
   brandNameAr,
   brandNameEn,
   price,
+  originalPrice,
+  discount,
+  discountPercentage,
+  finalPrice,
   rating = 0,
   image,
   isRecommended = false,
@@ -59,10 +67,14 @@ export default function ProductCard({
   const { isInCart, isLoading: cartLoading, handleAddToCart } = useCardCart(id, lang);
   const { isInWishlist: cardIsInWishlist, isLoading: wishlistLoading, handleToggle } = useCardWishlist(id, isInWishlist, lang);
 
-  const priceFmt = new Intl.NumberFormat(
+  const fmt = new Intl.NumberFormat(
     lang === "ar" ? "ar-EG" : "en-EG",
     { style: "currency", currency: "EGP", maximumFractionDigits: 0 }
-  ).format(price);
+  );
+  const hasDiscount = (discountPercentage ?? 0) > 0;
+  const displayPrice = finalPrice ?? price;
+  const priceFmt = fmt.format(displayPrice);
+  const originalPriceFmt = fmt.format(originalPrice ?? price);
 
   const productUrl = getLocalizedPath(
     `/product/${lang === "ar" ? (slugAr ?? id) : (slugEn ?? id)}`,
@@ -101,6 +113,12 @@ export default function ProductCard({
           >
             <Sparkles className="w-3 h-3" />
             <span>{lang === "ar" ? "موصى به" : "Recommended"}</span>
+          </div>
+        )}
+
+        {!isRecommended && hasDiscount && (
+          <div className="absolute top-2 end-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow">
+            -{discountPercentage}%
           </div>
         )}
 
@@ -161,7 +179,14 @@ export default function ProductCard({
 
           <div className="flex justify-between items-center gap-1">
             {/* Price */}
-            <div className="text-sm lg:text-base font-bold">{priceFmt}</div>
+            <div className="flex flex-col">
+              <div className="text-sm lg:text-base font-bold">{priceFmt}</div>
+              {hasDiscount && (
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-neutral-400 line-through">{originalPriceFmt}</span>
+                </div>
+              )}
+            </div>
 
             <div className="flex items-center gap-1">
               {!isAuthenticated && (

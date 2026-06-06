@@ -14,6 +14,10 @@ export default function ProductMeta({ product, brand, lang }: ProductMetaProps) 
   const title     = lang === "ar" ? product.nameAr     : product.nameEn;
   const brandName = lang === "ar" ? product.brand?.nameAr : product.brand?.nameEn;
   const price     = typeof product.price === "number" ? product.price : 0;
+  const finalPrice = typeof product.finalPrice === "number" ? product.finalPrice : price;
+  const originalPrice = typeof product.originalPrice === "number" ? product.originalPrice : price;
+  const discountPercentage = product.discountPercentage ?? 0;
+  const hasDiscount = discountPercentage > 0;
   const rating    = Number(product.averageRating ?? 0);
   const reviewCount = product.ratingCount ?? product.reviews?.length ?? 0;
 
@@ -49,7 +53,15 @@ export default function ProductMeta({ product, brand, lang }: ProductMetaProps) 
       </div>
 
       <div className="mt-4 flex items-center gap-3 flex-wrap">
-        <div className="text-2xl font-black">{priceFmt(price)}</div>
+        <div className="text-2xl font-black">{priceFmt(finalPrice)}</div>
+        {hasDiscount && (
+          <>
+            <span className="text-lg text-neutral-400 line-through">{priceFmt(originalPrice)}</span>
+            <span className="bg-red-100 text-red-600 text-sm font-bold px-2 py-0.5 rounded-full">
+              -{discountPercentage}%
+            </span>
+          </>
+        )}
       </div>
 
       {product.stock != null && (

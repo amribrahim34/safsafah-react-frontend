@@ -34,7 +34,7 @@ export default function StickyATCBar({ product, brand, lang }: StickyATCBarProps
   if (!visible) return null;
 
   const title = lang === "ar" ? product.nameAr : product.nameEn;
-  const price = typeof product.price === "number" ? product.price : 0;
+  const price = typeof product.finalPrice === "number" ? product.finalPrice : (typeof product.price === "number" ? product.price : 0);
 
   const formattedPrice = new Intl.NumberFormat(
     lang === "ar" ? "ar-EG" : "en-EG",
