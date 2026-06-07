@@ -231,7 +231,7 @@ export function useCatalogFilters(lang: Locale) {
     });
 
     router.push(`/${lang}/catalog?${params.toString()}`);
-  }, [priceRange, selectedCategoryIds, selectedBrandIds, selectedSkinTypeIds, selectedSkinConcernIds, searchQuery, recommended, router, lang]);
+  }, [priceRange, selectedCategoryIds, selectedBrandIds, selectedSkinTypeIds, selectedSkinConcernIds, searchQuery, recommended, onSale, router, lang]);
 
   /**
    * Handle sort change — updates URL only.
