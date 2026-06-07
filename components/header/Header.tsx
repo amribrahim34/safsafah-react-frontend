@@ -3,11 +3,12 @@
 import { useTranslation } from 'react-i18next';
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
 import {  getLocalizedPath } from '@/lib/locale-navigation';
-import logo from '../../assets/safsafah-logo.png';
+import logo from '../../assets/safsafah-logo1.png';
 import { useState, useEffect, Suspense } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
 import DesktopNav from './DesktopNav';
@@ -113,8 +114,8 @@ function HeaderContent({ brand }: HeaderProps) {
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
           {/* Logo */}
           <Link href={getLocalizedPath('/', lang)} className="flex items-center gap-3 shrink-0 order-1">
-            <img src={logo.src} alt="SAFSAFAH" className="w-10 h-10 rounded-2xl object-contain" />
-            <div className="font-extrabold text-xl tracking-tight whitespace-nowrap">SAFSAFAH</div>
+            <Image src={logo} alt="SAFSAFAH" width={100} height={10} className="rounded-2xl object-contain" />
+            {/* <div className="font-extrabold text-xl tracking-tight whitespace-nowrap">SAFSAFAH</div> */}
           </Link>
 
           {/* Hamburger — mobile only */}
