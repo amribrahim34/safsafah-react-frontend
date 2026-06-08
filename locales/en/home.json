@@ -132,6 +132,21 @@
       { "title": "Cleansers that care" }
     ]
   },
+  "header": {
+    "login": "Login",
+    "logout": "Logout",
+    "myAccount": "My Account",
+    "cart": "Shopping Cart",
+    "cartEmpty": "Your cart is empty",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "total": "Total",
+    "checkout": "Checkout",
+    "viewCart": "View Cart",
+    "remove": "Remove",
+    "decrease": "Decrease",
+    "increase": "Increase"
+  },
   "footer": {
     "about": "We curate science-backed skincare for Egypt with fast delivery and honest advice.",
     "quickLinks": "Quick links",

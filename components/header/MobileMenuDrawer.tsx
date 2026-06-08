@@ -3,6 +3,7 @@
 import { X, User2, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { getLocalizedPath, Locale } from '@/lib/locale-navigation';
 import LanguageSwitcher from './LanguageSwitcher';
 import NavLink from './NavLink';
@@ -35,6 +36,7 @@ export default function MobileMenuDrawer({
   onLogout,
 }: MobileMenuDrawerProps) {
   const pathname = usePathname();
+  const { t } = useTranslation('home');
 
   return (
     <>
@@ -89,7 +91,7 @@ export default function MobileMenuDrawer({
               })}
             </div>
 
-            {/* Account Section — only when authenticated */}
+            {/* Account Section — authenticated */}
             {isAuthenticated && (
               <div className="mt-6 pt-6 border-t border-neutral-200 space-y-2">
                 <Link
@@ -98,15 +100,29 @@ export default function MobileMenuDrawer({
                   onClick={onClose}
                 >
                   <User2 className="w-5 h-5" />
-                  <span className="font-medium">{isRTL ? 'حسابي' : 'My Account'}</span>
+                  <span className="font-medium">{t('header.myAccount')}</span>
                 </Link>
                 <button
                   onClick={() => { onClose(); onLogout(); }}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors w-full text-start"
                 >
                   <LogOut className="w-5 h-5" />
-                  <span className="font-medium">{isRTL ? 'تسجيل الخروج' : 'Logout'}</span>
+                  <span className="font-medium">{t('header.logout')}</span>
                 </button>
+              </div>
+            )}
+
+            {/* Login — not authenticated */}
+            {!isAuthenticated && (
+              <div className="mt-6 pt-6 border-t border-neutral-200">
+                <Link
+                  href={getLocalizedPath('/login', lang)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-700 hover:bg-neutral-100 transition-colors"
+                  onClick={onClose}
+                >
+                  <User2 className="w-5 h-5" />
+                  <span className="font-medium">{t('header.login')}</span>
+                </Link>
               </div>
             )}
 

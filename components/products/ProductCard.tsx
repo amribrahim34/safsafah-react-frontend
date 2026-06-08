@@ -193,7 +193,7 @@ export default function ProductCard({
                 <button
                   onClick={() => setGuestModalOpen(true)}
                   aria-label={lang === "ar" ? "اطلب كضيف" : "Order as guest"}
-                  className="rounded text-white md:px-3 md:py-2 px-2 py-1 hover:opacity-90 transition-opacity bg-brand-sage text-xs font-semibold"
+                  className="rounded text-white md:px-3 md:py-2 px-2 py-1 hover:opacity-90 transition-opacity bg-brand-terracotta text-xs font-semibold"
                   
                 >
                   {/* <CreditCard className="w-4 h-4" /> */}

@@ -1,20 +1,20 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { Menu } from 'lucide-react';
+import { Menu, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
-import {  getLocalizedPath } from '@/lib/locale-navigation';
+import { getLocalizedPath } from '@/lib/locale-navigation';
 import logo from '../../assets/safsafah-logo1.png';
 import { useState, useEffect, Suspense } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
 import DesktopNav from './DesktopNav';
 import SearchBar from './SearchBar';
 import ProfileDropdown from './ProfileDropdown';
-import CartDropdown from './CartDropdown';
+import CartDrawer from './CartDrawer';
 import MobileMenuDrawer from './MobileMenuDrawer';
 
 interface HeaderProps {
@@ -32,9 +32,10 @@ function HeaderContent({ brand }: HeaderProps) {
   const params = useParams();
   const locale = params?.locale as string | undefined;
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
-  
 
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const cart = useAppSelector((state) => state.cart.cart);
+  const localItems = useAppSelector((state) => state.cart.localItems);
 
   const [mounted, setMounted] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -46,18 +47,20 @@ function HeaderContent({ brand }: HeaderProps) {
   const { t } = useTranslation('home');
   const searchPlaceholder = t('search');
 
-  // Keep search input in sync with URL params (e.g. on back/forward navigation)
+  const totalItems = isAuthenticated
+    ? (cart?.totalItems ?? 0)
+    : localItems.reduce((sum, li) => sum + li.quantity, 0);
+
   useEffect(() => {
     setSearchQuery(searchParams.get('searchQuery') ?? '');
   }, [searchParams]);
 
   useEffect(() => { setMounted(true); }, []);
 
-  // Close dropdowns when clicking outside
+  // Close profile dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (isCartOpen && !target.closest('.cart-dropdown-container')) setIsCartOpen(false);
       if (isProfileOpen && !target.closest('.profile-dropdown-container')) setIsProfileOpen(false);
       if (isMobileMenuOpen && !target.closest('.mobile-menu-container') && !target.closest('.mobile-menu-button')) {
         setIsMobileMenuOpen(false);
@@ -65,13 +68,13 @@ function HeaderContent({ brand }: HeaderProps) {
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isCartOpen, isProfileOpen, isMobileMenuOpen]);
+  }, [isProfileOpen, isMobileMenuOpen]);
 
-  // Prevent body scroll when mobile menu is open
+  // Prevent body scroll when mobile menu or cart drawer is open
   useEffect(() => {
-    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
+    document.body.style.overflow = (isMobileMenuOpen || isCartOpen) ? 'hidden' : 'unset';
     return () => { document.body.style.overflow = 'unset'; };
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, isCartOpen]);
 
   const navItems = [
     { label: isRTL ? 'الرئيسية' : 'Home', path: '/' },
@@ -97,6 +100,15 @@ function HeaderContent({ brand }: HeaderProps) {
     }
   };
 
+  const cartBadge = mounted && totalItems > 0 && (
+    <span
+      className="absolute -top-1.5 -right-1.5 h-5 min-w-[20px] px-1 rounded-full text-[11px] flex items-center justify-center text-white"
+      style={{ background: brand.primary }}
+    >
+      {totalItems}
+    </span>
+  );
+
   return (
     <>
       <MobileMenuDrawer
@@ -110,22 +122,54 @@ function HeaderContent({ brand }: HeaderProps) {
         onLogout={handleLogout}
       />
 
-      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
-          {/* Logo */}
-          <Link href={getLocalizedPath('/', lang)} className="flex items-center gap-3 shrink-0 order-1">
-            <Image src={logo} alt="SAFSAFAH" width={100} height={10} className="rounded-2xl object-contain" />
-            {/* <div className="font-extrabold text-xl tracking-tight whitespace-nowrap">SAFSAFAH</div> */}
-          </Link>
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        isRTL={isRTL}
+        brandPrimary={brand.primary}
+        lang={lang}
+        mounted={mounted}
+      />
 
-          {/* Hamburger — mobile only */}
+      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+        {/* Mobile header row */}
+        <div className="md:hidden relative h-[60px] flex items-center px-4">
+          {/* Hamburger — always physically left */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className={`mobile-menu-button md:hidden p-2 hover:bg-neutral-100 rounded-xl transition-colors order-5 ${isRTL ? 'mr-auto' : 'ml-auto'}`}
+            className="mobile-menu-button absolute left-4 p-2 hover:bg-neutral-100 rounded-xl transition-colors"
             aria-label="Open menu"
           >
             <Menu className="w-6 h-6 text-neutral-800" />
           </button>
+
+          {/* Logo — always physically centered */}
+          <Link
+            href={getLocalizedPath('/', lang)}
+            className="absolute left-1/2 -translate-x-1/2 flex items-center"
+          >
+            <Image src={logo} alt="SAFSAFAH" width={80} height={10} className="rounded-2xl object-contain" />
+          </Link>
+
+          {/* Right group: Login/Profile + Cart — always physically right */}
+          <div className="absolute right-4 flex items-center gap-1">
+            <button
+              onClick={() => setIsCartOpen(!isCartOpen)}
+              className="relative p-2 hover:bg-neutral-100 rounded-xl transition-colors"
+              aria-label={t('header.cart')}
+            >
+              <ShoppingBag className="w-6 h-6 text-neutral-800" />
+              {cartBadge}
+            </button>
+          </div>
+        </div>
+
+        {/* Desktop header row */}
+        <div className="hidden md:flex max-w-7xl mx-auto px-4 py-3 items-center gap-3">
+          {/* Logo */}
+          <Link href={getLocalizedPath('/', lang)} className="flex items-center gap-3 shrink-0">
+            <Image src={logo} alt="SAFSAFAH" width={100} height={10} className="rounded-2xl object-contain" />
+          </Link>
 
           {/* Desktop Nav */}
           <DesktopNav navItems={navItems} lang={lang} brandPrimary={brand.primary} />
@@ -139,15 +183,24 @@ function HeaderContent({ brand }: HeaderProps) {
             placeholder={searchPlaceholder}
             isRTL={isRTL}
           />
-
           {/* Actions */}
           <div className="flex items-center gap-2 md:gap-3 shrink-0 order-4">
-            {/* Language Switcher — desktop only */}
             <div className="hidden md:flex">
               <LanguageSwitcher />
             </div>
 
-            {/* Profile Dropdown — only when authenticated */}
+            {/* Login — not authenticated */}
+            {mounted && !isAuthenticated && (
+              <Link
+                href={getLocalizedPath('/login', lang)}
+                className="text-sm font-semibold px-4 py-2 rounded-xl border border-neutral-200 hover:bg-neutral-50 transition-colors whitespace-nowrap order-4"
+                style={{ color: brand.primary }}
+              >
+                {t('header.login')}
+              </Link>
+            )}
+
+            {/* Profile dropdown — authenticated */}
             {mounted && isAuthenticated && (
               <ProfileDropdown
                 isRTL={isRTL}
@@ -160,14 +213,21 @@ function HeaderContent({ brand }: HeaderProps) {
               />
             )}
 
-            {/* Cart Dropdown */}
-            <CartDropdown
-              isRTL={isRTL}
-              brandPrimary={brand.primary}
-              lang={lang}
-              isOpen={isCartOpen}
-              onToggle={() => setIsCartOpen(!isCartOpen)}
-            />
+            {/* Cart button */}
+            <button
+              onClick={() => setIsCartOpen(!isCartOpen)}
+              className="hidden md:flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-xl text-white hover:opacity-90 transition-opacity whitespace-nowrap"
+              style={{ background: brand.primary }}
+              aria-label={t('header.cart')}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              {t('header.cart')}
+              {mounted && totalItems > 0 && (
+                <span className="bg-white/30 text-white text-[11px] font-bold px-1.5 py-0.5 rounded-full tabular-nums">
+                  {totalItems}
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
