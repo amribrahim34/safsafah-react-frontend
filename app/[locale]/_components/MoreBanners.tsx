@@ -15,8 +15,8 @@ export default function MoreBanners() {
   const { t } = useTranslation('home');
 
   const cards: BannerCard[] = [
-    { img: "/credibility-badges/cash.webp", title: t('extraBanners.items.0.title'), href: "/catalog" },
-    { img: "/credibility-badges/original.webp", title: t('extraBanners.items.1.title'), href: "/catalog" },
+    { img: "/credibility-badges/original.webp", title: t('extraBanners.items.0.title'), href: "/catalog" },
+    { img: "/credibility-badges/cash.webp", title: t('extraBanners.items.1.title'), href: "/catalog" },
     { img: "/credibility-badges/sale.webp", title: t('extraBanners.items.2.title'), href: "/catalog?sale=true" },
   ];
 
