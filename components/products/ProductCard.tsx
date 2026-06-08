@@ -198,7 +198,7 @@ export default function ProductCard({
                 >
                   {/* <CreditCard className="w-4 h-4" /> */}
                   {/* <ShoppingBag className="w-4 h-4" /> */}
-                  {lang === "ar" ? "شراء" : "Order as guest"}
+                  {lang === "ar" ? "شراء" : "buy"}
                 </button>
               )}
 
