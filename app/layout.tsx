@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
-import { GoogleTagManager } from '@next/third-parties/google'
 import Script from "next/script";
 import { Suspense } from "react";
 import FacebookPixelPageView from "@/components/FacebookPixelPageView";
@@ -43,7 +42,6 @@ export default async function RootLayout({
       <body
         className={`${cairo.variable} font-sans`}
       >
-        <GoogleTagManager gtmId="G-XPJ4C7758M" />
         <Script
           id="fb-pixel"
           strategy="afterInteractive"
@@ -69,18 +67,19 @@ export default async function RootLayout({
           />
         </noscript>
         <Script
-          id="google-ads-src"
+          id="gtag-src"
           strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=AW-18167280131"
+          src="https://www.googletagmanager.com/gtag/js?id=G-XPJ4C7758M"
         />
         <Script
-          id="google-ads-config"
+          id="gtag-config"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
+              gtag('config', 'G-XPJ4C7758M');
               gtag('config', 'AW-18167280131');
             `,
           }}

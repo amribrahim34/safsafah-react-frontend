@@ -134,7 +134,7 @@ export default function Footer({ brand }: FooterProps) {
         {/* Brand block */}
         <div>
           <div className="flex items-center gap-3">
-            <img src="/safsafah-logo.png" alt="SAFSAFAH" className="w-11 h-11 rounded-2xl object-contain" />
+            <img src="/safsafah-logo1.png" alt="SAFSAFAH" className="w-11 h-11 rounded-2xl object-contain" />
             <div className="font-extrabold text-xl tracking-tight pb-0.5 border-b-2" style={{ borderColor: brand.primary }}>SAFSAFAH</div>
           </div>
           <p className="mt-4 text-neutral-600 text-sm leading-relaxed">{t.about}</p>
