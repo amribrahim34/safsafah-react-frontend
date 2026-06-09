@@ -1,6 +1,7 @@
 'use client';
 
 import { Search } from 'lucide-react';
+import { search as fbSearch } from '@/lib/fbpixel';
 
 interface SearchBarProps {
   value: string;
@@ -21,8 +22,13 @@ export default function SearchBar({
   isRTL,
   isMobile = false,
 }: SearchBarProps) {
+  const handleSearch = () => {
+    if (value.trim()) fbSearch(value.trim());
+    onSearch();
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') onSearch();
+    if (e.key === 'Enter') handleSearch();
   };
 
   if (isMobile) {
@@ -40,7 +46,7 @@ export default function SearchBar({
             placeholder={placeholder}
           />
           <button
-            onClick={onSearch}
+            onClick={handleSearch}
             aria-label={isRTL ? 'بحث' : 'Search'}
             className="flex items-center justify-center w-12 shrink-0 text-white transition-opacity hover:opacity-90"
             style={{ background: brandPrimary }}
@@ -66,7 +72,7 @@ export default function SearchBar({
           placeholder={placeholder}
         />
         <button
-          onClick={onSearch}
+          onClick={handleSearch}
           aria-label={isRTL ? 'بحث' : 'Search'}
           className="flex items-center justify-center w-10 shrink-0 text-white transition-opacity hover:opacity-90"
           style={{ background: brandPrimary }}

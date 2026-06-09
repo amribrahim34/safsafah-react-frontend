@@ -3,6 +3,7 @@
 import '@/lib/i18n';
 import React, { useState, useRef, useEffect } from "react";
 import posthog from "posthog-js";
+import { purchase as fbPurchase } from "@/lib/fbpixel";
 import { BRAND } from "@/content/brand";
 import { useDir } from "@/hooks/useDir";
 import { useCheckoutValidation } from "@/hooks/useCheckoutValidation";
@@ -241,6 +242,7 @@ export default function CheckoutQuickPage() {
         shipping,
         item_count: cart?.items?.length,
       });
+      fbPurchase(orderResult?.id, total);
 
       await dispatch(fetchCart());
 

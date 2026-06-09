@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { addToCart as addToCartAction, updateCartItem, removeFromCart } from "../store/slices/cartsSlice";
 import type { Product } from "@/types/models/product";
 import posthog from "posthog-js";
+import { addToCart as fbAddToCart } from "@/lib/fbpixel";
 
 export function useProductCart(product: Product | null | undefined) {
   const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ export function useProductCart(product: Product | null | undefined) {
         price: product.price,
         quantity: 1,
       });
+      fbAddToCart(product, 1);
 
       onSuccess?.();
     } catch (error) {

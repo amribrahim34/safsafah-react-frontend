@@ -6,6 +6,7 @@ import { register, clearError } from '@/store/slices/authSlice';
 import { fetchCart } from '@/store/slices/cartsSlice';
 import { useLocaleRouter, type Locale } from '@/lib/locale-navigation';
 import posthog from 'posthog-js';
+import { completeRegistration as fbCompleteRegistration } from '@/lib/fbpixel';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MOBILE_REGEX = /^(01|\+201)[0-9]{8,10}$/;
@@ -138,6 +139,7 @@ export function useSignupForm(locale: Locale) {
       posthog.capture('user_signed_up', {
         name: name.trim(),
       });
+      fbCompleteRegistration();
       dispatch(fetchCart());
       router.push('/');
     }

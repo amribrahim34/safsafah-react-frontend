@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { Language, Product } from "@/types";
 import posthog from "posthog-js";
+import { initiateCheckout as fbInitiateCheckout } from "@/lib/fbpixel";
 import { useTranslation } from "react-i18next";
 import '@/lib/i18n';
 import { BRAND } from "@/content/brand";
@@ -212,6 +213,7 @@ export default function CartPage() {
                       cart_total: total,
                       item_count: items.length,
                     });
+                    fbInitiateCheckout(total, items.length);
                     router.push(`/${locale}/checkout`);
                   }}
                 />
@@ -240,6 +242,7 @@ export default function CartPage() {
                   cart_total: total,
                   item_count: items.length,
                 });
+                fbInitiateCheckout(total, items.length);
                 router.push(`/${locale}/checkout`);
               }}
               className="px-5 py-3 rounded-2xl text-white font-semibold"

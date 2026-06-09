@@ -7,6 +7,7 @@ import { localStorageManager } from '@/lib/localStorageManager';
 import { showProductToast } from '@/lib/swal';
 import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
+import { addToWishlist as fbAddToWishlist } from '@/lib/fbpixel';
 
 export function useCardWishlist(
   productId: number,
@@ -49,6 +50,7 @@ export function useCardWishlist(
         posthog.capture(isInWishlist ? 'wishlist_item_removed' : 'wishlist_item_added', {
           product_id: productId,
         });
+        if (!isInWishlist) fbAddToWishlist({ id: productId });
         setHasInteracted(true);
         setOptimistic(null);
       } catch (error) {
