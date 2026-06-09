@@ -112,6 +112,11 @@
     "title": "New arrivals",
     "viewAll": "View all"
   },
+  "homeSections": {
+    "onSale": { "title": "On Sale", "viewAll": "View all" },
+    "brandSomebymi": { "title": "Shop Some By Mi", "viewAll": "View all" },
+    "category18": { "title": "SPF Products", "viewAll": "View all" }
+  },
   "testimonials": {
     "title": "What Egyptians say",
     "items": [

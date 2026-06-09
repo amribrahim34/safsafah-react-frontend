@@ -112,6 +112,11 @@
     "title": "وصل حديثًا",
     "viewAll": "المزيد"
   },
+  "homeSections": {
+    "onSale": { "title": "عروض وتخفيضات", "viewAll": "المزيد" },
+    "brandSomebymi": { "title": "تسوق Some By Mi", "viewAll": "المزيد" },
+    "category18": { "title": "منتجات الحماية من الشمس", "viewAll": "المزيد" }
+  },
   "testimonials": {
     "title": "قالوا عنّا (مصريين)",
     "items": [
