@@ -68,6 +68,23 @@ export default async function RootLayout({
             alt=""
           />
         </noscript>
+        <Script
+          id="google-ads-src"
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18167280131"
+        />
+        <Script
+          id="google-ads-config"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-18167280131');
+            `,
+          }}
+        />
         <LocaleSync />
         <Suspense fallback={null}>
           <FacebookPixelPageView />
