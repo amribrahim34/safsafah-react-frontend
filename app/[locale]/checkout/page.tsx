@@ -201,7 +201,7 @@ export default function CheckoutQuickPage() {
         mobile: formData.mobile,
         fullName: formData.fullName,
         orderRef: `SFS-${Date.now()}`,
-        walletNumber: walletNumber ||"0100 000 0000",
+        walletNumber: walletNumber,
       });
       router.push(`/wallet-payment?${walletParams.toString()}`);
       return;

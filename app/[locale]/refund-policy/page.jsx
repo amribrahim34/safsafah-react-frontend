@@ -4,6 +4,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import '@/lib/i18n';
 import { useDir } from "@/hooks/useDir";
+import { settingsService } from '@/lib/api/services';
 
 // ---- Return & Refund Policy Page ----
 // Default language is AR. No borders between blocks. Clean, consistent styling.
@@ -17,6 +18,11 @@ export default function RefundPolicy({ lastUpdated }) {
   }, [lang, i18n]);
   useDir();
 
+  const [siteSettings, setSiteSettings] = useState(null);
+  useEffect(() => {
+    settingsService.getSettings().then(setSiteSettings).catch(() => {});
+  }, []);
+
   const updated = useMemo(() => {
     const d = lastUpdated ? new Date(lastUpdated) : new Date();
     return d.toLocaleDateString(lang === "ar" ? "ar-EG" : "en-GB", {
@@ -26,12 +32,11 @@ export default function RefundPolicy({ lastUpdated }) {
     });
   }, [lastUpdated, lang]);
 
-  // Contact details — EDIT THESE
   const CONTACT = {
-    email: "support@example.com",
-    phone: "+20 10 0000 0000",
-    hoursEN: "Sunday–Thursday, 10:00–18:00",
-    hoursAR: "الأحد–الخميس، 10 صباحًا – 6 مساءً",
+    email: siteSettings?.email || '—',
+    phone: siteSettings?.mobile || '—',
+    hoursEN: 'Sunday–Thursday, 10:00–18:00',
+    hoursAR: 'الأحد–الخميس، 10 صباحًا – 6 مساءً',
   };
 
   const copy = {

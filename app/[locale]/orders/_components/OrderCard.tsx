@@ -140,7 +140,7 @@ export default function OrderCard({ lang = 'ar', brand, order, onCancel }: Order
       <div className="mt-2 border-t border-neutral-100 pt-2 grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
         {renderActions({ order, isRTL, brand, settings, onCancel, isCanceling, setIsCanceling, fmt })}
         <a
-          href="https://wa.me/201000000000"
+          href={settings?.whatsapp ? `https://wa.me/${settings.whatsapp.replace(/\D/g, '')}` : '#'}
           className="sm:ms-auto inline-flex items-center gap-1 text-[11px] text-neutral-600"
         >
           <HelpCircle className="w-4 h-4" /> {isRTL ? 'تحتاج مساعدة؟' : 'Need help?'}
