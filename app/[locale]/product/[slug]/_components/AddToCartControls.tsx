@@ -1,11 +1,9 @@
 'use client';
 
 import React from "react";
-import { Trash2, Heart, Check } from "lucide-react";
-import { useProductCart } from "@/hooks/useProductCart";
-import { useCardCart } from "@/hooks/useCardCart";
+import { Heart } from "lucide-react";
+import AddToCartButton from "@/components/products/AddToCartButton";
 import { useWishlist } from "@/hooks/useWishlist";
-import { useAppSelector } from "@/store/hooks";
 import type { Product } from '@/types/models/product';
 import type { BrandColors } from '../types';
 
@@ -18,118 +16,27 @@ interface AddToCartControlsProps {
 
 /**
  * AddToCartControls
- * Shows an "Add to cart" button (or quantity stepper when already in cart)
- * alongside a wishlist toggle button.
+ * Pairs the shared add-to-cart control (button / quantity stepper) with a
+ * wishlist toggle button on the product detail page.
  */
 export default function AddToCartControls({ product, brand, lang, onSuccess }: AddToCartControlsProps) {
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-
-  const {
-    cartItem,
-    isLoading,
-    handleAddToCart,
-    handleIncrement,
-    handleDecrement,
-  } = useProductCart(product);
-
-  // Guest-aware add-to-cart (localStorage + toast), mirroring the product card.
-  const {
-    isInCart: guestInCart,
-    isLoading: guestLoading,
-    handleAddToCart: handleGuestAddToCart,
-  } = useCardCart(product.id, lang === "en" ? "en" : "ar");
-
   const {
     isInWishlist,
     isLoading: isWishlistLoading,
     handleToggleWishlist,
   } = useWishlist(product);
 
-  const isOutOfStock = product.stock != null && product.stock < 1;
-  const atStockLimit = Boolean(
-    product.stock && cartItem && cartItem.quantity >= product.stock
-  );
-
-  const addLoading = isAuthenticated ? isLoading : guestLoading;
-
-  const handleAdd = () => {
-    if (isAuthenticated) {
-      handleAddToCart(() => {
-        document.dispatchEvent(new CustomEvent('open-mini-cart'));
-        onSuccess?.();
-      });
-    } else {
-      handleGuestAddToCart();
-      onSuccess?.();
-    }
-  };
-
   return (
     <div className="mt-5">
       <div className="flex items-center gap-3">
-
-        {/* Quantity stepper — shown when product is already in cart */}
-        {cartItem ? (
-          <div
-            className="flex items-center border rounded-2xl overflow-hidden"
-            style={{ borderColor: brand.primary }}
-          >
-            <button
-              className="px-3 py-2 hover:bg-neutral-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              onClick={handleDecrement}
-              disabled={isLoading}
-              style={{ color: cartItem.quantity <= 1 ? "#ef4444" : brand.primary }}
-              aria-label={lang === "ar" ? "تقليل الكمية" : "Decrease quantity"}
-            >
-              {cartItem.quantity <= 1 ? (
-                <Trash2 className="w-4 h-4" />
-              ) : (
-                "–"
-              )}
-            </button>
-
-            <div
-              className="px-4 py-2 min-w-[40px] text-center font-semibold"
-              style={{ color: brand.primary }}
-              aria-live="polite"
-            >
-              {cartItem.quantity}
-            </div>
-
-            <button
-              className="px-3 py-2 hover:bg-neutral-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              onClick={handleIncrement}
-              disabled={isLoading || atStockLimit}
-              style={{ color: brand.primary }}
-              aria-label={lang === "ar" ? "زيادة الكمية" : "Increase quantity"}
-            >
-              +
-            </button>
-          </div>
-        ) : !isAuthenticated && guestInCart ? (
-          /* Guest already added the item locally — show in-cart state */
-          <div
-            className="px-6 py-3 rounded-2xl text-white font-semibold flex items-center gap-2"
-            style={{ background: brand.primary }}
-          >
-            <Check className="w-5 h-5" />
-            {lang === "ar" ? "في السلة" : "In cart"}
-          </div>
-        ) : (
-          /* Add to cart button — shown when product is NOT in cart */
-          <button
-            onClick={handleAdd}
-            disabled={addLoading || isOutOfStock}
-            className="px-6 py-3 rounded-2xl text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ background: brand.primary }}
-          >
-            {addLoading
-              ? lang === "ar" ? "جاري الإضافة..." : "Adding..."
-              : isOutOfStock
-              ? lang === "ar" ? "غير متوفر" : "Out of stock"
-              : lang === "ar" ? "أضِف إلى السلة" : "Add to cart"}
-          </button>
-        )}
+        <AddToCartButton
+          variant="detail"
+          productId={product.id}
+          product={product}
+          brand={brand}
+          lang={lang}
+          onSuccess={onSuccess}
+        />
 
         {/* Wishlist toggle */}
         <button
@@ -152,15 +59,6 @@ export default function AddToCartControls({ product, brand, lang, onSuccess }: A
           </span>
         </button>
       </div>
-
-      {/* Stock-limit warning */}
-      {atStockLimit && (
-        <div className="mt-2 text-sm text-amber-600">
-          {lang === "ar"
-            ? `الحد الأقصى المتاح: ${product.stock}`
-            : `Maximum available: ${product.stock}`}
-        </div>
-      )}
     </div>
   );
 }

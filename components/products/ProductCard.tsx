@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Plus, Check, Sparkles, Heart, ShoppingBag, ShoppingCart, CreditCard } from "lucide-react";
+import { Star, Sparkles, Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { getLocalizedPath } from "@/lib/locale-navigation";
-import { useCardCart } from "@/hooks/useCardCart";
+import AddToCartButton from "./AddToCartButton";
 import { useCardWishlist } from "@/hooks/useCardWishlist";
 import GuestOrderModal from "./GuestOrderModal";
 import type { RootState } from "@/store";
@@ -64,7 +64,6 @@ export default function ProductCard({
   const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
   const [guestModalOpen, setGuestModalOpen] = useState(false);
 
-  const { isInCart, isLoading: cartLoading, handleAddToCart } = useCardCart(id, lang);
   const { isInWishlist: cardIsInWishlist, isLoading: wishlistLoading, handleToggle } = useCardWishlist(id, isInWishlist, lang);
 
   const fmt = new Intl.NumberFormat(
@@ -202,27 +201,12 @@ export default function ProductCard({
                 </button>
               )}
 
-              {!isInCart ? (
-                <button
-                  onClick={handleAddToCart}
-                  disabled={cartLoading}
-                  className="rounded text-white md:px-3 md:py-2 px-2 py-1 hover:opacity-90 transition-opacity disabled:opacity-50 flex"
-                  style={{ background: brand.primary }}
-                > 
-                  {cartLoading ? "..." : <ShoppingCart className="w-4 h-4" />}
-                </button>
-              ) : (
-                <Link
-                  href={getLocalizedPath("/cart", lang)}
-                  className="flex items-center gap-1 rounded text-white md:px-3 md:py-2 px-2 py-1 text-xs font-semibold hover:opacity-90 transition-opacity"
-                  style={{ background: "#8DA78A" }}
-                >
-                  <Check className="w-4 h-4" />
-                  <span className="hidden sm:inline">
-                    {lang === "ar" ? "في السلة" : "In Cart"}
-                  </span>
-                </Link>
-              )}
+              <AddToCartButton
+                variant="card"
+                productId={id}
+                brand={brand}
+                lang={lang}
+              />
             </div>
           </div>
         </div>
