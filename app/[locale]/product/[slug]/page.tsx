@@ -9,6 +9,7 @@ import type { LocalReview } from "./types";
 
 
 // Page-scoped components
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ProductDescription from "./_components/ProductDescription";
 import ProductHero from "./_components/ProductHero";
 import ProductJsonLd from "./_components/ProductJsonLd";
@@ -135,10 +136,28 @@ export default async function ProductPage({
     reviews = [];
   }
 
+  const productName = lang === "ar" ? product.nameAr : product.nameEn;
+  const categoryName = lang === "ar" ? product.category?.nameAr : product.category?.nameEn;
+  const breadcrumbItems = [
+    { label: lang === "ar" ? "الرئيسية" : "Home", href: `/${locale}` },
+    { label: lang === "ar" ? "المتجر" : "Shop", href: `/${locale}/catalog` },
+    ...(product.category
+      ? [
+          {
+            label: categoryName ?? "",
+            href: `/${locale}/catalog?categoryIds=${product.category.id}`,
+          },
+        ]
+      : []),
+    { label: productName ?? "" },
+  ];
+
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       {/* Structured data for Google rich results (price, stock, rating) */}
       <ProductJsonLd product={product} locale={locale} slug={slug} />
+
+      <Breadcrumbs items={breadcrumbItems} locale={locale} />
 
       {/* Server-rendered hero — h1, price, badges in initial HTML for SEO */}
       <ProductHero product={product} brand={BRAND} lang={lang} reviews={reviews} />
