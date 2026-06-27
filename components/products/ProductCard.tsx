@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Sparkles, Heart } from "lucide-react";
+import { Star, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { getLocalizedPath } from "@/lib/locale-navigation";
 import AddToCartButton from "./AddToCartButton";
-import { useCardWishlist } from "@/hooks/useCardWishlist";
+import WishlistButton from "./WishlistButton";
 import GuestOrderModal from "./GuestOrderModal";
 import type { RootState } from "@/store";
 
@@ -64,7 +64,7 @@ export default function ProductCard({
   const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
   const [guestModalOpen, setGuestModalOpen] = useState(false);
 
-  const { isInWishlist: cardIsInWishlist, isLoading: wishlistLoading, handleToggle } = useCardWishlist(id, isInWishlist, lang);
+  const [cardIsInWishlist, setCardIsInWishlist] = useState(isInWishlist);
 
   const fmt = new Intl.NumberFormat(
     lang === "ar" ? "ar-EG" : "en-EG",
@@ -122,21 +122,14 @@ export default function ProductCard({
         )}
 
         {/* Wishlist button — always visible, top-start */}
-        <button
-          onClick={handleToggle}
-          disabled={wishlistLoading}
-          aria-label={cardIsInWishlist
-            ? (lang === "ar" ? "إزالة من المفضلة" : "Remove from favorites")
-            : (lang === "ar" ? "إضافة إلى المفضلة" : "Add to favorites")
-          }
-          className="absolute top-2 start-2 bg-white rounded-full p-1.5 shadow transition-opacity hover:opacity-80 disabled:opacity-50"
-        >
-          <Heart
-            className={`w-4 h-4 ${
-              cardIsInWishlist ? "fill-red-500 text-red-500" : "text-gray-400"
-            }`}
-          />
-        </button>
+        <WishlistButton
+          variant="card"
+          productId={id}
+          isInWishlist={isInWishlist}
+          brand={brand}
+          lang={lang}
+          onStateChange={setCardIsInWishlist}
+        />
       </div>
 
       <div className="p-2 sm:p-3 flex flex-col flex-1">
