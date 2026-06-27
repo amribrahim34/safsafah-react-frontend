@@ -1,9 +1,11 @@
 'use client';
 
 import React from "react";
-import { Trash2, Heart } from "lucide-react";
+import { Trash2, Heart, Check } from "lucide-react";
 import { useProductCart } from "@/hooks/useProductCart";
+import { useCardCart } from "@/hooks/useCardCart";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useAppSelector } from "@/store/hooks";
 import type { Product } from '@/types/models/product';
 import type { BrandColors } from '../types';
 
@@ -20,6 +22,8 @@ interface AddToCartControlsProps {
  * alongside a wishlist toggle button.
  */
 export default function AddToCartControls({ product, brand, lang, onSuccess }: AddToCartControlsProps) {
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+
   const {
     cartItem,
     isLoading,
@@ -27,6 +31,13 @@ export default function AddToCartControls({ product, brand, lang, onSuccess }: A
     handleIncrement,
     handleDecrement,
   } = useProductCart(product);
+
+  // Guest-aware add-to-cart (localStorage + toast), mirroring the product card.
+  const {
+    isInCart: guestInCart,
+    isLoading: guestLoading,
+    handleAddToCart: handleGuestAddToCart,
+  } = useCardCart(product.id, lang === "en" ? "en" : "ar");
 
   const {
     isInWishlist,
@@ -38,6 +49,20 @@ export default function AddToCartControls({ product, brand, lang, onSuccess }: A
   const atStockLimit = Boolean(
     product.stock && cartItem && cartItem.quantity >= product.stock
   );
+
+  const addLoading = isAuthenticated ? isLoading : guestLoading;
+
+  const handleAdd = () => {
+    if (isAuthenticated) {
+      handleAddToCart(() => {
+        document.dispatchEvent(new CustomEvent('open-mini-cart'));
+        onSuccess?.();
+      });
+    } else {
+      handleGuestAddToCart();
+      onSuccess?.();
+    }
+  };
 
   return (
     <div className="mt-5">
@@ -81,18 +106,24 @@ export default function AddToCartControls({ product, brand, lang, onSuccess }: A
               +
             </button>
           </div>
+        ) : !isAuthenticated && guestInCart ? (
+          /* Guest already added the item locally — show in-cart state */
+          <div
+            className="px-6 py-3 rounded-2xl text-white font-semibold flex items-center gap-2"
+            style={{ background: brand.primary }}
+          >
+            <Check className="w-5 h-5" />
+            {lang === "ar" ? "في السلة" : "In cart"}
+          </div>
         ) : (
           /* Add to cart button — shown when product is NOT in cart */
           <button
-            onClick={() => handleAddToCart(() => {
-              document.dispatchEvent(new CustomEvent('open-mini-cart'));
-              onSuccess?.();
-            })}
-            disabled={isLoading || isOutOfStock}
+            onClick={handleAdd}
+            disabled={addLoading || isOutOfStock}
             className="px-6 py-3 rounded-2xl text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ background: brand.primary }}
           >
-            {isLoading
+            {addLoading
               ? lang === "ar" ? "جاري الإضافة..." : "Adding..."
               : isOutOfStock
               ? lang === "ar" ? "غير متوفر" : "Out of stock"
