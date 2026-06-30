@@ -155,7 +155,7 @@ export default async function ProductPage({
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       {/* Structured data for Google rich results (price, stock, rating) */}
-      <ProductJsonLd product={product} locale={locale} slug={slug} />
+      <ProductJsonLd product={product} locale={locale} slug={slug} reviews={reviews} />
 
       <Breadcrumbs items={breadcrumbItems} locale={locale} />
 
