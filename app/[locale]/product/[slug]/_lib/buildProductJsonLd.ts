@@ -125,6 +125,36 @@ export function buildProductJsonLd({
               ? "https://schema.org/InStock"
               : "https://schema.org/OutOfStock",
           itemCondition: "https://schema.org/NewCondition",
+          // Ship to Egypt only — pinning the country stops Google from
+          // expanding the offer to multiple regions. Flat 50 EGP courier rate
+          // (free over 2000 EGP), 1–5 business days across Egypt.
+          shippingDetails: {
+            "@type": "OfferShippingDetails",
+            shippingRate: {
+              "@type": "MonetaryAmount",
+              value: 50,
+              currency: "EGP",
+            },
+            shippingDestination: {
+              "@type": "DefinedRegion",
+              addressCountry: "EG",
+            },
+            deliveryTime: {
+              "@type": "ShippingDeliveryTime",
+              handlingTime: {
+                "@type": "QuantitativeValue",
+                minValue: 0,
+                maxValue: 1,
+                unitCode: "DAY",
+              },
+              transitTime: {
+                "@type": "QuantitativeValue",
+                minValue: 1,
+                maxValue: 5,
+                unitCode: "DAY",
+              },
+            },
+          },
         },
         ...(hasRating
           ? {
