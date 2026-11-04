@@ -125,6 +125,19 @@ export function buildProductJsonLd({
               ? "https://schema.org/InStock"
               : "https://schema.org/OutOfStock",
           itemCondition: "https://schema.org/NewCondition",
+          seller: {
+            "@type": "OnlineStore",
+            name: locale === "ar" ? "صفصافة" : "Safsafah",
+            url: siteUrl,
+          },
+          hasMerchantReturnPolicy: {
+            "@type": "MerchantReturnPolicy",
+            applicableCountry: "EG",
+            returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+            merchantReturnDays: 14,
+            returnMethod: "https://schema.org/ReturnByMail",
+            returnFees: "https://schema.org/FreeReturn",
+          },
           // Ship to Egypt only — pinning the country stops Google from
           // expanding the offer to multiple regions. Flat 50 EGP courier rate
           // (free over 2000 EGP), 1–5 business days across Egypt.
