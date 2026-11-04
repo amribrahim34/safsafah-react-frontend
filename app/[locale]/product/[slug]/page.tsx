@@ -40,9 +40,21 @@ export async function generateMetadata({
     const productUrl = `${siteUrl}/${locale}/product/${slug}`;
     const imageUrl = product.image ?? "";
 
+    // Define language counterparts for Hreflang
+    const alternateLocale = locale === "ar" ? "en" : "ar";
+
     return {
       title: title ?? undefined,
       description: description ?? undefined,
+      // 👇 Add alternates configuration here
+      alternates: {
+        canonical: productUrl,
+        languages: {
+          'ar-EG': `${siteUrl}/ar/product/${slug}`,
+          'en-EG': `${siteUrl}/en/product/${slug}`,
+          'x-default': `${siteUrl}/ar/product/${slug}`,
+        },
+      },
       robots: {
         index: true,
         follow: true,
