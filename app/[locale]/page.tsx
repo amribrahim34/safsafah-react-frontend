@@ -12,9 +12,9 @@ import HomeProductSection from "./_components/HomeProductSection";
 
 
 type PageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export default async function Home({ params }: PageProps) {

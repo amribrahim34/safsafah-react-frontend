@@ -9,7 +9,8 @@ import { settingsService } from '@/lib/api/services';
 // ---- Return & Refund Policy Page ----
 // Default language is AR. No borders between blocks. Clean, consistent styling.
 
-export default function RefundPolicy({ lastUpdated }) {
+export default function RefundPolicy() {
+  const lastUpdated = undefined;
   // Default Arabic
   const [lang] = useState("ar");
   const { i18n } = useTranslation('home');
