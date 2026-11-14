@@ -37,6 +37,8 @@ export default async function RootLayout({
       <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png"></link>
       <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png"></link>
       <link rel="manifest" href="/favicons/site.webmanifest"></link>
+      {/* WebMCP Origin Trial Token — enables Agentic Browsing support for Chrome AI agents */}
+      <meta httpEquiv="origin-trial" content="AskHdaDaI1JLZJ4pr3MRkba8qr2IPWu5bD7sbPOIArGrtGl0Rp9aTI5NGqA44rgBnmA/d1IFirhlh9Zq0QgrLQwAAABMeyJvcmlnaW4iOiJodHRwczovL3NhZnNhZmFoLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViTUNQIiwiZXhwaXJ5IjoxODA2MzY0ODAwfQ==" />
       </head>
 
       <body

@@ -1,0 +1,64 @@
+# Safsafah (صفصافه)
+
+> Safsafah is a Saudi Arabian e-commerce platform specializing in premium cosmetics, skincare, and beauty products. The site supports both Arabic (RTL) and English (LTR) and ships across Saudi Arabia.
+
+## Site Overview
+
+- **Domain:** https://safsafah.com
+- **Languages:** Arabic (default, RTL), English
+- **Category:** Beauty & Cosmetics E-commerce
+- **Currency:** SAR (Saudi Riyal)
+
+## Key Pages
+
+- **Homepage:** https://safsafah.com — Featured collections, best sellers, top brands, and categories
+- **Catalog / Shop:** https://safsafah.com/catalog — Browse all products with filters (brand, category, price, skin type)
+- **Product Page:** https://safsafah.com/product/{slug} — Full product detail, images, description, reviews, and add-to-cart
+- **Cart:** https://safsafah.com/cart — Shopping cart with quantity controls and coupon codes
+- **Checkout:** https://safsafah.com/checkout — Delivery address (with map picker), payment methods, order summary
+- **Brands:** https://safsafah.com/brands — Browse all available beauty brands
+- **Blog:** https://safsafah.com/blog — Beauty tips, skincare guides, and product tutorials
+- **Contact:** https://safsafah.com/contact — Customer support contact form and response hours
+- **Login:** https://safsafah.com/login — Email/password or OTP login
+- **Sign Up:** https://safsafah.com/signup — New account registration
+- **My Account:** https://safsafah.com/account — Order history, addresses, wishlist, rewards wallet, beauty profile, settings
+- **My Orders:** https://safsafah.com/orders — Track and manage past orders
+- **Skin Quiz:** https://safsafah.com/quize — Personalized skin type and concern quiz to get product recommendations
+- **Wallet Payment:** https://safsafah.com/wallet-payment — Pay using Safsafah rewards wallet
+
+## Product Categories
+
+Safsafah carries products in the following beauty categories:
+- Skincare (moisturizers, serums, cleansers, toners, masks, SPF)
+- Makeup (foundation, lipstick, mascara, eyeshadow, blush, concealer)
+- Haircare (shampoo, conditioner, hair masks, oils)
+- Fragrance & Body (perfumes, body lotions, scrubs)
+- Tools & Accessories (brushes, applicators, devices)
+- Men's Grooming
+
+## Key Features
+
+- **Beauty Profile / Skin Quiz:** Users can take a skin type quiz to receive personalized product recommendations
+- **Rewards Wallet:** Loyalty points earned on purchases, redeemable at checkout
+- **Wishlist:** Save products for later
+- **Reviews & Ratings:** Product reviews with rating breakdown
+- **Bilingual:** Full Arabic and English support with locale-based routing (`/ar/`, `/en/`)
+- **Fast Delivery:** Ships across Saudi Arabia
+
+## Common User Actions
+
+- Search and filter products by brand, category, skin type, or price
+- Add products to cart and proceed to checkout
+- Apply coupon codes
+- Select delivery address using an interactive map
+- Pay via card or Safsafah wallet
+- Track existing orders
+- Save items to wishlist
+- Write and read product reviews
+- Take the skin quiz for personalized recommendations
+- Contact support
+
+## Contact & Support
+
+- Contact page: https://safsafah.com/contact
+- Social media links available in site footer
