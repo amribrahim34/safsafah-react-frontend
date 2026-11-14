@@ -1,8 +1,15 @@
 import { unstable_cache } from 'next/cache'
 import type { MetadataRoute } from 'next'
 
-const BASE_URL = 'https://safsafah.com'
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://api.safsafah.com/api/v1'
+export const revalidate = 3600
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '') || 'https://safsafah.com'
+const FALLBACK_PROD_API = 'https://api.safsafah.com/api'
+
+function normalizeApiUrl(rawUrl?: string): string {
+  if (!rawUrl || !rawUrl.trim()) return FALLBACK_PROD_API
+  return rawUrl.trim().replace(/\/api\/v1\/?$/, '/api').replace(/\/+$/, '')
+}
 
 // ─── Static routes ────────────────────────────────────────────────────────────
 // Use real last-modified dates — not new Date() — so Google doesn't think
@@ -19,6 +26,7 @@ const staticRoutes: {
   { path: '/about',         lastModified: '2025-01-01', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/contact',       lastModified: '2025-01-01', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/refund-policy', lastModified: '2025-01-01', changeFrequency: 'yearly',  priority: 0.4 },
+  { path: '/blog',          lastModified: '2025-01-01', changeFrequency: 'weekly',  priority: 0.7 },
 ]
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -27,7 +35,62 @@ interface ProductSlug {
   slugEn?: string
   slugAr?: string
   updatedAt?: string
-  updated_at?: string
+}
+
+function mapProduct(p: any): ProductSlug {
+  return {
+    slugEn: typeof p?.slugEn === 'string' && p.slugEn.trim() ? p.slugEn.trim() : undefined,
+    slugAr: typeof p?.slugAr === 'string' && p.slugAr.trim() ? p.slugAr.trim() : undefined,
+    updatedAt: p?.updatedAt || p?.updated_at || undefined,
+  }
+}
+
+// ─── API Product Fetcher ───────────────────────────────────────────────────────
+
+async function fetchProductsFromApi(baseUrl: string): Promise<ProductSlug[]> {
+  // Use limit=100 and per_page=100 so Laravel accepts the batch size
+  const firstRes = await fetch(`${baseUrl}/products?limit=100&per_page=100&page=1`, {
+    headers: { Accept: 'application/json' },
+  })
+
+  if (!firstRes.ok) {
+    throw new Error(`Products API responded with ${firstRes.status} (${baseUrl})`)
+  }
+
+  const firstData = await firstRes.json()
+  const rawFirstList: any[] = firstData.data ?? []
+  const products: ProductSlug[] = rawFirstList.map(mapProduct)
+  const lastPage: number = Number(firstData.meta?.last_page) || 1
+
+  // Fetch all remaining pages in controlled batches (batch size 3) to prevent overwhelming PHP-FPM
+  if (lastPage > 1) {
+    const remainingPages = Array.from({ length: lastPage - 1 }, (_, i) => i + 2)
+    const BATCH_SIZE = 3
+
+    for (let i = 0; i < remainingPages.length; i += BATCH_SIZE) {
+      const batch = remainingPages.slice(i, i + BATCH_SIZE)
+      const batchResults = await Promise.allSettled(
+        batch.map(async (page) => {
+          const res = await fetch(`${baseUrl}/products?limit=100&per_page=100&page=${page}`, {
+            headers: { Accept: 'application/json' },
+          })
+          if (!res.ok) throw new Error(`Page ${page} failed with ${res.status}`)
+          const json = await res.json()
+          return (json.data ?? []).map(mapProduct) as ProductSlug[]
+        })
+      )
+
+      for (const res of batchResults) {
+        if (res.status === 'fulfilled') {
+          products.push(...res.value)
+        } else {
+          console.warn('[sitemap] Failed fetching product page:', res.reason)
+        }
+      }
+    }
+  }
+
+  return products
 }
 
 // ─── Cached product fetcher ───────────────────────────────────────────────────
@@ -37,37 +100,26 @@ interface ProductSlug {
 
 const getCachedProductSlugs = unstable_cache(
   async (): Promise<ProductSlug[]> => {
-    // Fetch page 1 to discover total page count
-    const firstRes = await fetch(`${API_BASE}/products?per_page=100&page=1`)
+    const primaryApi = normalizeApiUrl(process.env.NEXT_PUBLIC_API_BASE_URL)
 
-    if (!firstRes.ok) {
-      throw new Error(`Products API responded with ${firstRes.status}`)
+    try {
+      return await fetchProductsFromApi(primaryApi)
+    } catch (primaryErr) {
+      // If primary API (e.g. localhost during build or misconfigured URL) fails, fallback to production API
+      if (primaryApi !== FALLBACK_PROD_API) {
+        console.warn(`[sitemap] Primary API (${primaryApi}) failed. Retrying with production API (${FALLBACK_PROD_API})...`, primaryErr)
+        try {
+          return await fetchProductsFromApi(FALLBACK_PROD_API)
+        } catch (fallbackErr) {
+          console.error('[sitemap] Production fallback API also failed:', fallbackErr)
+          throw fallbackErr
+        }
+      }
+      throw primaryErr
     }
-
-    const firstData = await firstRes.json()
-    const products: ProductSlug[] = firstData.data ?? []
-    const lastPage: number = firstData.meta?.last_page ?? 1
-
-    // Fetch all remaining pages in parallel
-    if (lastPage > 1) {
-      const pageNumbers = Array.from({ length: lastPage - 1 }, (_, i) => i + 2)
-      const rest = await Promise.all(
-        pageNumbers.map((page) =>
-          fetch(`${API_BASE}/products?per_page=100&page=${page}`)
-            .then((r) => {
-              if (!r.ok) throw new Error(`Page ${page} failed with ${r.status}`)
-              return r.json()
-            })
-            .then((d) => (d.data ?? []) as ProductSlug[])
-        )
-      )
-      products.push(...rest.flat())
-    }
-
-    return products
   },
-  ['sitemap-products'],       // cache key
-  { revalidate: 3600 }        // refresh every hour; stale value kept on error
+  ['sitemap-products-slugs-v2'], // cache key
+  { revalidate: 3600 }           // refresh every hour; stale value kept on error
 )
 
 // ─── Sitemap ──────────────────────────────────────────────────────────────────
@@ -117,9 +169,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Skip products that are missing both slugs
     if (!product.slugEn && !product.slugAr) continue
 
-    const modified = new Date(
-      product.updatedAt ?? product.updated_at ?? Date.now()
-    )
+    const modified = product.updatedAt ? new Date(product.updatedAt) : new Date('2025-01-01')
 
     // Use the EN URL as the canonical; AR as the alternate (and vice-versa)
     if (product.slugEn) {
