@@ -59,8 +59,13 @@ export default function CartPage() {
       return;
     }
     setGuestLoading(true);
-    Promise.all(localItems.map((li) => productsService.getProduct(li.productId)))
-      .then(setGuestProducts)
+    Promise.allSettled(localItems.map((li) => productsService.getProduct(li.productId)))
+      .then((results) => {
+        const successful = results
+          .filter((r): r is PromiseFulfilledResult<Product> => r.status === 'fulfilled')
+          .map((r) => r.value);
+        setGuestProducts(successful);
+      })
       .finally(() => setGuestLoading(false));
   }, [isAuthenticated, localItems]);
 

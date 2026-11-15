@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   Star,
   ShieldCheck,
@@ -35,14 +34,11 @@ export const TetraGlowHero: React.FC<TetraGlowHeroProps> = ({
   lang,
   onScrollToOrder,
 }) => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
-  const [quantity, setQuantity] = useState(1);
   const [isLiked, setIsLiked] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
-  const [isBuying, setIsBuying] = useState(false);
 
   const isAr = lang === 'ar';
 
@@ -116,12 +112,12 @@ export const TetraGlowHero: React.FC<TetraGlowHeroProps> = ({
   const handleAddToCart = async () => {
     setIsAdding(true);
     try {
-      const success = await executeAddToCart(quantity);
+      const success = await executeAddToCart(1);
       if (success) {
         showProductToast(
           isAr
-            ? `تمت إضافة (${quantity}) عبوة إلى السلة بنجاح`
-            : `Added (${quantity}) to cart successfully`,
+            ? 'تمت إضافة المنتج إلى السلة بنجاح'
+            : 'Added to cart successfully',
           isAr
         );
       }
@@ -131,29 +127,21 @@ export const TetraGlowHero: React.FC<TetraGlowHeroProps> = ({
   };
 
   /**
-   * Buy Now handler
-   * Adds the selected quantity to cart and routes directly to the checkout flow
+   * Buy Now handler — on the landing page we scroll to the express COD form
+   * rather than routing to /checkout (which requires authentication).
    */
-  const handleBuyNow = async () => {
-    setIsBuying(true);
-    try {
-      const success = await executeAddToCart(quantity);
-      if (success) {
-        // Track checkout initiation
-        posthog.capture('checkout_started', {
-          product_id: product.id,
-          cart_total: product.price * quantity,
-          item_count: quantity,
-        });
+  const handleBuyNow = () => {
+    // Track intent
+    posthog.capture('checkout_started', {
+      product_id: product.id,
+      cart_total: product.price,
+      item_count: 1,
+      source: 'landing_hero_buy_now',
+    });
+    fbInitiateCheckout(product.price, 1);
 
-        fbInitiateCheckout(product.price * quantity, quantity);
-
-        // Navigate to the checkout page
-        router.push(`/${lang}/checkout`);
-      }
-    } finally {
-      setIsBuying(false);
-    }
+    // Scroll to the express COD order form at the bottom of the page
+    scrollToExpressForm();
   };
 
   const scrollToExpressForm = () => {
@@ -274,63 +262,24 @@ export const TetraGlowHero: React.FC<TetraGlowHeroProps> = ({
 
             {/* ACTION BUTTONS: BUY NOW & ADD TO CART */}
             <div className="space-y-3 pt-2">
-              {/* Stepper + Buy Now */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
-                {/* Stepper */}
-                <div className="flex items-center justify-between sm:justify-start border border-neutral-300 rounded-xl bg-white shadow-xs px-3 py-1.5 self-center sm:self-auto w-full sm:w-auto">
-                  <span className="text-xs text-neutral-500 font-medium sm:hidden">
-                    {isAr ? 'الكمية:' : 'Qty:'}
-                  </span>
-                  <div className="flex items-center">
-                    <button
-                      type="button"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-8 h-8 flex items-center justify-center text-neutral-600 hover:text-black font-bold text-lg disabled:opacity-30"
-                      disabled={quantity <= 1 || isAdding || isBuying}
-                      aria-label={isAr ? 'تقليل الكمية' : 'Decrease Quantity'}
-                    >
-                      -
-                    </button>
-                    <span className="w-9 text-center font-bold text-neutral-800 text-sm">
-                      {quantity}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="w-8 h-8 flex items-center justify-center text-neutral-600 hover:text-black font-bold text-lg disabled:opacity-30"
-                      disabled={isAdding || isBuying}
-                      aria-label={isAr ? 'زيادة الكمية' : 'Increase Quantity'}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                {/* Primary CTA: BUY NOW */}
-                <button
-                  type="button"
-                  onClick={handleBuyNow}
-                  disabled={isBuying || isAdding}
-                  className="flex-1 py-3.5 px-6 rounded-xl font-extrabold text-sm sm:text-base text-white bg-teal-700 hover:bg-teal-800 active:scale-[0.98] shadow-md shadow-teal-700/20 transition-all text-center flex items-center justify-center gap-2 disabled:opacity-60"
-                >
-                  <Zap className="w-4 h-4 sm:w-5 sm:h-5 fill-white text-white" />
-                  <span>
-                    {isBuying
-                      ? isAr
-                        ? 'جاري تجهيز الطلب...'
-                        : 'Preparing order...'
-                      : isAr
-                      ? 'اشتري الآن (إتمام الطلب مباشرة)'
-                      : 'Buy Now (Direct Checkout)'}
-                  </span>
-                </button>
-              </div>
+              {/* Primary CTA: BUY NOW → scrolls to COD form */}
+              <button
+                type="button"
+                onClick={handleBuyNow}
+                disabled={isAdding}
+                className="w-full py-3.5 px-6 rounded-xl font-extrabold text-sm sm:text-base text-white bg-teal-700 hover:bg-teal-800 active:scale-[0.98] shadow-md shadow-teal-700/20 transition-all text-center flex items-center justify-center gap-2 disabled:opacity-60"
+              >
+                <Zap className="w-4 h-4 sm:w-5 sm:h-5 fill-white text-white" />
+                <span>
+                  {isAr ? 'اطلبي الآن (دفع عند الاستلام)' : 'Order Now (Cash on Delivery)'}
+                </span>
+              </button>
 
               {/* Secondary CTA: ADD TO CART */}
               <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={isAdding || isBuying}
+                disabled={isAdding}
                 className="w-full py-3.5 px-5 rounded-xl font-bold text-sm sm:text-base text-teal-800 bg-teal-50 hover:bg-teal-100/80 active:scale-[0.98] border border-teal-200 transition-all flex items-center justify-center gap-2 shadow-xs disabled:opacity-60"
               >
                 <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-teal-700" />
@@ -364,7 +313,7 @@ export const TetraGlowHero: React.FC<TetraGlowHeroProps> = ({
               <div className="flex items-center gap-1.5 text-neutral-600">
                 <Truck className="w-3.5 h-3.5 text-teal-600 flex-shrink-0" />
                 <span className="text-[11px] font-medium leading-tight">
-                  {isAr ? 'توصيل 24-48 ساعة' : '24-48h Delivery'}
+                  {isAr ? 'توصيل خلال 72 ساعة' : '72h Express Delivery'}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 text-neutral-600">

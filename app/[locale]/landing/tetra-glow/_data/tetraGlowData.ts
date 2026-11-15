@@ -1,16 +1,16 @@
 import type { TetraGlowProductData } from '../_types';
 
 export const TETRA_GLOW_DATA: TetraGlowProductData = {
-  id: 9942,
+  id: 644,
   slug: 'tetra-glow-whitening-sensitive-zone-cream-50-gm',
   nameAr: 'كريم تيترا جلو لتفتيح المناطق الحساسة - 50 جم',
   nameEn: 'Tetra Glow Whitening Sensitive Zone Cream - 50 gm',
   taglineAr: 'تركيبة متطورة رباعية الفعالية لتفتيح وتوحيد لون المناطق الحساسة بأمان ونعومة فائقة',
   taglineEn: 'Advanced Quad-Action Formula for Safe, Gentle & Luminous Sensitive Zone Brightening',
   size: '50 gm / 1.76 oz',
-  price: 295,
-  originalPrice: 420,
-  discountPercentage: 30,
+  price: 418,
+  originalPrice: 522,
+  discountPercentage: 20,
   rating: 4.9,
   ratingCount: 148,
   inStock: true,
@@ -253,8 +253,8 @@ export const TETRA_GLOW_DATA: TetraGlowProductData = {
       id: 'faq-5',
       questionAr: 'كيف يتم الشحن والتوصيل، وهل يوجد دفع عند الاستلام؟',
       questionEn: 'How does shipping work, and is Cash on Delivery available?',
-      answerAr: 'نعم! نوفر خدمة الدفع عند الاستلام في جميع محافظات مصر، والتوصيل سريع خلال 24 إلى 48 ساعة داخل القاهرة والجيزة، و2 إلى 4 أيام لباقي المحافظات في تغليف سري ومحكم تماماً للحفاظ على خصوصيتك.',
-      answerEn: 'Yes! Cash on Delivery is available across all governorates of Egypt. Fast delivery within 24-48 hours in Cairo and Giza, and 2-4 days for other governorates in completely discreet, secure packaging to guarantee your privacy.',
+      answerAr: 'نعم! نوفر خدمة الدفع عند الاستلام في جميع محافظات مصر، والتوصيل سريع خلال 72 ساعة في تغليف سري ومحكم تماماً للحفاظ على خصوصيتك.',
+      answerEn: 'Yes! Cash on Delivery is available across all governorates of Egypt. Express delivery takes up to 72 hours in completely discreet, secure packaging to guarantee your privacy.',
       category: 'shipping'
     }
   ]

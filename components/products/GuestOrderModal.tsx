@@ -5,7 +5,7 @@ import { X, ShoppingBag } from "lucide-react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
 import { setAuthData } from "@/store/slices/authSlice";
-import { ordersService } from "@/lib/api";
+import { ordersService, ApiException } from "@/lib/api";
 import { showProductToast } from "@/lib/swal";
 import type { User } from "@/types";
 
@@ -94,7 +94,11 @@ export default function GuestOrderModal({
       showProductToast(t.success, isRtl);
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t.required);
+      if (err instanceof ApiException && err.errors && Object.keys(err.errors).length > 0) {
+        setError(Object.values(err.errors).flat().join("\n"));
+      } else {
+        setError(err instanceof Error ? err.message : t.required);
+      }
     } finally {
       setIsLoading(false);
     }

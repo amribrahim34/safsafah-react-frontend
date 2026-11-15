@@ -98,13 +98,16 @@ export const cartService = {
 
   /**
    * Syncs local cart with server cart (useful after login)
+   * The backend has no /cart/sync endpoint, so items are added individually via /cart/items.
    * @param localItems - Items from local storage
    * @returns Merged cart
    */
   async syncCart(localItems: AddToCartRequest[]): Promise<CartResponse> {
-    const response = await post<CartResponse, { items: AddToCartRequest[] }>('/cart/sync', {
-      items: localItems,
-    });
-    return response.data;
+    if (localItems.length > 0) {
+      await Promise.allSettled(
+        localItems.map((item) => this.addToCart(item))
+      );
+    }
+    return this.getCart();
   },
 };
