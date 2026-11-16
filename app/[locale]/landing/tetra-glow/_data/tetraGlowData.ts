@@ -56,7 +56,7 @@ export const TETRA_GLOW_DATA: TetraGlowProductData = {
     },
     {
       id: 'texture',
-      src: '/products/tetra-glow/texture.png',
+      src: '/products/tetra-glow/texture.jpg',
       altAr: 'قوام كريم تيترا جلو المخملي الخفيف وسريع الامتصاص',
       altEn: 'Tetra Glow Cream Silky Fast-Absorbing Velvety Texture',
       captionAr: 'قوام مخملي غير لزج فائق النعومة',
