@@ -46,7 +46,7 @@ export const TETRA_GLOW_DATA: TetraGlowProductData = {
   images: [
     {
       id: 'main',
-      src: '/products/tetra-glow/main.jpg',
+      src: '/products/tetra-glow/main.png',
       altAr: 'عبوة كريم تيترا جلو لتفتيح المناطق الحساسة 50 جم الأصلية',
       altEn: 'Tetra Glow Sensitive Zone Whitening Cream 50g Original Package',
       captionAr: 'العبوة الأصلية الفاخرة بحجم 50 جم',
@@ -56,7 +56,7 @@ export const TETRA_GLOW_DATA: TetraGlowProductData = {
     },
     {
       id: 'texture',
-      src: '/products/tetra-glow/texture.jpg',
+      src: '/products/tetra-glow/texture.png',
       altAr: 'قوام كريم تيترا جلو المخملي الخفيف وسريع الامتصاص',
       altEn: 'Tetra Glow Cream Silky Fast-Absorbing Velvety Texture',
       captionAr: 'قوام مخملي غير لزج فائق النعومة',
@@ -66,7 +66,7 @@ export const TETRA_GLOW_DATA: TetraGlowProductData = {
     },
     {
       id: 'ingredients',
-      src: '/products/tetra-glow/ingredients.jpg',
+      src: '/products/tetra-glow/ingredients.png',
       altAr: 'المكونات الفعالة والطبيعية في كريم تيترا جلو لتفتيح المناطق الحساسة',
       altEn: 'Active and Botanical Ingredients in Tetra Glow Whitening Cream',
       captionAr: 'خلاصات طبيعية وعلم تفتيح دقيق',

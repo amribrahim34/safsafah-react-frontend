@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://safsafah.com';
   const canonicalUrl = `${siteUrl}/${locale}/landing/tetra-glow`;
-  const mainImage = `${siteUrl}${product.images[0]?.src || '/products/tetra-glow/main.jpg'}`;
+  const mainImage = `${siteUrl}${product.images[0]?.src || '/products/tetra-glow/main.png'}`;
 
   // Price validity: set to end of current year as a rolling promotional window
   const priceValidUntil = `${new Date().getFullYear()}-12-31`;

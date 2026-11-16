@@ -49,7 +49,7 @@ export const TetraGlowStickyBar: React.FC<TetraGlowStickyBarProps> = ({ product,
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="relative w-11 h-11 rounded-lg overflow-hidden border border-neutral-200 flex-shrink-0 bg-stone-50">
             <Image
-              src={product.images[0]?.src || '/products/tetra-glow/main.jpg'}
+              src={product.images[0]?.src || '/products/tetra-glow/main.png'}
               alt={isAr ? product.nameAr : product.nameEn}
               fill
               className="object-cover"
