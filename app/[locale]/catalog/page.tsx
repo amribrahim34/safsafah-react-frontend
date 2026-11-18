@@ -119,7 +119,7 @@ function CatalogPageContent() {
           onApply={applyFilters}
         />
 
-        <div className="grid md:grid-cols-[280px,1fr] gap-6">
+        <div className="grid md:grid-cols-[280px_1fr] gap-6">
           <DesktopFilterSidebar
             lang={locale}
             brand={BRAND}

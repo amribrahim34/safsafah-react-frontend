@@ -1,3 +1,5 @@
+'use client';
+
 import Filters from '@/components/catalog/filters/Filters';
 import type { FilterState } from '@/components/catalog/filters/Filters';
 

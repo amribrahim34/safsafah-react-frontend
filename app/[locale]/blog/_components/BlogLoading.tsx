@@ -8,7 +8,7 @@ export default function BlogLoading() {
         <div className="h-8 w-48 bg-neutral-200 rounded-lg mb-2" />
         <div className="h-4 w-72 bg-neutral-100 rounded-lg mb-10" />
 
-        <div className="grid md:grid-cols-[320px,1fr] gap-10">
+        <div className="grid md:grid-cols-[320px_1fr] gap-10">
           {/* Sidebar skeleton */}
           <div className="hidden md:block space-y-6">
             <div className="h-11 bg-neutral-100 rounded-2xl" />

@@ -67,7 +67,7 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
         <div className="absolute top-3.5 start-3.5 z-10 flex flex-col gap-1.5 pointer-events-none">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold tracking-wide uppercase bg-teal-700 text-white shadow-xs">
             <Sparkles className="w-3.5 h-3.5" />
-            {isAr ? 'غسول خالٍ من السلفات' : 'Sulfate Free Cleanser'}
+            {isAr ? 'رغوة لطيفة بدون جفاف' : 'Gentle Foaming Cleanser'}
           </span>
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-white/95 backdrop-blur-md text-neutral-800 border border-neutral-200/60 shadow-2xs">
             <ShieldCheck className="w-3.5 h-3.5 text-teal-700" />
@@ -160,7 +160,15 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
 
       {/* Thumbnails Strip */}
       {images.length > 1 && (
-        <div className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
+        <div
+          className={`mt-3 grid gap-2 sm:gap-3 ${
+            images.length === 2
+              ? 'grid-cols-2 max-w-xs mx-auto'
+              : images.length >= 4
+              ? 'grid-cols-4'
+              : 'grid-cols-3'
+          }`}
+        >
           {images.map((img, idx) => {
             const isSelected = idx === activeIndex;
             return (

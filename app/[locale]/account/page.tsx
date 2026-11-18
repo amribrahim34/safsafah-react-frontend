@@ -77,7 +77,7 @@ export default function ProfilePage() {
           <OverviewHeader brand={BRAND} lang={lang} user={user} t={overviewT} />
         )}
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr),380px] items-start mt-4">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] items-start mt-4">
           <div className="space-y-6">
             <OrdersList brand={BRAND} lang={lang} t={ordersT} />
             <WishlistGrid brand={BRAND} lang={lang} t={wishlistT} />

@@ -13,7 +13,7 @@ interface VichyNormadermSimilarProductsProps {
 
 export default async function VichyNormadermSimilarProducts({
   lang,
-  currentProductId = 920,
+  currentProductId = 648,
 }: VichyNormadermSimilarProductsProps) {
   const isAr = lang === 'ar';
 

@@ -4,21 +4,21 @@ import type { VichyNormadermProductData } from '../_types';
  * Vichy Normaderm Phytosolution Daily Purifying Gel Cleanser 200ml
  * Original Price: 850 EGP
  * Discount: 15% -> Price: 722 EGP (850 - 128 = 722.5 -> 722 EGP)
- * Exact info extracted from official dermatological sheet:
- * - Salicylic Acid: حمض تقشير مستخلص من اصل طبيعي للتخلص من الرؤوس البيضا والسودا
- * - Hyaluronic Acid: مرطيب مائي خفيف لمدة 24 ساعه يحافظ علي المحتوي المائي للبشرة
- * - ZN-Gluconate: تنظيم الافرازات الدهنيه مضاد للبكتريا المسببه لحب الشباب
- * - Pro Biotic: يمنع تكرار ظهور الحبوب مره اخري ينشط ويقوي جهاز المناعة
- * - Sulfate Free Cleanser: غسول خالٍ تماماً من السلفات والبارابين والصابون
- * - 200ml
+ * Product ID: 648
+ *
+ * Ingredients clinically included:
+ * 1. SALICYLIC ACID: حمض تقشير مستخلص من أصل طبيعي للتخلص من الرؤوس البيضاء والسوداء وتنظيف المسام بعمق
+ * 2. HYALURONIC ACID: مرطب مائي خفيف لمدة 24 ساعة يحافظ على المحتوى المائي للبشرة بدون جفاف
+ * 3. ZN-GLUCONATE: تنظيم الإفرازات الدهنية ومضاد للبكتيريا المسببة لحب الشباب والتحكم في اللمعان
+ * 4. PRO BIOTIC: يمنع تكرار ظهور الحبوب مرة أخرى وينشط ويقوي جهاز مناعة البشرة
  */
 export const VICHY_NORMADERM_DATA: VichyNormadermProductData = {
-  id: 920,
+  id: 648,
   slug: 'vichy-normaderm-phytosolution-daily-purifying-cleansing-gel-200ml',
   nameAr: 'فيشي نورماديرم فيتوسوليوشن غسول يومي للبشرة الدهنية المعرضة لحب الشباب 200ملليلتر',
   nameEn: 'Vichy Normaderm Phytosolution Daily Purifying Gel Cleanser 200ml',
-  taglineAr: 'غسول يومي منقي مكثف وخالٍ من السلفات بحمض الساليسيليك والهيالورونيك والزنك والبروبيوتيك — تنقية عميقة وترطيب 24 ساعة بدون جفاف',
-  taglineEn: 'Sulfate-Free Intensive Daily Purifying Cleansing Gel powered by Salicylic Acid, Hyaluronic Acid, Zinc & Probiotics for acne-prone oily skin',
+  taglineAr: 'غسول يومي منقي مكثف بالساليسيليك، الهيالورونيك، الزنك، والبروبيوتيك — رغوة لطيفة تنظف بعمق بدون جفاف',
+  taglineEn: 'Intensive daily purifying cleanser powered by Salicylic Acid, Hyaluronic Acid, Zinc & Probiotics — gentle foam that deeply cleanses without dryness',
   size: '200 مل / 200ml',
   price: 722,
   originalPrice: 850,
@@ -30,69 +30,59 @@ export const VICHY_NORMADERM_DATA: VichyNormadermProductData = {
   highlightsAr: [
     'حمض الساليسيليك الطبيعي (Salicylic Acid): حمض تقشير مستخلص من أصل طبيعي للتخلص من الرؤوس البيضاء والسوداء وتنظيف المسام بعمق',
     'حمض الهيالورونيك (Hyaluronic Acid): مرطب مائي خفيف لمدة 24 ساعة يحافظ على المحتوى المائي للبشرة ويحميها من الجفاف',
-    'جلوكونات الزنك (ZN-Gluconate): تنظيم الإفرازات الدهنية وتقليل اللمعان ومضاد فعال للبكتيريا المسببة لحب الشباب',
-    'البروبيوتيك (Pro Biotic): يمنع تكرار ظهور الحبوب مرة أخرى وينشط ويقوي جهاز مناعة البشرة وحاجزها الطبيعي',
-    'تركيبة خالية تماماً من السلفات (Sulfate Free Cleanser) والصابون والكحول للحفاظ على توازن البشرة',
-    'مختبر جلدياً من معامل فيشي العالمية ومناسب للبشرة الدهنية والمختلطة والمعرضة لحب الشباب'
+    'جلوكونات الزنك (ZN-Gluconate): تنظيم الإفرازات الدهنية ومضاد فعال للبكتيريا المسببة لحب الشباب والحد من اللمعان',
+    'البروبيوتيك (Pro Biotic): يمنع تكرار ظهور الحبوب مرة أخرى وينشط ويقوي جهاز المناعة والحاجز الطبيعي للبشرة',
+    'رغوة ناعمة ولطيفة تنظف بعمق بدون جفاف: تزيل الشوائب والزيوت الزائدة بلطف فائق وتناسب البشرة الحساسة المعرضة للحبوب',
+    'مختبر سريرياً وجلدياً من معامل فيشي العالمية للبشرة الدهنية والمختلطة والمعرضة لحب الشباب'
   ],
   highlightsEn: [
-    'Natural Salicylic Acid: Naturally derived exfoliating BHA to eliminate blackheads, whiteheads, and unclog pores',
-    'Hyaluronic Acid: Lightweight 24-hour aquatic hydration preserving skin water content without greasiness',
-    'ZN-Gluconate: Regulates sebum secretion, minimizes daytime shine, and neutralizes acne-causing bacteria',
-    'Pro Biotic: Prevents recurrent breakouts and actively reinforces the skin natural immune barrier',
-    '100% Sulfate Free Cleanser: Gentle formula free from harsh sulfates, soap, and drying alcohol',
-    'Dermatologically tested by Vichy Laboratoires specifically for oily, combination, and acne-prone skin'
+    'Naturally Derived Salicylic Acid (BHA): Deeply penetrates to unclog pores and eliminate blackheads and whiteheads',
+    'Hyaluronic Acid: Lightweight 24-hour aquatic hydration preserving skin moisture with zero tightness',
+    'Zinc Gluconate (ZN-Gluconate): Regulates excess sebum secretion, minimizes shine, and neutralizes acne bacteria',
+    'Pro Biotic Fractions: Fortifies cutaneous immune defense and prevents recurrent blemish breakouts',
+    'Gentle Comforting Foam: Purifies pores and washes away impurities and excess oils without drying sensitive skin',
+    'Dermatologically & clinically tested by Vichy Laboratoires specifically for oily and acne-prone skin'
   ],
   safetyBadgesAr: [
-    'خالٍ من السلفات (Sulfate Free)',
-    'مفحوص جلدياً للبشرة الدهنية',
-    'خالٍ من الصابون والكحول',
-    'من فيشي لابوراتوار الأصلية'
+    'رغوة لطيفة بدون جفاف',
+    'مفحوص جلدياً وسريرياً',
+    'تنظيم دهون ومنع الحبوب',
+    'من فيشي لابوراتوار فرنسا'
   ],
   safetyBadgesEn: [
-    'Sulfate Free Cleanser',
+    'Gentle Foam Zero Dryness',
     'Dermatologically Tested',
-    'Soap & Alcohol Free',
-    '100% Original Vichy'
+    'Sebum Control & Anti-Acne',
+    'Vichy Laboratoires France'
   ],
   images: [
     {
       id: 'main',
-      src: '/products/vichy-normaderm/main.png',
-      altAr: 'عبوة غسول فيشي نورماديرم فيتوسوليوشن 200مل للبشرة الدهنية وحب الشباب الأصلية',
-      altEn: 'Vichy Normaderm Phytosolution Daily Purifying Cleansing Gel 200ml Original Bottle',
+      src: '/products/vichy-normaderm/main.jpg',
+      altAr: 'عبوة غسول فيشي نورماديرم فيتوسوليوشن 200مل الأصلية للبشرة الدهنية وحب الشباب',
+      altEn: 'Vichy Normaderm Phytosolution Daily Purifying Cleansing Gel 200ml Original Tube',
       captionAr: 'العبوة الأصلية بحجم 200 مل من فيشي لابوراتوار',
-      captionEn: 'Original 200ml Packaging by Vichy Laboratoires',
+      captionEn: 'Original 200ml Value Packaging by Vichy Laboratoires',
       badgeAr: 'المنتج الأصلي',
       badgeEn: 'Original Product'
     },
     {
-      id: 'infographic',
-      src: '/products/vichy-normaderm/infographic.jpg',
-      altAr: 'التركيبة العلمية لغسول فيشي نورماديرم: ساليسيليك، هيالورونيك، زنك، وبروبيوتيك',
-      altEn: 'Scientific Formula of Vichy Normaderm: Salicylic Acid, Hyaluronic Acid, Zinc & Probiotics',
-      captionAr: 'التركيبة الفعالة وخالٍ من السلفات (Sulfate Free Cleanser)',
-      captionEn: 'Active ingredients breakdown & Sulfate-Free claim',
-      badgeAr: 'التركيبة المعتمدة',
-      badgeEn: 'Clinical Formula'
-    },
-    {
-      id: 'texture',
-      src: '/products/vichy-normaderm/texture.jpg',
-      altAr: 'رغوة وقوام جل فيشي نورماديرم المنعش والمنظف للمسام',
-      altEn: 'Vichy Normaderm Purifying Gel foam and texture',
-      captionAr: 'قوام جل رغوي خفيف ينظف بلطف دون أن يسبب شد البشرة',
-      captionEn: 'Refreshing purifying gel foam with zero tightness',
-      badgeAr: 'رغوة منعشة',
-      badgeEn: 'Gentle Foam'
+      id: 'gentle-foam',
+      src: '/products/vichy-normaderm/gentle-foam.jpg',
+      altAr: 'رغوة فيشي نورماديرم الناعمة: تنظف بعمق بدون جفاف ولطيفة على البشرة الحساسة',
+      altEn: 'Vichy Normaderm Gentle Foaming Cleanser: Deeply cleanses without drying sensitive skin',
+      captionAr: 'رغوة ناعمة تحتضن بشرتك وتزيل الشوائب والزيوت الزائدة',
+      captionEn: 'Comforting gentle foam removing excess oils without dryness',
+      badgeAr: 'رغوة لطيفة بدون جفاف',
+      badgeEn: 'Gentle Cleansing Foam'
     }
   ],
   ingredients: [
     {
       nameAr: 'حمض الساليسيليك (Salicylic Acid)',
-      nameEn: 'Salicylic Acid',
-      roleAr: 'حمض تقشير طبيعي لإزالة الرؤوس السوداء والبيضاء',
-      roleEn: 'Natural Exfoliating BHA & Pore Purifier',
+      nameEn: 'Salicylic Acid (BHA)',
+      roleAr: 'حمض تقشير طبيعي لتنظيف المسام بعمق وإزالة الرؤوس السوداء',
+      roleEn: 'Natural Exfoliating BHA & Deep Pore Cleanser',
       descriptionAr: 'حمض تقشير مستخلص من أصل طبيعي يتغلغل داخل المسام العميقة لإذابة الدهون المتراكمة والخلايا الميتة، والتخلص الجذري من الرؤوس البيضاء والسوداء ومنع انسداد المسام.',
       descriptionEn: 'Naturally derived BHA that penetrates deep into pores to dissolve trapped sebum and dead cells, clearing blackheads and whiteheads at the root.',
       icon: 'sparkles'
@@ -100,28 +90,28 @@ export const VICHY_NORMADERM_DATA: VichyNormadermProductData = {
     {
       nameAr: 'حمض الهيالورونيك (Hyaluronic Acid)',
       nameEn: 'Hyaluronic Acid',
-      roleAr: 'ترطيب مائي خفيف لمدة 24 ساعة',
-      roleEn: '24-Hour Lightweight Hydration',
-      descriptionAr: 'مرطب مائي فائق الخفة يحافظ على المحتوى المائي للبشرة لمدة 24 ساعة كاملة، ليمنحها مرونة وانتعاشاً دون أي إحساس دهني أو لمعان.',
-      descriptionEn: 'Ultra-lightweight aquatic hydrator that locks in moisture for 24 hours, keeping skin supple and fresh without feeling heavy or oily.',
+      roleAr: 'مرطب مائي خفيف لمدة 24 ساعة بدون جفاف',
+      roleEn: '24-Hour Lightweight Aquatic Hydration',
+      descriptionAr: 'مرطب مائي فائق الخفة يحافظ على المحتوى المائي للبشرة لمدة 24 ساعة كاملة، ليمنحها مرونة وانتعاشاً ونعومة دون أي إحساس دهني أو لمعان أو شد.',
+      descriptionEn: 'Ultra-lightweight aquatic hydrator that locks in moisture for 24 hours, keeping skin supple and fresh without feeling heavy, greasy, or tight.',
       icon: 'droplets'
     },
     {
       nameAr: 'جلوكونات الزنك (ZN-Gluconate)',
       nameEn: 'Zinc Gluconate (ZN-Gluconate)',
-      roleAr: 'تنظيم الإفرازات الدهنية ومضاد للبكتيريا',
+      roleAr: 'تنظيم الإفرازات الدهنية ومضاد للبكتيريا المسببة للحبوب',
       roleEn: 'Sebum Regulation & Anti-Bacterial Action',
-      descriptionAr: 'عنصر معدني أساسي ينظم نشاط الغدد الدهنية ليحد من الإفرازات الزائدة واللمعان، ويوفر حماية قوية ضد البكتيريا المسببة لظهور حب الشباب.',
+      descriptionAr: 'عنصر معدني حيوي ينظم نشاط الغدد الدهنية ليحد من الإفرازات الزائدة واللمعان، ويوفر حماية فعالة ضد البكتيريا المسببة لظهور حب الشباب.',
       descriptionEn: 'Essential mineral complex that regulates sebaceous gland activity to minimize excess shine, while neutralizing acne-causing bacteria.',
       icon: 'shield'
     },
     {
       nameAr: 'البروبيوتيك (Pro Biotic)',
       nameEn: 'Pro Biotic Fractions',
-      roleAr: 'تقوية جهاز المناعة ومنع تكرار الحبوب',
-      roleEn: 'Barrier Immunity & Acne Recurrence Prevention',
-      descriptionAr: 'مستخلصات البروبيوتيك الحيوية تنشط وتقوي جهاز مناعة البشرة وتعيد التوازن للميكروبيوم الطبيعي، مما يمنع تكرار ظهور الحبوب ويسرع تجدد خلايا البشرة.',
-      descriptionEn: 'Bioactive probiotic fractions that stimulate and fortify the skin immune defense, rebalancing the microbiome to prevent acne relapse.',
+      roleAr: 'يمنع تكرار ظهور الحبوب وينشط ويقوي جهاز المناعة',
+      roleEn: 'Immune Barrier Defense & Relapse Prevention',
+      descriptionAr: 'مستخلصات حيوية نافعة تنشط وتقوي جهاز مناعة البشرة وتعيد التوازن للميكروبيوم الوقائي، مما يمنع تكرار ظهور الحبوب ويسرع التجديد الصحي لخلايا الجلد.',
+      descriptionEn: 'Bioactive probiotic fractions that stimulate and fortify the skin immune defense, rebalancing the microbiome to prevent acne recurrence.',
       icon: 'leaf'
     }
   ],
@@ -133,13 +123,13 @@ export const VICHY_NORMADERM_DATA: VichyNormadermProductData = {
       cityEn: 'Cairo',
       rating: 5,
       date: 'نوفمبر 2026',
-      titleAr: 'أفضل غسول لحب الشباب بدون جفاف نهائياً',
-      titleEn: 'Best acne cleanser with zero dryness',
-      commentAr: 'كنت متعودة إن أي غسول فيه ساليسيليك بينشف وشي ويخليه مشدود، لكن نورماديرم فيتوسوليوشن مختلف تماماً! عشان فيه هيالورونيك وترطيب 24 ساعة، وشي بينضف جداً والرؤوس السودا اختفت تقريباً ومن غير أي قشور. منتج أصلي وممتاز من صفصافة.',
-      commentEn: 'I was used to salicylic cleansers drying out my skin, but Normaderm Phytosolution is a game changer! With hyaluronic acid providing 24h moisture, my pores are deep cleaned and blackheads gone with zero flaking. 100% genuine product.',
+      titleAr: 'رغوة ناعمة بتنضف المسام من غير أي جفاف',
+      titleEn: 'Gentle foam that cleanses without any tightness',
+      commentAr: 'كنت متعودة إن أي غسول فيه ساليسيليك بينشف وشي ويخليه مشدود، لكن فيشي نورماديرم مختلف تماماً! عشان فيه هيالورونيك وترطيب 24 ساعة، رغوته ناعمة جداً وبتنضف بعمق، والرؤوس السودا اختفت تقريباً ومن غير أي قشور. منتج أصلي وممتاز من صفصافة.',
+      commentEn: 'I was used to salicylic cleansers drying out my skin, but Normaderm Phytosolution is completely different! The hyaluronic acid provides 24h moisture, so the foam is soft and comforting. Pores are deeply cleaned with zero flaking. 100% genuine product.',
       verified: true,
-      highlightAr: 'تنظيف عميق بدون شد',
-      highlightEn: 'Deep Clean Without Tightness'
+      highlightAr: 'تنظيف عميق وترطيب 24 ساعة',
+      highlightEn: 'Deep Clean & 24h Moisture'
     },
     {
       id: 'rev-2',
@@ -148,9 +138,9 @@ export const VICHY_NORMADERM_DATA: VichyNormadermProductData = {
       cityEn: 'Alexandria',
       rating: 5,
       date: 'أكتوبر 2026',
-      titleAr: 'تركيبة الزنك والبروبيوتيك فرقت جداً مع الحبوب',
-      titleEn: 'Zinc and Probiotics made a massive difference',
-      commentAr: 'أنا طبيبة صيدلانية وبشرتي مختلطة معرضة للحبوب في الصيف والشتاء. وجود الزنك مع البروبيوتيك بيمنع تكرار الحبوب تحت الجلد بشكل ملحوظ وبيتحكم في اللمعة في منطقة الـ T-Zone. والـ 200 مل بتقعد فترة طويلة جداً.',
+      titleAr: 'تركيبة الزنك والبروبيوتيك فرقت جداً في منع تكرار الحبوب',
+      titleEn: 'Zinc and Probiotics visibly prevented acne relapse',
+      commentAr: 'أنا طبيبة صيدلانية وبشرتي مختلطة معرضة للحبوب. وجود الزنك (ZN-Gluconate) مع البروبيوتيك بيمنع تكرار الحبوب تحت الجلد بشكل ملحوظ وبيتحكم في لمعان الـ T-Zone طول اليوم. والعبوة الـ 200 مل بتقعد شهور.',
       commentEn: 'As a pharmacist with combination acne-prone skin, the synergy of Zinc and Probiotics visibly prevents recurrent blemishes and controls T-zone shine all day. The 200ml bottle lasts for months.',
       verified: true,
       highlightAr: 'تنظيم دهون ومنع تكرار الحبوب',
@@ -165,36 +155,36 @@ export const VICHY_NORMADERM_DATA: VichyNormadermProductData = {
       date: 'نوفمبر 2026',
       titleAr: 'الرؤوس السوداء والمسام الواسعة اتحسنت في أسبوعين',
       titleEn: 'Blackheads and pores improved in 2 weeks',
-      commentAr: 'أجمل حاجة إنه خالي من السلفات فمش بيهيج البشرة. طلبت العبوة الـ 200 مل بخصم الـ 15% من صفصافة والتوصيل كان سريع جداً في أقل من 48 ساعة والدفع عند الاستلام. تجربة تسوق راقية جداً.',
-      commentEn: 'The fact that it is Sulfate-Free makes it so gentle on sensitive areas. Ordered the 200ml with 15% discount on Safsafah; delivery was super fast under 48 hours with cash on delivery. Highly recommended!',
+      commentAr: 'الرغوة بتاعته ناعمة ولطيفة جداً على البشرة الحساسة ومش بتلسع. طلبت العبوة الـ 200 مل بخصم الـ 15% من صفصافة والتوصيل كان سريع في أقل من 48 ساعة والدفع عند الاستلام. تجربة تسوق راقية جداً.',
+      commentEn: 'The foam is super gentle on sensitive skin with zero stinging. Ordered the 200ml with 15% discount on Safsafah; delivery was super fast under 48 hours with cash on delivery. Highly recommended!',
       verified: true,
-      highlightAr: 'خالٍ من السلفات وسريع التوصيل',
-      highlightEn: 'Sulfate-Free & Fast Shipping'
+      highlightAr: 'لطيف على البشرة وسريع التوصيل',
+      highlightEn: 'Gentle on Skin & Fast Shipping'
     }
   ],
   faqs: [
     {
       id: 'faq-1',
-      questionAr: 'ما الذي يميز فيشي نورماديرم فيتوسوليوشن عن باقي غسولات حب الشباب؟',
-      questionEn: 'What makes Vichy Normaderm Phytosolution unique compared to ordinary cleansers?',
-      answerAr: 'يتميز بتركيبته الرباعية المتقدمة: حمض الساليسيليك الطبيعي لإزالة الرؤوس السوداء، حمض الهيالورونيك لترطيب 24 ساعة دون جفاف، جلوكونات الزنك لتنظيم الدهون، والبروبيوتيك الذي ينشط مناعة الجلد ويمنع تكرار الحبوب. كما أنه خالٍ تماماً من السلفات (Sulfate Free Cleanser) والصابون والكحول.',
-      answerEn: 'It combines four clinically proven bio-actives: Natural Salicylic Acid for pore unclogging, Hyaluronic Acid for 24h lightweight hydration, Zinc Gluconate for sebum regulation, and Probiotics to fortify skin immunity against acne relapse. Furthermore, it is 100% Sulfate-Free, soap-free, and alcohol-free.',
+      questionAr: 'ما هي المكونات الفعالة الرئيسية في فيشي نورماديرم فيتوسوليوشن؟',
+      questionEn: 'What are the core active ingredients in Vichy Normaderm Phytosolution?',
+      answerAr: 'يرتكز الغسول على 4 مكونات فعالة أساسية: حمض الساليسيليك (Salicylic Acid) لتنظيف المسام بعمق وإزالة الرؤوس السوداء والبيضاء، حمض الهيالورونيك (Hyaluronic Acid) لترطيب مائي خفيف يدوم 24 ساعة ويحافظ على رطوبة الجلد، جلوكونات الزنك (ZN-Gluconate) لتنظيم الإفرازات الدهنية والحد من اللمعان ومكافحة البكتيريا، والبروبيوتيك (Pro Biotic) الذي يقوي مناعة البشرة ويمنع تكرار ظهور الحبوب.',
+      answerEn: 'The cleanser is powered by four targeted actives: Salicylic Acid for deep pore unclogging and blackhead clearance, Hyaluronic Acid for 24-hour lightweight aquatic hydration, Zinc Gluconate for sebum regulation and anti-bacterial defense, and Probiotics to fortify skin barrier immunity and prevent breakout relapse.',
       category: 'results'
     },
     {
       id: 'faq-2',
       questionAr: 'هل يسبب الغسول أي جفاف أو تقشير أو شد في البشرة؟',
       questionEn: 'Does this cleansing gel cause peeling, tightness, or dry patches?',
-      answerAr: 'لا، على عكس غسولات حب الشباب التقليدية التي تضر الحاجز الواقي، تم تدعيم فيشي نورماديرم بحمض الهيالورونيك لتأمين ترطيب مائي يدوم 24 ساعة مع كل غسلة، بالإضافة لكونه خالياً من السلفات القاسية، مما يترك البشرة ناعمة ومرنة ومنتعشة دون أي إحساس بالشد.',
-      answerEn: 'No. Unlike harsh acne washes, Vichy Normaderm Phytosolution is infused with Hyaluronic Acid to provide continuous 24-hour hydration, and uses a Sulfate-Free cleansing base that respects the skin lipid barrier, leaving skin fresh and supple with zero tightness.',
+      answerAr: 'لا نهائياً! تم تدعيم تركيبته بحمض الهيالورونيك لضمان ترطيب مائي يدوم 24 ساعة مع كل غسلة، بالإضافة إلى رغوة ناعمة ولطيفة تزيل الشوائب والزيوت الزائدة دون الإخلال بالمحتوى المائي الطبيعي للبشرة، مما يترك البشرة مرنة ومنتعشة بدون أي إحساس بالشد.',
+      answerEn: 'No! Infused with Hyaluronic Acid for 24-hour hydration, it produces a gentle comforting foam that effectively lifts away impurities and excess sebum without stripping the skin natural water content, ensuring fresh skin with zero tightness.',
       category: 'safety'
     },
     {
       id: 'faq-3',
       questionAr: 'ما هي الطريقة الصحيحة للاستخدام لتحقيق أفضل نتيجة؟',
       questionEn: 'What is the recommended application routine for optimal results?',
-      answerAr: 'يُستخدم مرتين يومياً (صباحاً ومساءً). بللي وجهك بالماء الفاتر، ثم ضعي ضخة واحدة على راحة يدك ودلكي بها الوجه بحركات دائرية خفيفة لمدة دقيقة مع التركيز على الجبهة والأنف والذقن ومناطق الحبوب، ثم اشطفي جيداً وجففي برفق بمنشفة قطنية نظيفة.',
-      answerEn: 'Use twice daily (morning and evening). Wet face with lukewarm water, apply one pump onto palms, and gently lather and massage in circular motions for 60 seconds focusing on the T-zone and blemishes. Rinse thoroughly and pat dry with a clean towel.',
+      answerAr: 'يُستخدم مرتين يومياً (صباحاً ومساءً). بللي وجهك بالماء الفاتر، ثم ضعي كمية مناسبة على راحة يدك ودلكي بها الوجه حتى تتكون رغوة ناعمة تحتضن بشرتك لمدة 60 ثانية مع التركيز على الجبهة والأنف والذقن ومناطق الحبوب، ثم اشطفي جيداً وجففي برفق.',
+      answerEn: 'Use twice daily (morning and evening). Wet face with lukewarm water, lather in palms to create a comforting foam, massage gently in circular motions for 60 seconds focusing on the T-zone and blemishes. Rinse thoroughly and pat dry.',
       category: 'usage'
     },
     {

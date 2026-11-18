@@ -96,7 +96,7 @@ function BlogPageContent() {
 
       {/* Main layout */}
       <section className="max-w-7xl mx-auto px-4 pb-20">
-        <div className="grid md:grid-cols-[280px,1fr] gap-10">
+        <div className="grid md:grid-cols-[280px_1fr] gap-10">
 
           {/* Desktop Sidebar */}
           <BlogSidebar

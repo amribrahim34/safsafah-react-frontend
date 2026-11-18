@@ -182,7 +182,7 @@ export default function CartPage() {
           <>
             <FreeShippingBar brand={BRAND} subtotal={subtotal} target={freeShippingThreshold} />
 
-            <div className="grid gap-6 md:grid-cols-[minmax(0,1fr),380px]">
+            <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_380px]">
               <section className="space-y-3">
                 {items.map((it) => (
                   <CartItem
