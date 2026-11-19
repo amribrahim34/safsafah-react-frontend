@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Sparkles, ShieldCheck, Leaf, Droplets, CheckCircle } from 'lucide-react';
 import type { CicaplastProductData } from '../_types';
