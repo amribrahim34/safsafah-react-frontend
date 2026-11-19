@@ -58,7 +58,7 @@ export const VICHY_NORMADERM_DATA: VichyNormadermProductData = {
   images: [
     {
       id: 'main',
-      src: '/products/vichy-normaderm/main.jpg',
+      src: '/products/vichy-normaderm/main.jpeg',
       altAr: 'عبوة غسول فيشي نورماديرم فيتوسوليوشن 200مل الأصلية للبشرة الدهنية وحب الشباب',
       altEn: 'Vichy Normaderm Phytosolution Daily Purifying Cleansing Gel 200ml Original Tube',
       captionAr: 'العبوة الأصلية بحجم 200 مل من فيشي لابوراتوار',
@@ -75,6 +75,16 @@ export const VICHY_NORMADERM_DATA: VichyNormadermProductData = {
       captionEn: 'Comforting gentle foam removing excess oils without dryness',
       badgeAr: 'رغوة لطيفة بدون جفاف',
       badgeEn: 'Gentle Cleansing Foam'
+    },
+    {
+      id: 'green-formula',
+      src: '/products/vichy-normaderm/Vichy Normaderm Clinical Green Formula.png',
+      altAr: 'فيشي نورماديرم فيتوسوليوشن — تركيبة خضراء إكلينيكية بمكونات طبيعية مُحسّنة',
+      altEn: 'Vichy Normaderm Phytosolution — Clinical Green Formula with naturally derived actives',
+      captionAr: 'تركيبة خضراء إكلينيكية بمكونات طبيعية المصدر',
+      captionEn: 'Clinical Green Formula with naturally derived ingredients',
+      badgeAr: 'تركيبة طبيعية إكلينيكية',
+      badgeEn: 'Clinical Green Formula'
     }
   ],
   ingredients: [

@@ -44,7 +44,7 @@ export const VichyNormadermStickyBar: React.FC<VichyNormadermStickyBarProps> = (
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="relative w-11 h-11 rounded-lg overflow-hidden border border-neutral-200 flex-shrink-0 bg-stone-50">
             <Image
-              src={product.images[0]?.src || '/products/vichy-normaderm/main.png'}
+              src={product.images[0]?.src || '/products/vichy-normaderm/main.jpeg'}
               alt={isAr ? product.nameAr : product.nameEn}
               fill
               className="object-contain p-1"

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import {
-  Star,
   ShieldCheck,
   Truck,
   RotateCcw,
@@ -159,27 +158,6 @@ export const CicaplastHero: React.FC<CicaplastHeroProps> = ({
               <p className="mt-2 text-xs sm:text-sm text-neutral-600 leading-relaxed">
                 {isAr ? product.taglineAr : product.taglineEn}
               </p>
-            </div>
-
-            {/* Ratings & Social Proof */}
-            <div className="flex items-center gap-2 flex-wrap text-xs sm:text-sm">
-              <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 ${
-                      i < Math.floor(product.rating)
-                        ? 'fill-amber-400 text-amber-400'
-                        : 'fill-amber-400/30 text-amber-400'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="font-bold text-neutral-900">{product.rating}</span>
-              <span className="text-neutral-400">·</span>
-              <span className="text-neutral-500 underline underline-offset-2">
-                {product.ratingCount} {isAr ? 'تقييم موثق من عملاء صفصافة' : 'Verified Reviews'}
-              </span>
             </div>
 
             {/* Safety Badges Strip */}
