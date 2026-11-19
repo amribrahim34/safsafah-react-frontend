@@ -8,7 +8,6 @@ import CicaplastHero from './_components/CicaplastHero';
 import CicaplastHighlights from './_components/CicaplastHighlights';
 import CicaplastDescription from './_components/CicaplastDescription';
 import CicaplastComparison from './_components/CicaplastComparison';
-import CicaplastTestimonials from './_components/CicaplastTestimonials';
 import CicaplastFAQ from './_components/CicaplastFAQ';
 import CicaplastOrderSection from './_components/CicaplastOrderSection';
 import CicaplastSimilarProducts from './_components/CicaplastSimilarProducts';
@@ -318,9 +317,6 @@ export default async function CicaplastLandingPage({ params }: PageProps) {
 
         {/* 4. Comparison Table (Cicaplast vs. Ordinary Creams) */}
         <CicaplastComparison lang={lang} />
-
-        {/* 5. Customer Testimonials & Reviews */}
-        <CicaplastTestimonials reviews={product.reviews} lang={lang} />
 
         {/* 6. Frequently Asked Questions (Accordion + JSON-LD) */}
         <CicaplastFAQ faqs={product.faqs} lang={lang} />

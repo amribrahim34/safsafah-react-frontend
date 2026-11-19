@@ -8,7 +8,6 @@ import VichyNormadermHero from './_components/VichyNormadermHero';
 import VichyNormadermHighlights from './_components/VichyNormadermHighlights';
 import VichyNormadermDescription from './_components/VichyNormadermDescription';
 import VichyNormadermComparison from './_components/VichyNormadermComparison';
-import VichyNormadermTestimonials from './_components/VichyNormadermTestimonials';
 import VichyNormadermFAQ from './_components/VichyNormadermFAQ';
 import VichyNormadermOrderSection from './_components/VichyNormadermOrderSection';
 import VichyNormadermSimilarProducts from './_components/VichyNormadermSimilarProducts';
@@ -318,9 +317,6 @@ export default async function VichyNormadermLandingPage({ params }: PageProps) {
 
         {/* 4. Comparison Table (Vichy vs. Ordinary Cleansers) */}
         <VichyNormadermComparison lang={lang} />
-
-        {/* 5. Customer Testimonials & Reviews */}
-        <VichyNormadermTestimonials reviews={product.reviews} lang={lang} />
 
         {/* 6. Frequently Asked Questions (Accordion + JSON-LD) */}
         <VichyNormadermFAQ faqs={product.faqs} lang={lang} />

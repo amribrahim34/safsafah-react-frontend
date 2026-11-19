@@ -8,7 +8,6 @@ import TetraGlowHero from './_components/TetraGlowHero';
 import TetraGlowHighlights from './_components/TetraGlowHighlights';
 import TetraGlowDescription from './_components/TetraGlowDescription';
 import TetraGlowComparison from './_components/TetraGlowComparison';
-import TetraGlowTestimonials from './_components/TetraGlowTestimonials';
 import TetraGlowFAQ from './_components/TetraGlowFAQ';
 import TetraGlowOrderSection from './_components/TetraGlowOrderSection';
 import TetraGlowSimilarProducts from './_components/TetraGlowSimilarProducts';
@@ -331,9 +330,6 @@ export default async function TetraGlowLandingPage({ params }: PageProps) {
 
         {/* 4. Comparison Table (Tetra Glow vs. Ordinary Bleaches) */}
         <TetraGlowComparison lang={lang} />
-
-        {/* 5. Customer Testimonials & Reviews */}
-        <TetraGlowTestimonials reviews={product.reviews} lang={lang} />
 
         {/* 6. Frequently Asked Questions */}
         <TetraGlowFAQ faqs={product.faqs} lang={lang} />
