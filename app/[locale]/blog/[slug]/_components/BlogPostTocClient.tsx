@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import type { TocItem } from '../_lib/parseToc';
 import { BRAND } from '@/content/brand';
+import { getFixedT } from '@/lib/i18n-helpers';
 
 interface Props {
   tocItems: TocItem[];
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function BlogPostTocClient({ tocItems, locale }: Props) {
-  const { t } = useTranslation('blog');
+  const t = getFixedT(locale, 'blog');
   const [activeId, setActiveId] = useState<string>('');
   const [mobileOpen, setMobileOpen] = useState(false);
   const isRTL = locale === 'ar';

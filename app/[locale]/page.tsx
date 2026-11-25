@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { BRAND } from "@/content/brand";
+import { buildAlternates } from "@/lib/seo";
 // import { COPY } from "@/content/copy";
 
 import ClientWrapper from "@/components/ClientWrapper";
@@ -16,6 +18,24 @@ type PageProps = {
     locale: string;
   }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isAr = locale !== 'en';
+  return {
+    title: isAr
+      ? 'صفصافه | مستحضرات التجميل والعناية بالبشرة'
+      : 'Safsafah | Premium Cosmetics & Skincare',
+    description: isAr
+      ? 'اكتشفي صفصافه – وجهتك المثالية لأفضل مستحضرات التجميل والعناية بالبشرة. تسوّقي من أشهر الماركات، وروتينات العناية المختارة بعناية، وأحدث منتجات الجمال. استمتعي بتوصيل سريع وعروض حصرية يومية.'
+      : 'Discover Safsafah – your destination for premium cosmetics and skincare products. Shop trusted brands, expert-curated routines, and the latest beauty essentials. Enjoy fast delivery and exclusive deals every day.',
+    alternates: buildAlternates(locale, ''),
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 export default async function Home({ params }: PageProps) {
   const { locale } = await params;

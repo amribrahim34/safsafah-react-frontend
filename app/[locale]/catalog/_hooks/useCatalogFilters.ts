@@ -79,7 +79,7 @@ export function useCatalogFilters(lang: Locale) {
 
     const searchQueryParam = searchParams.get('searchQuery');
     const brandIdsParam = searchParams.get('brandIds');
-    const categoryIdsParam = searchParams.get('categoryIds');
+    const categoryIdsParam = searchParams.get('categoryIds') || searchParams.get('categoryId');
     const skinTypeIdsParam = searchParams.get('skinTypeIds');
     const skinConcernIdsParam = searchParams.get('skinConcernIds');
     const minPriceParam = searchParams.get('minPrice');
@@ -89,32 +89,26 @@ export function useCatalogFilters(lang: Locale) {
     const recommendedParam = searchParams.get('recommended');
     const saleParam = searchParams.get('sale');
 
+    const parseIds = (raw: string | null): number[] =>
+      raw
+        ? raw
+            .split(',')
+            .map((id) => Number(id.trim()))
+            .filter((n) => Number.isInteger(n) && n > 0)
+        : [];
+
+    const parsedBrandIds = parseIds(brandIdsParam);
+    const parsedCategoryIds = parseIds(categoryIdsParam);
+    const parsedSkinTypeIds = parseIds(skinTypeIdsParam);
+    const parsedSkinConcernIds = parseIds(skinConcernIdsParam);
+
     if (searchQueryParam) setSearchQuery(searchQueryParam);
     else setSearchQuery('');
 
-    if (brandIdsParam) {
-      setSelectedBrandIds(brandIdsParam.split(',').map((id) => Number(id.trim())));
-    } else {
-      setSelectedBrandIds([]);
-    }
-
-    if (categoryIdsParam) {
-      setSelectedCategoryIds(categoryIdsParam.split(',').map((id) => Number(id.trim())));
-    } else {
-      setSelectedCategoryIds([]);
-    }
-
-    if (skinTypeIdsParam) {
-      setSelectedSkinTypeIds(skinTypeIdsParam.split(',').map((id) => Number(id.trim())));
-    } else {
-      setSelectedSkinTypeIds([]);
-    }
-
-    if (skinConcernIdsParam) {
-      setSelectedSkinConcernIds(skinConcernIdsParam.split(',').map((id) => Number(id.trim())));
-    } else {
-      setSelectedSkinConcernIds([]);
-    }
+    setSelectedBrandIds(parsedBrandIds);
+    setSelectedCategoryIds(parsedCategoryIds);
+    setSelectedSkinTypeIds(parsedSkinTypeIds);
+    setSelectedSkinConcernIds(parsedSkinConcernIds);
 
     if (sortByParam) setSortValue(sortByParam);
     else setSortValue('relevance');
@@ -129,10 +123,10 @@ export function useCatalogFilters(lang: Locale) {
     }
 
     const filters: BaseFilters = {
-      categoryIds: categoryIdsParam ? categoryIdsParam.split(',').map(id => Number(id.trim())) : undefined,
-      brandIds: brandIdsParam ? brandIdsParam.split(',').map(id => Number(id.trim())) : undefined,
-      skinTypeIds: skinTypeIdsParam ? skinTypeIdsParam.split(',').map(id => Number(id.trim())) : undefined,
-      skinConcernIds: skinConcernIdsParam ? skinConcernIdsParam.split(',').map(id => Number(id.trim())) : undefined,
+      categoryIds: parsedCategoryIds.length > 0 ? parsedCategoryIds : undefined,
+      brandIds: parsedBrandIds.length > 0 ? parsedBrandIds : undefined,
+      skinTypeIds: parsedSkinTypeIds.length > 0 ? parsedSkinTypeIds : undefined,
+      skinConcernIds: parsedSkinConcernIds.length > 0 ? parsedSkinConcernIds : undefined,
       searchQuery: searchQueryParam || undefined,
       minPrice: minPriceParam ? Number(minPriceParam) : undefined,
       maxPrice: maxPriceParam ? Number(maxPriceParam) : undefined,
@@ -271,8 +265,12 @@ export function useCatalogFilters(lang: Locale) {
     (filterKey: keyof ProductFilters) => {
       const params = new URLSearchParams(searchParams.toString());
       params.delete(filterKey as string);
+      if (filterKey === 'categoryIds') {
+        params.delete('categoryId');
+      }
       params.delete('page');
-      router.push(`/${lang}/catalog?${params.toString()}`);
+      const qs = params.toString();
+      router.push(qs ? `/${lang}/catalog?${qs}` : `/${lang}/catalog`);
     },
     [searchParams, router, lang],
   );

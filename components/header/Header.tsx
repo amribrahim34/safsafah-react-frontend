@@ -1,6 +1,5 @@
 'use client';
 
-import { useTranslation } from 'react-i18next';
 import { Menu, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,6 +7,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
 import { getLocalizedPath } from '@/lib/locale-navigation';
+import { getFixedT } from '@/lib/i18n-helpers';
 import logo from '../../assets/safsafah-logo1.png';
 import { useState, useEffect, Suspense } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -44,7 +44,7 @@ function HeaderContent({ brand }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('searchQuery') ?? '');
 
   const isRTL = lang === 'ar';
-  const { t } = useTranslation('home');
+  const t = getFixedT(lang, 'home');
   const searchPlaceholder = t('search');
 
   const totalItems = isAuthenticated

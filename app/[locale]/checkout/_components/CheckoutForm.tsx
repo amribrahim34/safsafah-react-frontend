@@ -1,6 +1,5 @@
-import '@/lib/i18n';
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { getFixedT } from "@/lib/i18n-helpers";
 import FormInput from "@/components/forms/FormInput";
 import FormTextarea from "@/components/forms/FormTextarea";
 import MapPicker from "./MapPicker";
@@ -39,7 +38,7 @@ export default function CheckoutForm({
   selectedAddressId,
   onAddressSelect,
 }: CheckoutFormProps) {
-  const { t } = useTranslation('checkout');
+  const t = getFixedT(lang, 'checkout');
   const { fullName, mobile, address, notes } = formData;
   const isRTL = lang === "ar";
 

@@ -1,11 +1,11 @@
 'use client';
 
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { buildUrlWithParams, getCtaFilters } from "../../../lib/navigation";
-import "../../../lib/i18n";
+import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
+import { getFixedT } from "@/lib/i18n-helpers";
 
 // Import Swiper styles
 import 'swiper/css';
@@ -13,10 +13,11 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 export default function HeroSlider({ brand }) {
-  const { t, i18n } = useTranslation('home');
+  const lang = useLocale();
+  const t = getFixedT(lang, 'home');
 
   // Determine if the current language is RTL
-  const isRTL = i18n.language === 'ar';
+  const isRTL = lang === 'ar';
 
   // Prepare slider data with translations and images
   const slides = [
@@ -28,7 +29,7 @@ export default function HeroSlider({ brand }) {
   return (
     <div className="relative  ">
       <Swiper
-        key={i18n.language} // Force re-render when language changes
+        key={lang} // Force re-render when language changes
         modules={[Autoplay, Pagination, Navigation]}
         spaceBetween={0}
         slidesPerView={1}
@@ -58,14 +59,14 @@ export default function HeroSlider({ brand }) {
                     <p className="mt-2 text-white/90 text-sm md:text-xl">{s.sub}</p>
                     <div className="mt-5 flex gap-3">
                       <Link
-                        href={buildUrlWithParams('/catalog', getCtaFilters(s.cta1))}
+                        href={getLocalizedPath(buildUrlWithParams('/catalog', getCtaFilters(s.cta1)), lang)}
                         className="rounded-lg text-xs lg:text-lg px-2 py-2 self-center  lg:px-5 lg:py-3 lg:font-semibold text-white"
                         style={{ background: brand.primary }}
                       >
                         {s.cta1}
                       </Link>
                       <Link
-                        href={buildUrlWithParams('/catalog', getCtaFilters(s.cta2))}
+                        href={getLocalizedPath(buildUrlWithParams('/catalog', getCtaFilters(s.cta2)), lang)}
                         className="rounded-lg text-xs lg:text-lg px-2 py-2  border lg:px-5 lg:py-3 lg:font-semibold text-white/90 border-white/70"
                       >
                         {s.cta2}

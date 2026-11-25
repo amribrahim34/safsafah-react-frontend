@@ -1,8 +1,8 @@
 'use client';
 
 import React from "react";
-import { useTranslation } from "react-i18next";
-import '@/lib/i18n';
+import { useLocale } from "@/lib/locale-navigation";
+import { getFixedT } from "@/lib/i18n-helpers";
 
 interface PromoCodeProps {
   brand: { primary: string };
@@ -13,7 +13,8 @@ interface PromoCodeProps {
 }
 
 export default function PromoCode({ brand, value, onChange, hint, onApply }: PromoCodeProps) {
-  const { t } = useTranslation('cart');
+  const lang = useLocale();
+  const t = getFixedT(lang, 'cart');
 
   return (
     <div className="rounded-2xl border border-neutral-200 p-3 bg-white">

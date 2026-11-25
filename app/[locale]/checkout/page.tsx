@@ -1,14 +1,13 @@
 'use client';
 
-import '@/lib/i18n';
 import React, { useState, useRef, useEffect } from "react";
 import posthog from "posthog-js";
 import { purchase as fbPurchase } from "@/lib/fbpixel";
 import { BRAND } from "@/content/brand";
 import { useDir } from "@/hooks/useDir";
+import { getFixedT } from "@/lib/i18n-helpers";
 import { useCheckoutValidation } from "@/hooks/useCheckoutValidation";
 import { useParams, useRouter } from "next/navigation";
-import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchCart } from "@/store/slices/cartsSlice";
 import { createOrder } from "@/store/slices/ordersSlice";
@@ -33,10 +32,7 @@ export default function CheckoutQuickPage() {
   const locale = params?.locale as string | undefined;
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
-  const { t, i18n } = useTranslation('checkout');
-  useEffect(() => {
-    if (i18n.language !== lang) i18n.changeLanguage(lang);
-  }, [lang, i18n]);
+  const t = getFixedT(lang, 'checkout');
 
   useDir();
   const router = useRouter();
@@ -203,7 +199,7 @@ export default function CheckoutQuickPage() {
         orderRef: `SFS-${Date.now()}`,
         walletNumber: walletNumber,
       });
-      router.push(`/wallet-payment?${walletParams.toString()}`);
+      router.push(`/${lang}/wallet-payment?${walletParams.toString()}`);
       return;
     }
 
@@ -250,7 +246,7 @@ export default function CheckoutQuickPage() {
       setShowSuccess(true);
 
       setTimeout(() => {
-        router.push("/");
+        router.push(`/${lang}`);
       }, 2000);
     } catch (error) {
       posthog.captureException(error);

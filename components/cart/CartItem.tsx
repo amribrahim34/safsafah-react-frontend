@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
-import '@/lib/i18n';
 import { getLocalizedPath } from "@/lib/locale-navigation";
+import { getFixedT } from "@/lib/i18n-helpers";
 import type { Language } from "@/types";
 
 interface CartItemData {
@@ -48,8 +47,7 @@ interface CartItemProps {
 
 export default function CartItem({ lang, brand, item, onQty, onRemove }: CartItemProps) {
   const [busy, setBusy] = useState(false);
-  const { t, i18n } = useTranslation('cart');
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
+  const t = getFixedT(lang, 'cart');
 
   const primary = brand?.primary ?? "#288880";
   const isAr = lang === "ar";

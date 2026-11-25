@@ -2,10 +2,9 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
-import '@/lib/i18n';
 import { BRAND } from '@/content/brand';
 import { useDir } from '@/hooks/useDir';
+import { useLocale, getLocalizedPath } from '@/lib/locale-navigation';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchPaginatedOrders, cancelOrder } from '@/store/slices/ordersSlice';
 import type { PaginatedOrderItem } from '@/store/slices/ordersSlice';
@@ -74,11 +73,7 @@ const mapApiOrderToUI = (apiOrder: PaginatedOrderItem, lang: string): UIOrder =>
 };
 
 export default function OrdersPage() {
-  const [lang, setLang] = useState('ar');
-  const { i18n } = useTranslation('home');
-  useEffect(() => {
-    if (i18n.language !== lang) i18n.changeLanguage(lang);
-  }, [lang, i18n]);
+  const lang = useLocale();
   useDir();
   const isRTL = lang === 'ar';
   const dispatch = useAppDispatch();
@@ -181,7 +176,7 @@ export default function OrdersPage() {
                   {isRTL ? 'ابدئي التسوق الآن — الأفضل مبيعًا بانتظارك.' : 'Start shopping — bestsellers are waiting.'}
                 </p>
                 <Link
-                  href="/catalog"
+                  href={getLocalizedPath('/catalog', lang)}
                   className="inline-block mt-3 px-4 py-2 rounded-2xl text-white font-semibold"
                   style={{ background: BRAND.primary }}
                 >

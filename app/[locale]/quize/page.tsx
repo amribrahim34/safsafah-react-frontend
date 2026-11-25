@@ -1,10 +1,8 @@
 'use client';
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { createThemedSwal } from '@/lib/swal';
-import { useTranslation } from 'react-i18next';
-import '@/lib/i18n';
 import { BRAND } from '@/content/brand';
 import enQuize from '@/locales/en/quize.json';
 import arQuize from '@/locales/ar/quize.json';
@@ -41,10 +39,6 @@ export default function SkinCareQuize() {
   const locale = params?.locale as string | undefined;
   const lang: Lang = locale === 'en' || locale === 'ar' ? locale : 'ar';
 
-  const { t: tHome, i18n } = useTranslation('home');
-  useEffect(() => {
-    if (i18n.language !== lang) i18n.changeLanguage(lang);
-  }, [lang, i18n]);
   const t = lang === 'en' ? enQuize : arQuize;
   useDir();
 

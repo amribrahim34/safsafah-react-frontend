@@ -86,7 +86,7 @@ export default function CategoriesSection() {
           return (
             <Link
               key={category.id}
-              href={getLocalizedPath(`/catalog?categoryId=${category.id}`, lang)}
+              href={getLocalizedPath(`/catalog?categoryIds=${category.id}`, lang)}
               className="relative rounded-2xl overflow-hidden border border-neutral-200 h-28 lg:h-44"
             >
               {imageUrl ? (

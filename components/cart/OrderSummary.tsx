@@ -1,8 +1,7 @@
 'use client';
 import React from "react";
 import { useParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import '@/lib/i18n';
+import { getFixedT } from "@/lib/i18n-helpers";
 import DeliveryETA from "../product_details/DeliveryETA";
 
 interface OrderSummaryProps {
@@ -27,8 +26,7 @@ export default function OrderSummary({ brand, fmt, subtotal, discount, shipping,
   const locale = params?.locale as string | undefined;
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
-  const { t, i18n } = useTranslation('cart');
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
+  const t = getFixedT(lang, 'cart');
 
   return (
     <div className="rounded-3xl border border-neutral-200 p-4 bg-neutral-50">

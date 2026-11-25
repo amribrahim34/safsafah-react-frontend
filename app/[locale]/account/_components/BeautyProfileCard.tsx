@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchBeautyProfile } from '@/store/slices/beautyProfileSlice';
+import { getLocalizedPath } from '@/lib/locale-navigation';
 import type { BrandConfig, BeautyProfileTranslations } from './_types';
 
 interface BeautyProfileCardProps {
@@ -116,13 +118,13 @@ export default function BeautyProfileCard({ brand, lang, t }: BeautyProfileCardP
         )}
       </div>
 
-      <a
-        href="/catalog?personalized=1"
+      <Link
+        href={getLocalizedPath('/catalog?personalized=1', lang)}
         className="inline-block mt-3 px-4 py-2 rounded-2xl text-white font-semibold"
         style={{ background: brand.primary }}
       >
         {t.cta}
-      </a>
+      </Link>
     </section>
   );
 }

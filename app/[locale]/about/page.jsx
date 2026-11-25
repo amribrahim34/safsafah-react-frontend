@@ -1,10 +1,9 @@
 'use client';
 
-import '@/lib/i18n';
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useLocale } from '@/lib/locale-navigation';
 import { useDir } from '@/hooks/useDir';
+import { getFixedT } from '@/lib/i18n-helpers';
 import Image from 'next/image';
 import { BRAND } from '@/content/brand';
 import VisionMission from './_components/VisionMission';
@@ -13,23 +12,19 @@ import ContactPanel from './_components/ContactPanel';
 
 export default function AboutPage() {
   const lang = useLocale();
-  const { t, i18n } = useTranslation('about');
+  const t = getFixedT(lang, 'about');
   const [siteSettings, setSiteSettings] = useState(null);
 
   useDir();
 
   useEffect(() => {
-    if (i18n.language !== lang) i18n.changeLanguage(lang);
-  }, [lang, i18n]);
-
-  useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/settings`, {
-      headers: { Accept: 'application/json', 'Accept-Language': 'ar' },
+      headers: { Accept: 'application/json', 'Accept-Language': lang },
     })
       .then((r) => r.json())
       .then((json) => setSiteSettings(json.data ?? null))
       .catch(() => {});
-  }, []);
+  }, [lang]);
 
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
 

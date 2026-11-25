@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslation } from "react-i18next";
 import { Star } from "lucide-react";
+import { useLocale } from "@/lib/locale-navigation";
+import { getFixedT } from "@/lib/i18n-helpers";
 
 interface TestimonialItem {
   name: string;
@@ -19,7 +20,8 @@ const DATA: TestimonialItem[] = [
 ];
 
 export default function Testimonials() {
-  const { t } = useTranslation('home');
+  const lang = useLocale();
+  const t = getFixedT(lang, 'home');
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-8">

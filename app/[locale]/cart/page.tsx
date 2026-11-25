@@ -5,10 +5,9 @@ import { useParams, useRouter } from "next/navigation";
 import type { Language, Product } from "@/types";
 import posthog from "posthog-js";
 import { initiateCheckout as fbInitiateCheckout } from "@/lib/fbpixel";
-import { useTranslation } from "react-i18next";
-import '@/lib/i18n';
 import { BRAND } from "@/content/brand";
 import { useDir } from "@/hooks/useDir";
+import { getFixedT } from "@/lib/i18n-helpers";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchCart,
@@ -39,10 +38,7 @@ export default function CartPage() {
   const locale = params?.locale as string | undefined;
   const lang: Language = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
-  const { t, i18n } = useTranslation('cart');
-  useEffect(() => {
-    if (i18n.language !== lang) i18n.changeLanguage(lang);
-  }, [lang, i18n]);
+  const t = getFixedT(lang, 'cart');
   useDir();
 
   const [promo, setPromo] = useState("");

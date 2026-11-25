@@ -4,7 +4,6 @@ import { X, ShoppingBag, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   removeFromCart,
@@ -16,6 +15,7 @@ import { localStorageManager } from '@/lib/localStorageManager';
 import { productsService } from '@/lib/api/services/products.service';
 import type { Product } from '@/types';
 import { getLocalizedPath, Locale } from '@/lib/locale-navigation';
+import { getFixedT } from '@/lib/i18n-helpers';
 import { env } from '@/config';
 
 interface CartDrawerProps {
@@ -50,7 +50,7 @@ export default function CartDrawer({
   lang,
   mounted,
 }: CartDrawerProps) {
-  const { t } = useTranslation('home');
+  const t = getFixedT(lang, 'home');
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart.cart);
   const isCartLoading = useAppSelector((state) => state.cart.isLoading);

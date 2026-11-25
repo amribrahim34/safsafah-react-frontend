@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
 import type { BlogPost } from '@/types/models/blog';
 import { BRAND } from '@/content/brand';
+import { getFixedT } from '@/lib/i18n-helpers';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -20,7 +20,7 @@ function formatDate(iso: string, locale: string) {
 }
 
 export default function BlogCard({ post, locale }: BlogCardProps) {
-  const { t } = useTranslation('blog');
+  const t = getFixedT(locale, 'blog');
   const isRTL = locale === 'ar';
 
   const title = isRTL ? post.titleAr : post.titleEn;

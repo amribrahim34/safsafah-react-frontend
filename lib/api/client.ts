@@ -194,7 +194,9 @@ function createApiClient(): AxiosInstance {
 
         // Redirect to login page only if not already there
         if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-          window.location.href = '/login';
+          const seg = window.location.pathname.split('/')[1];
+          const localePrefix = (seg === 'en' || seg === 'ar') ? `/${seg}` : '/ar';
+          window.location.href = `${localePrefix}/login`;
         }
       }
 

@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams, useParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import '@/lib/i18n';
+import { getFixedT } from "@/lib/i18n-helpers";
 import { BRAND } from "@/content/brand";
 import PromoBar from "@/components/header/PromoBar";
 import Header from "@/components/header/Header";
@@ -26,14 +25,12 @@ function WalletPaymentContent() {
   const locale = params?.locale as string | undefined;
   const lang: Language = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
-  const { t, i18n } = useTranslation('walletPayment');
-  const { t: tHome } = useTranslation('home');
+  const t = getFixedT(lang, 'walletPayment');
 
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   useEffect(() => {
-    if (i18n.language !== lang) i18n.changeLanguage(lang);
     settingsService.getSettings().then(setSiteSettings).catch(() => {});
-  }, [lang, i18n]);
+  }, [lang]);
 
   const walletNumber = searchParams.get('walletNumber') || siteSettings?.mobile || "—";
   const [orderRef] = useState<string>(() => searchParams.get('orderRef') || `SFS-${Date.now()}`);
@@ -62,7 +59,7 @@ function WalletPaymentContent() {
     }
     // TODO: upload to backend, mark order as 'awaiting verification'
     alert(t('alertProofReceived'));
-    router.push("/");
+    router.push(`/${lang}`);
   };
 
   return (

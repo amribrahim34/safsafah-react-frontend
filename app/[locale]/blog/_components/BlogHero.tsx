@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
 import type { BlogPost } from '@/types/models/blog';
 import { BRAND } from '@/content/brand';
+import { getFixedT } from '@/lib/i18n-helpers';
 
 interface BlogHeroProps {
   post: BlogPost;
@@ -12,7 +12,7 @@ interface BlogHeroProps {
 }
 
 export default function BlogHero({ post, locale }: BlogHeroProps) {
-  const { t } = useTranslation('blog');
+  const t = getFixedT(locale, 'blog');
   const isRTL = locale === 'ar';
 
   const title = isRTL ? post.titleAr : post.titleEn;

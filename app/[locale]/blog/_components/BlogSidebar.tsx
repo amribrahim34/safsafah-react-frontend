@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
 import type { BlogCategory, BlogPost } from '@/types/models/blog';
 import { BRAND } from '@/content/brand';
+import { getFixedT } from '@/lib/i18n-helpers';
 
 interface BlogSidebarProps {
   locale: string;
@@ -25,7 +25,7 @@ export default function BlogSidebar({
   onSearchChange,
   recentPosts,
 }: BlogSidebarProps) {
-  const { t } = useTranslation('blog');
+  const t = getFixedT(locale, 'blog');
   const isRTL = locale === 'ar';
 
   return (

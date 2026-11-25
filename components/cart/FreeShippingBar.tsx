@@ -2,8 +2,7 @@
 
 import React from "react";
 import { useParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import '@/lib/i18n';
+import { getFixedT } from "@/lib/i18n-helpers";
 
 interface FreeShippingBarProps {
   brand: { primary: string };
@@ -16,8 +15,7 @@ export default function FreeShippingBar({ brand, subtotal, target = 500 }: FreeS
   const locale = params?.locale as string | undefined;
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
-  const { t, i18n } = useTranslation('cart');
-  if (i18n.language !== lang) i18n.changeLanguage(lang);
+  const t = getFixedT(lang, 'cart');
 
   const pct = Math.max(0, Math.min(1, subtotal / target));
   const left = Math.max(0, target - subtotal);

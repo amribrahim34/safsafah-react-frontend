@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { getFixedT } from '@/lib/i18n-helpers';
 
 interface Props {
   url: string;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function BlogPostShareButtons({ url, title, locale }: Props) {
-  const { t } = useTranslation('blog');
+  const t = getFixedT(locale, 'blog');
   const [copied, setCopied] = useState(false);
   const isRTL = locale === 'ar';
 

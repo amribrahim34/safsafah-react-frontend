@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
+import { getFixedT } from "@/lib/i18n-helpers";
 
 
 interface BannerCard {
@@ -12,12 +13,13 @@ interface BannerCard {
 }
 
 export default function MoreBanners() {
-  const { t } = useTranslation('home');
+  const lang = useLocale();
+  const t = getFixedT(lang, 'home');
 
   const cards: BannerCard[] = [
-    { img: "/credibility-badges/original.webp", title: t('extraBanners.items.0.title'), href: "/catalog" },
-    { img: "/credibility-badges/cash.webp", title: t('extraBanners.items.1.title'), href: "/catalog" },
-    { img: "/credibility-badges/sale.webp", title: t('extraBanners.items.2.title'), href: "/catalog?sale=true" },
+    { img: "/credibility-badges/original.webp", title: t('extraBanners.items.0.title'), href: getLocalizedPath("/catalog", lang) },
+    { img: "/credibility-badges/cash.webp", title: t('extraBanners.items.1.title'), href: getLocalizedPath("/catalog", lang) },
+    { img: "/credibility-badges/sale.webp", title: t('extraBanners.items.2.title'), href: getLocalizedPath("/catalog?sale=true", lang) },
   ];
 
   return (

@@ -1,8 +1,12 @@
-import { useTranslation } from "react-i18next";
-import { Truck, ShieldCheck, Leaf, Globe } from "lucide-react";
+'use client';
 
-export default function USPGrid({ brand, lang, copy }) {
-  const { t } = useTranslation('home');
+import { Truck, ShieldCheck, Leaf, Globe } from "lucide-react";
+import { useLocale } from "@/lib/locale-navigation";
+import { getFixedT } from "@/lib/i18n-helpers";
+
+export default function USPGrid({ brand, lang: propLang }) {
+  const routeLang = useLocale();
+  const t = getFixedT(propLang || routeLang, 'home');
 
   const items = [
     { icon: Truck, title: t('uspGrid.items.0.title'), desc: t('uspGrid.items.0.desc') },

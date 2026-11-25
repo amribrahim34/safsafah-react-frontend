@@ -1,10 +1,9 @@
 'use client';
 
-import '@/lib/i18n';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
 import { useDir } from '@/hooks/useDir';
+import { getFixedT } from '@/lib/i18n-helpers';
 import { BRAND } from '@/content/brand';
 import { settingsService, type SiteSettings } from '@/lib/api/services';
 
@@ -18,15 +17,14 @@ export default function ContactPage() {
   const locale = params?.locale as string | undefined;
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
 
-  const { t, i18n } = useTranslation('contact');
+  const t = getFixedT(lang, 'contact');
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
 
   useDir();
 
   useEffect(() => {
-    if (i18n.language !== lang) i18n.changeLanguage(lang);
     settingsService.getSettings().then(setSiteSettings).catch(() => {});
-  }, [lang, i18n]);
+  }, [lang]);
 
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
 

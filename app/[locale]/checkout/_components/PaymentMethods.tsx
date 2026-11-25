@@ -1,6 +1,5 @@
-import '@/lib/i18n';
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { getFixedT } from "@/lib/i18n-helpers";
 import { Language } from "@/types/models/common";
 import { BrandColors } from "@/types/models/brand";
 
@@ -14,7 +13,7 @@ interface PaymentMethodsProps {
 }
 
 export default function PaymentMethodsLite({ lang, brand, value, onChange }: PaymentMethodsProps) {
-  const { t } = useTranslation('checkout');
+  const t = getFixedT(lang, 'checkout');
 
   const options: { id: PaymentMethod; label: string }[] = [
     { id: "cod",    label: t('payment.cod') },

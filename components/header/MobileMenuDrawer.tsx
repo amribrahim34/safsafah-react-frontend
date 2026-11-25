@@ -3,8 +3,8 @@
 import { X, User2, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
 import { getLocalizedPath, Locale } from '@/lib/locale-navigation';
+import { getFixedT } from '@/lib/i18n-helpers';
 import LanguageSwitcher from './LanguageSwitcher';
 import NavLink from './NavLink';
 import logo from '../../assets/safsafah-logo.png';
@@ -36,7 +36,7 @@ export default function MobileMenuDrawer({
   onLogout,
 }: MobileMenuDrawerProps) {
   const pathname = usePathname();
-  const { t } = useTranslation('home');
+  const t = getFixedT(lang, 'home');
 
   return (
     <>

@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
+import { cache } from "react";
+import { notFound } from "next/navigation";
 import enHome from "@/locales/en/home.json";
 import arHome from "@/locales/ar/home.json";
 import { BRAND } from "@/content/brand";
+import { ApiException } from "@/lib/api/client";
 import { productsService } from "@/lib/api/services/products.service";
 import type { Language } from "@/types/models/common";
 import type { BrandColors } from "@/types/models/brand";
 import type { LocalReview } from "./types";
+
+const getProductCached = cache((slug: string) => productsService.getProductBySlug(slug));
 
 
 // Page-scoped components
@@ -23,8 +28,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug, locale } = await params;
   try {
-    const product = await productsService.getProductBySlug(slug);
-    if (!product) return {};
+    const product = await getProductCached(slug);
+    if (!product) notFound();
     const rawTitle = locale === "ar" ? product.nameAr : product.nameEn;
     const title = rawTitle ? rawTitle.slice(0, 60) : undefined;
 
@@ -36,23 +41,22 @@ export async function generateMetadata({
     const cleanDesc = rawDesc ? rawDesc.replace(/<[^>]*>?/gm, '').trim().slice(0, 155) : "";
     const description = cleanDesc || fallbackDesc;
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://safsafah.com";
-    const productUrl = `${siteUrl}/${locale}/product/${slug}`;
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://safsafah.com").replace(/\/+$/, "");
+    const arSlug = product.slugAr?.trim() || slug;
+    const enSlug = product.slugEn?.trim() || slug;
+    const canonicalSlug = locale === "ar" ? arSlug : enSlug;
+    const productUrl = `${siteUrl}/${locale}/product/${canonicalSlug}`;
     const imageUrl = product.image ?? "";
-
-    // Define language counterparts for Hreflang
-    const alternateLocale = locale === "ar" ? "en" : "ar";
 
     return {
       title: title ?? undefined,
       description: description ?? undefined,
-      // 👇 Add alternates configuration here
       alternates: {
         canonical: productUrl,
         languages: {
-          'ar-EG': `${siteUrl}/ar/product/${slug}`,
-          'en-EG': `${siteUrl}/en/product/${slug}`,
-          'x-default': `${siteUrl}/ar/product/${slug}`,
+          'ar-EG': `${siteUrl}/ar/product/${arSlug}`,
+          'en-EG': `${siteUrl}/en/product/${enSlug}`,
+          'x-default': `${siteUrl}/ar/product/${arSlug}`,
         },
       },
       robots: {
@@ -92,7 +96,10 @@ export async function generateMetadata({
         ...(product.updatedAt ? { modifiedTime: product.updatedAt } : {}),
       },
     };
-  } catch {
+  } catch (err) {
+    if (err instanceof ApiException && (err.statusCode === 404 || err.statusCode === 422)) {
+      notFound();
+    }
     return {};
   }
 }
@@ -130,14 +137,20 @@ export default async function ProductPage({
 
   let product;
   try {
-    product = await productsService.getProductBySlug(slug);
-  } catch {
+    product = await getProductCached(slug);
+  } catch (err) {
+    if (err instanceof ApiException && (err.statusCode === 404 || err.statusCode === 422)) {
+      notFound();
+    }
     return <ErrorState lang={lang} brand={BRAND} error={null} />;
   }
 
   if (!product) {
-    return <ErrorState lang={lang} brand={BRAND} error={null} />;
+    notFound();
   }
+
+  const canonicalSlug =
+    lang === "ar" ? (product.slugAr?.trim() || slug) : (product.slugEn?.trim() || slug);
 
   let reviews: LocalReview[] = [];
   try {
@@ -167,7 +180,7 @@ export default async function ProductPage({
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       {/* Structured data for Google rich results (price, stock, rating) */}
-      <ProductJsonLd product={product} locale={locale} slug={slug} reviews={reviews} />
+      <ProductJsonLd product={product} locale={locale} slug={canonicalSlug} reviews={reviews} />
 
       <Breadcrumbs items={breadcrumbItems} locale={locale} />
 

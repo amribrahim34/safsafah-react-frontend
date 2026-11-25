@@ -7,6 +7,8 @@ import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
 const inter = Inter({ subsets: ['latin'] });
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '') || 'https://safsafah.com';
+
 const metadataByLocale: Record<string, { title: string; description: string }> = {
   en: {
     title: 'Safsafah | Premium Cosmetics & Skincare',
@@ -24,8 +26,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const meta = metadataByLocale[locale] ?? metadataByLocale['en'];
   const brandSuffix = locale === 'ar' ? 'صفصافه' : 'Safsafah';
-  
+
   return {
+    metadataBase: new URL(BASE_URL),
     title: {
       template: `%s | ${brandSuffix}`,
       default: meta.title,

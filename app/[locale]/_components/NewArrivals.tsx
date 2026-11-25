@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
 import ProductGrid from "./ProductGrid";
 import SectionHeader from "./SectionHeader";
 import { homeService } from "@/lib/api/services";
 import type { HomeProduct } from "@/types";
 import { getLocalizedPath } from '@/lib/locale-navigation';
+import { getFixedT } from "@/lib/i18n-helpers";
 
 interface NewArrivalsProps {
   brand: {
@@ -22,7 +22,7 @@ export default function NewArrivals({ brand }: NewArrivalsProps) {
   const params = useParams();
   const locale = params?.locale as string | undefined;
   const lang = (locale === 'en' || locale === 'ar') ? locale : 'ar';
-  const { t } = useTranslation('home');
+  const t = getFixedT(lang, 'home');
   const [products, setProducts] = useState<HomeProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

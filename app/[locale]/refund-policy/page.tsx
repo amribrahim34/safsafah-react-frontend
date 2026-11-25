@@ -1,37 +1,37 @@
-'use client';
+import React from "react";
+import type { Metadata } from "next";
+import { settingsService, type SiteSettings } from '@/lib/api/services/settings.service';
+import { buildAlternates } from '@/lib/seo';
 
-import React, { useMemo, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import '@/lib/i18n';
-import { useDir } from "@/hooks/useDir";
-import { settingsService } from '@/lib/api/services';
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const isAr = locale === 'ar';
+  return {
+    title: isAr ? 'سياسة الاسترجاع' : 'Refund Policy',
+    description: isAr
+      ? 'تعرفي على سياسة الاسترجاع والاستبدال في صفصافه.'
+      : "Learn about Safsafah's return and refund policy.",
+    alternates: buildAlternates(locale, '/refund-policy'),
+  };
+}
 
-// ---- Return & Refund Policy Page ----
-// Default language is AR. No borders between blocks. Clean, consistent styling.
+// ---- Return & Refund Policy Page (Server Component for 100% SSR language fidelity) ----
+export default async function RefundPolicy({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const lang = locale === 'en' ? 'en' : 'ar';
+  const dir = lang === 'ar' ? 'rtl' : 'ltr';
 
-export default function RefundPolicy() {
-  const lastUpdated = undefined;
-  // Default Arabic
-  const [lang] = useState("ar");
-  const { i18n } = useTranslation('home');
-  useEffect(() => {
-    if (i18n.language !== lang) i18n.changeLanguage(lang);
-  }, [lang, i18n]);
-  useDir();
+  let siteSettings: SiteSettings | null = null;
+  try {
+    siteSettings = await settingsService.getSettings();
+  } catch {
+    siteSettings = null;
+  }
 
-  const [siteSettings, setSiteSettings] = useState(null);
-  useEffect(() => {
-    settingsService.getSettings().then(setSiteSettings).catch(() => {});
-  }, []);
-
-  const updated = useMemo(() => {
-    const d = lastUpdated ? new Date(lastUpdated) : new Date();
-    return d.toLocaleDateString(lang === "ar" ? "ar-EG" : "en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  }, [lastUpdated, lang]);
+  const updated = new Date('2025-01-01').toLocaleDateString(
+    lang === 'ar' ? 'ar-EG' : 'en-GB',
+    { day: '2-digit', month: 'short', year: 'numeric' }
+  );
 
   const CONTACT = {
     email: siteSettings?.email || '—',
@@ -210,8 +210,7 @@ export default function RefundPolicy() {
   const c = copy[lang];
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
-     
+    <div className="min-h-screen bg-white text-neutral-900" dir={dir}>
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Page header */}
         <header className="mb-6">
@@ -248,7 +247,6 @@ export default function RefundPolicy() {
           ))}
         </div>
       </main>
-
     </div>
   );
 }

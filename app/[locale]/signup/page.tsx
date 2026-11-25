@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, ChangeEvent } from 'react';
+import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { clearError } from '@/store/slices/authSlice';
-import { useLocale, useLocaleRouter, getOppositeLocale } from '@/lib/locale-navigation';
+import { useLocale, useLocaleRouter, getOppositeLocale, getLocalizedPath } from '@/lib/locale-navigation';
 import { useDir } from '@/hooks/useDir';
 import { BRAND } from '@/content/brand';
 import AuthHeroPanel from '@/components/auth/AuthHeroPanel';
@@ -202,9 +203,9 @@ export default function SignupPage() {
 
                 <div className="text-sm text-neutral-700 mt-3">
                   {isRTL ? 'لديك حساب؟' : 'Already have an account?'}{' '}
-                  <a href="/login" className="font-semibold" style={{ color: BRAND.primary }}>
+                  <Link href={getLocalizedPath('/login', locale)} className="font-semibold" style={{ color: BRAND.primary }}>
                     {isRTL ? 'تسجيل الدخول' : 'Sign in'}
-                  </a>
+                  </Link>
                 </div>
               </form>
             </div>

@@ -43,7 +43,14 @@ export async function generateMetadata({ params }: { params: PageParams }): Prom
     return {
       title: title ?? undefined,
       description,
-      alternates: { canonical: articleUrl },
+      alternates: {
+        canonical: articleUrl,
+        languages: {
+          'ar-EG': `${siteUrl}/ar/blog/${slug}`,
+          'en-EG': `${siteUrl}/en/blog/${slug}`,
+          'x-default': `${siteUrl}/ar/blog/${slug}`,
+        },
+      },
       robots: {
         index: true,
         follow: true,

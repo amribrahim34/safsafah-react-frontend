@@ -29,6 +29,9 @@ const staticRoutes: {
   { path: '/blog',          lastModified: '2025-01-01', changeFrequency: 'weekly',  priority: 0.7 },
   { path: '/landing/beauty-of-joseon-relief-sun-aqua-fresh', lastModified: '2026-11-25', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/landing/dr-althea-345-relief-cream', lastModified: '2026-11-25', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/landing/cicaplast-baume-b5', lastModified: '2026-11-25', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/landing/vichy-normaderm', lastModified: '2026-11-25', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/landing/tetra-glow', lastModified: '2026-11-25', changeFrequency: 'weekly', priority: 0.9 },
 ]
 
 // ─── Types ────────────────────────────────────────────────────────────────────

@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // Ensure <head> always contains canonical, hreflang, and robots tags in initial HTML
+  // (instead of streaming metadata into <body>) for all crawlers and audit tools.
+  htmlLimitedBots: /.*/,
   images: {
     remotePatterns: [{ hostname: '**' }],
     // The Next image optimizer (/_next/image) is uncached in dev, so a page full

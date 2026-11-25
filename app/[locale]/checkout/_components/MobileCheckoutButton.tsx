@@ -1,6 +1,5 @@
-import '@/lib/i18n';
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { getFixedT } from "@/lib/i18n-helpers";
 import { Language } from "@/types/models/common";
 import { BrandColors } from "@/types/models/brand";
 
@@ -27,7 +26,7 @@ export default function MobileCheckoutButton({
   onClick,
   fmt,
 }: MobileCheckoutButtonProps) {
-  const { t } = useTranslation('checkout');
+  const t = getFixedT(lang, 'checkout');
 
   return (
     <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-neutral-200 md:hidden">
