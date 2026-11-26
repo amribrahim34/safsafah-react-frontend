@@ -1,30 +1,41 @@
-# Safsafah (صفصافه)
+# Safsafah (صفصافة)
 
-> Safsafah is a Saudi Arabian e-commerce platform specializing in premium cosmetics, skincare, and beauty products. The site supports both Arabic (RTL) and English (LTR) and ships across Saudi Arabia.
+> Safsafah is an Egyptian e-commerce platform specializing in authentic skincare and cosmetics products. The site supports both Arabic (RTL) and English (LTR) and delivers across Egypt's governorates.
 
 ## Site Overview
 
 - **Domain:** https://safsafah.com
 - **Languages:** Arabic (default, RTL), English
-- **Category:** Beauty & Cosmetics E-commerce
-- **Currency:** SAR (Saudi Riyal)
+- **Category:** Beauty & Cosmetics E-commerce (distributor, not manufacturer)
+- **Currency:** EGP (Egyptian Pound)
+- **Market:** Egypt
 
 ## Key Pages
 
-- **Homepage:** https://safsafah.com — Featured collections, best sellers, top brands, and categories
-- **Catalog / Shop:** https://safsafah.com/catalog — Browse all products with filters (brand, category, price, skin type)
+- **Homepage:** https://safsafah.com — Featured collections, bestsellers, top brands, categories, and curated collections
+- **Catalog / Shop:** https://safsafah.com/catalog — Browse all products with filters (brand, category, price, skin type, skin concern)
 - **Product Page:** https://safsafah.com/product/{slug} — Full product detail, images, description, reviews, and add-to-cart
 - **Cart:** https://safsafah.com/cart — Shopping cart with quantity controls and coupon codes
-- **Checkout:** https://safsafah.com/checkout — Delivery address (with map picker), payment methods, order summary
-- **Brands:** https://safsafah.com/brands — Browse all available beauty brands
-- **Blog:** https://safsafah.com/blog — Beauty tips, skincare guides, and product tutorials
-- **Contact:** https://safsafah.com/contact — Customer support contact form and response hours
+- **Checkout:** https://safsafah.com/checkout — Delivery address, payment methods (COD, card, wallets), order summary
+- **Brands:** https://safsafah.com/catalog (filtered by brand) — Browse all available beauty brands
+- **Blog:** https://safsafah.com/blog — Beauty tips, skincare guides, and product tutorials (Glow Journal)
+- **About:** https://safsafah.com/about — Who we are, vision & mission, service commitments, FAQs
+- **Contact:** https://safsafah.com/contact — Customer support contact form, WhatsApp, phone, email
 - **Login:** https://safsafah.com/login — Email/password or OTP login
 - **Sign Up:** https://safsafah.com/signup — New account registration
 - **My Account:** https://safsafah.com/account — Order history, addresses, wishlist, rewards wallet, beauty profile, settings
 - **My Orders:** https://safsafah.com/orders — Track and manage past orders
-- **Skin Quiz:** https://safsafah.com/quize — Personalized skin type and concern quiz to get product recommendations
+- **Skin Quiz:** https://safsafah.com/quize — Personalized skin type and concern quiz for product recommendations
 - **Wallet Payment:** https://safsafah.com/wallet-payment — Pay using Safsafah rewards wallet
+- **Refund Policy:** https://safsafah.com/refund-policy — Return and refund conditions
+
+## Landing Pages
+
+- https://safsafah.com/landing/beauty-of-joseon-relief-sun-aqua-fresh
+- https://safsafah.com/landing/dr-althea-345-relief-cream
+- https://safsafah.com/landing/cicaplast-baume-b5
+- https://safsafah.com/landing/vichy-normaderm
+- https://safsafah.com/landing/tetra-glow
 
 ## Product Categories
 
@@ -34,31 +45,41 @@ Safsafah carries products in the following beauty categories:
 - Haircare (shampoo, conditioner, hair masks, oils)
 - Fragrance & Body (perfumes, body lotions, scrubs)
 - Tools & Accessories (brushes, applicators, devices)
-- Men's Grooming
 
 ## Key Features
 
+- **Authentic Products:** Products sourced from trusted suppliers and wholesalers within Egypt; packaging and expiry dates inspected before shipping
 - **Beauty Profile / Skin Quiz:** Users can take a skin type quiz to receive personalized product recommendations
-- **Rewards Wallet:** Loyalty points earned on purchases, redeemable at checkout
+- **Rewards Wallet:** Loyalty points earned on purchases; 1 point = 1 EGP, redeemable at checkout
 - **Wishlist:** Save products for later
 - **Reviews & Ratings:** Product reviews with rating breakdown
 - **Bilingual:** Full Arabic and English support with locale-based routing (`/ar/`, `/en/`)
-- **Fast Delivery:** Ships across Saudi Arabia
+- **Fast Delivery:** Same/next-day delivery in Cairo & Giza; 1–3 business days within Greater Cairo; 2–5 business days for other Egyptian governorates
+- **Cash on Delivery:** COD available, plus card and wallet payment options via courier
+- **Free Shipping:** Free shipping on orders above 2,000 EGP; standard shipping fee of 50 EGP otherwise
 
 ## Common User Actions
 
-- Search and filter products by brand, category, skin type, or price
+- Search and filter products by brand, category, skin type, skin concern, or price
 - Add products to cart and proceed to checkout
-- Apply coupon codes
-- Select delivery address using an interactive map
-- Pay via card or Safsafah wallet
+- Apply coupon codes (e.g., GLOW10 for 10% off first order)
+- Select delivery address for Egyptian governorates
+- Pay via cash on delivery, card, or Safsafah wallet
 - Track existing orders
 - Save items to wishlist
 - Write and read product reviews
 - Take the skin quiz for personalized recommendations
-- Contact support
+- Contact support via WhatsApp, phone, or email
+
+## Service Commitments
+
+- **Delivery:** To most Egyptian governorates via shipping partners; timeframes vary by courier and location
+- **Payment:** Cash on delivery, card, or available wallets depending on the courier; transactions processed through certified payment channels
+- **Returns:** Accepted within 14 days for unopened products per conditions on the refund policy page
+- **Support:** Response during official working hours; post-purchase and delivery requests prioritized
 
 ## Contact & Support
 
 - Contact page: https://safsafah.com/contact
-- Social media links available in site footer
+- WhatsApp, phone, and email support available
+- Social media: Facebook, Instagram, TikTok (links in site footer)
