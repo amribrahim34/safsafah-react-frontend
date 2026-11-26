@@ -58,9 +58,10 @@ export default function CheckoutQuickPage() {
     const walletNumber =  siteSettings?.mobile || "—";
     
 
-  const subtotal = cart?.totalPrice || 0;
-  const discount = 0;
-  const shipping = subtotal >= 2000 ? 0 : 50;
+  const subtotal = cart?.items?.reduce((sum, item) => sum + item.productPrice * item.quantity, 0) || cart?.totalPrice || 0;
+  const itemsTotal = cart?.items?.reduce((sum, item) => sum + item.subtotal, 0) || cart?.totalPrice || 0;
+  const discount = Math.max(0, subtotal - itemsTotal) + (cart?.discountAmount || 0);
+  const shipping = (subtotal - discount) >= 2000 ? 0 : 50;
   const total = Math.max(0, subtotal - discount + shipping);
   const fmt = (n: number): string =>
     new Intl.NumberFormat(lang === "ar" ? "ar-EG" : "en-EG", {
@@ -310,7 +311,7 @@ export default function CheckoutQuickPage() {
             brand={BRAND}
             fmt={fmt}
             subtotal={subtotal}
-            discount={0}
+            discount={discount}
             shipping={shipping}
             total={total}
             onCheckout={undefined}

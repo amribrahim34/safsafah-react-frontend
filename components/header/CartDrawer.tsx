@@ -83,7 +83,7 @@ export default function CartDrawer({
       productId: li.productId,
       name: lang === 'ar' ? p.nameAr : p.nameEn,
       image: p.image,
-      price: p.price,
+      price: p.finalPrice ?? p.price,
       quantity: li.quantity,
       slugEn: p.slugEn,
       slugAr: p.slugAr,
@@ -329,11 +329,17 @@ export default function CartDrawer({
         {/* Drawer Footer */}
         {((isAuthenticated && cart && cart.items.length > 0) ||
           (!isAuthenticated && guestCartItems.length > 0)) && (() => {
-          const subtotal = isAuthenticated
-            ? cart!.items.reduce((sum, i) => sum + i.subtotal, 0)
+          const originalTotal = isAuthenticated
+            ? cart!.items.reduce((sum, i) => sum + i.productPrice * i.quantity, 0)
             : guestTotal;
-          const discount = isAuthenticated ? (cart!.discountAmount ?? 0) : 0;
-          const total = isAuthenticated ? (cart!.totalPrice ?? 0) : guestTotal;
+          const subtotal = originalTotal;
+          const itemLevelDiscount = isAuthenticated
+            ? originalTotal - cart!.items.reduce((sum, i) => sum + i.subtotal, 0)
+            : 0;
+          const discount = isAuthenticated
+            ? Math.max(0, itemLevelDiscount) + (cart!.discountAmount ?? 0)
+            : 0;
+          const total = Math.max(0, subtotal - discount);
 
           return (
             <div className="border-t border-neutral-200 p-4 bg-neutral-50 shrink-0">

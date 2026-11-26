@@ -71,7 +71,7 @@ export default function CartPage() {
       return cart.items.map((item) => ({
         id: item.id,
         name: { en: item.productNameEn, ar: item.productNameAr },
-        price: item.productPrice,
+        price: item.quantity > 0 ? item.subtotal / item.quantity : item.productPrice,
         productId: item.productId,
         img: item.productImage,
         slugEn: item.productSlugEn,
@@ -87,7 +87,7 @@ export default function CartPage() {
       return [{
         id: li.productId,
         name: { en: p.nameEn, ar: p.nameAr },
-        price: p.price,
+        price: p.finalPrice ?? p.price,
         productId: li.productId,
         img: p.image,
         slugEn: p.slugEn,
@@ -151,10 +151,15 @@ export default function CartPage() {
 
   const freeShippingThreshold = 2000;
   const subtotal = isAuthenticated
-    ? (cart?.totalPrice || 0)
+    ? (cart?.items?.reduce((sum, item) => sum + item.productPrice * item.quantity, 0) || cart?.totalPrice || 0)
     : items.reduce((sum, it) => sum + it.price * it.qty, 0);
-  const discount = cart?.discountAmount || 0;
-  const shipping = subtotal - discount >= freeShippingThreshold ? 0 : 50;
+  const itemsTotal = isAuthenticated
+    ? (cart?.items?.reduce((sum, item) => sum + item.subtotal, 0) || cart?.totalPrice || 0)
+    : items.reduce((sum, it) => sum + it.price * it.qty, 0);
+  const discount = isAuthenticated
+    ? Math.max(0, subtotal - itemsTotal) + (cart?.discountAmount || 0)
+    : 0;
+  const shipping = (subtotal - discount) >= freeShippingThreshold ? 0 : 50;
   const total = Math.max(0, subtotal - discount + shipping);
 
   const showLoading = isLoading || guestLoading;
