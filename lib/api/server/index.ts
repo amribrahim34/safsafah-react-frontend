@@ -8,4 +8,5 @@
  */
 
 export { getBrandsServer } from './brands';
+export { getSettingsServer, DEFAULT_SITE_SETTINGS } from './settings';
 

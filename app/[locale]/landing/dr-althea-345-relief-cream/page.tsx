@@ -224,30 +224,6 @@ export default async function DrAlthea345LandingPage({ params }: PageProps) {
     })),
   };
 
-  // ── 4. Organization Schema ──
-  const organizationJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    '@id': `${siteUrl}#organization`,
-    name: 'Safsafah',
-    alternateName: 'صفصافة',
-    url: siteUrl,
-    logo: {
-      '@type': 'ImageObject',
-      url: `${siteUrl}/safsafah-logo1.png`,
-    },
-    contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'customer service',
-      areaServed: 'EG',
-      availableLanguage: ['Arabic', 'English'],
-    },
-    areaServed: {
-      '@type': 'Country',
-      name: 'Egypt',
-    },
-  };
-
   const breadcrumbItems = [
     { label: isAr ? 'الرئيسية' : 'Home', href: `/${lang}` },
     { label: isAr ? 'العناية بالبشرة' : 'Skincare', href: `/${lang}/catalog` },
@@ -271,10 +247,6 @@ export default async function DrAlthea345LandingPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
 
       <main className="min-h-screen bg-white">

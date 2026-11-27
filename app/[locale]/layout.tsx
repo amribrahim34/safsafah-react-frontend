@@ -5,6 +5,8 @@ import Footer from '@/components/footer/Footer';
 import { BRAND } from '@/content/brand';
 import PromoBar from '@/components/header/PromoBar';
 import Header from '@/components/header/Header';
+import { getSettingsServer } from '@/lib/api/server';
+import { buildOrganizationJsonLd } from '@/lib/seo';
 const inter = Inter({ subsets: ['latin'] });
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '') || 'https://safsafah.com';
@@ -44,13 +46,22 @@ type LayoutProps = {
   }>;
 };
 
-export default function LocaleLayout({ children }: LayoutProps) {
+export default async function LocaleLayout({ children }: LayoutProps) {
+  const settings = await getSettingsServer();
+  const organizationJsonLd = buildOrganizationJsonLd(settings);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
       <PromoBar  />
       <Header brand={BRAND} />
       {children}
-      <Footer brand={BRAND} />
+      <Footer brand={BRAND} settings={settings} />
       <BottomTabs />
     </>
   );

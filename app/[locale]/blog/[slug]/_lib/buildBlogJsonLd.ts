@@ -36,7 +36,7 @@ export function buildBlogJsonLd({ post, locale, slug }: Options) {
         publisher: {
           '@type': 'Organization',
           name: 'Safsafah',
-          logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png` },
+          logo: { '@type': 'ImageObject', url: `${siteUrl}/safsafah-logo1.png` },
         },
         mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
         articleSection: categoryName,

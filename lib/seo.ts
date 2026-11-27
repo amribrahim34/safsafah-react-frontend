@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { SiteSettings } from '@/lib/api/services/settings.service';
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '') || 'https://safsafah.com';
@@ -59,6 +60,49 @@ export function buildAlternates(
       'ar-EG': `${BASE_URL}/ar${cleanPath}`,
       'en-EG': `${BASE_URL}/en${cleanPath}`,
       'x-default': `${BASE_URL}/ar${cleanPath}`,
+    },
+  };
+}
+
+/**
+ * Builds the site-wide schema.org/Organization JSON-LD object with social `sameAs`
+ * links and contact metadata so search engines and AI crawlers can connect the brand
+ * to its official profiles.
+ */
+export function buildOrganizationJsonLd(settings: SiteSettings) {
+  const sameAs = [settings.facebook, settings.instagram, settings.tiktok].filter(
+    (url): url is string => Boolean(url),
+  );
+  const digits = settings.mobile?.replace(/\D/g, '') || '';
+  const telephone = digits
+    ? digits.startsWith('0')
+      ? `+2${digits}`
+      : `+${digits}`
+    : undefined;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${BASE_URL}#organization`,
+    name: 'Safsafah',
+    alternateName: 'صفصافة',
+    url: BASE_URL,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${BASE_URL}/safsafah-logo1.png`,
+    },
+    ...(sameAs.length ? { sameAs } : {}),
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      ...(settings.email ? { email: settings.email } : {}),
+      ...(telephone ? { telephone } : {}),
+      areaServed: 'EG',
+      availableLanguage: ['Arabic', 'English'],
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: 'Egypt',
     },
   };
 }

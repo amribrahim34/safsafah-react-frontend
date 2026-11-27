@@ -5,7 +5,7 @@ import { Leaf, ShieldCheck, ChevronDown } from "lucide-react";
 import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa6";
 import Link from "next/link";
 import { useLocale, getLocalizedPath } from "@/lib/locale-navigation";
-import { settingsService, type SiteSettings } from "@/lib/api/services";
+import type { SiteSettings } from "@/lib/api/services/settings.service";
 import { useAppSelector } from '@/store/hooks';
 
 interface FooterProps {
@@ -14,6 +14,7 @@ interface FooterProps {
     dark: string;
     light: string;
   };
+  settings: SiteSettings;
 }
 
 interface FooterTranslations {
@@ -76,16 +77,14 @@ function FooterSection({ title, children, defaultOpen = false }: FooterSectionPr
   );
 }
 
-export default function Footer({ brand }: FooterProps) {
+export default function Footer({ brand, settings }: FooterProps) {
   const locale = useLocale();
   const isRTL = locale === "ar";
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    settingsService.getSettings().then(setSettings).catch(() => {});
   }, []);
 
   const authState = mounted ? isAuthenticated : false;
