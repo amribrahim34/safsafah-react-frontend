@@ -7,6 +7,7 @@ import { VICHY_NORMADERM_DATA } from './_data/vichyNormadermData';
 import VichyNormadermHero from './_components/VichyNormadermHero';
 import VichyNormadermHighlights from './_components/VichyNormadermHighlights';
 import VichyNormadermDescription from './_components/VichyNormadermDescription';
+import VichyNormadermFormulaStandards from './_components/VichyNormadermFormulaStandards';
 import VichyNormadermComparison from './_components/VichyNormadermComparison';
 import VichyNormadermFAQ from './_components/VichyNormadermFAQ';
 import VichyNormadermOrderSection from './_components/VichyNormadermOrderSection';
@@ -30,8 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     : `${product.nameEn} | Safsafah`;
 
   const description = isAr
-    ? `تسوقي الآن ${product.nameAr} من صفصافة بأفضل سعر في مصر — ${product.price} جنيه فقط (بدلاً من ${product.originalPrice} جنيه بخصم ${product.discountPercentage}٪). غسول يومي مكثف خالٍ من السلفات بالساليسيليك والهيالورونيك والزنك والبروبيوتيك لتنقية المسام والرؤوس السوداء وترطيب 24 ساعة بدون جفاف. توصيل خلال 72 ساعة والدفع عند الاستلام.`
-    : `Shop ${product.nameEn} at Safsafah Egypt — only ${product.price} EGP (was ${product.originalPrice} EGP, save ${product.discountPercentage}%). Sulfate-Free daily purifying gel with Salicylic Acid, Hyaluronic Acid, Zinc & Probiotics for oily acne-prone skin. Fast 72-hour delivery & Cash on Delivery across Egypt.`;
+    ? `تسوقي الآن ${product.nameAr} من صفصافة بأفضل سعر في مصر — ${product.price} جنيه فقط (بدلاً من ${product.originalPrice} جنيه بخصم ${product.discountPercentage}٪). جل منقي بقاعدة نباتية خالٍ من السلفات والصابون والكحول بدرجة حموضة 5.5 مع حمض الساليسيليك ومعادن الزنك والنحاس والبروبيوتيك. توصيل خلال 72 ساعة والدفع عند الاستلام.`
+    : `Shop ${product.nameEn} at Safsafah Egypt — only ${product.price} EGP (was ${product.originalPrice} EGP, save ${product.discountPercentage}%). Sulfate-, soap- & alcohol-free purifying gel at physiological pH 5.5 with Salicylic Acid, Zinc & Copper minerals & Bifidus probiotic. Fast 72h delivery & Cash on Delivery.`;
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://safsafah.com';
   const canonicalUrl = `${siteUrl}/${locale}/landing/vichy-normaderm`;
@@ -281,13 +282,16 @@ export default async function VichyNormadermLandingPage({ params }: PageProps) {
         {/* 1. Hero Section (Image Gallery + Buy / Conversion Panel) */}
         <VichyNormadermHero product={product} lang={lang} />
 
-        {/* 2. Key Science Pillars & Proof Highlights */}
+        {/* 2. Official Vichy Clinical Results (Visual Gauges) */}
         <VichyNormadermHighlights lang={lang} />
 
-        {/* 3. In-Depth Product Description, Active Ingredients & Application Routine */}
+        {/* 3. Product Overview, Visual Skin-Action Map & Application Routine */}
         <VichyNormadermDescription product={product} lang={lang} />
 
-        {/* 4. Comparison Table (Vichy vs. Ordinary Cleansers) */}
+        {/* 4. Official Formula Purity, Target Zones & Full INCI List */}
+        <VichyNormadermFormulaStandards lang={lang} />
+
+        {/* 5. Comparison Table (Vichy vs. Ordinary Cleansers) */}
         <VichyNormadermComparison lang={lang} />
 
         {/* 6. Frequently Asked Questions (Accordion + JSON-LD) */}
