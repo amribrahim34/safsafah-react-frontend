@@ -6,7 +6,6 @@ import {
   Truck,
   RotateCcw,
   Lock,
-  CheckCircle2,
   ShoppingCart,
   Zap,
   Heart,
@@ -197,18 +196,6 @@ export const VichyNormadermHero: React.FC<VichyNormadermHeroProps> = ({
                     : 'Fast Shipping & Cash on Delivery Available across Egypt'}
                 </span>
               </div>
-            </div>
-
-            {/* Quick Benefits Bullet Points */}
-            <div className="space-y-2 py-1">
-              {(isAr ? product.highlightsAr.slice(0, 4) : product.highlightsEn.slice(0, 4)).map(
-                (item, idx) => (
-                  <div key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-neutral-700">
-                    <CheckCircle2 className="w-4 h-4 text-teal-700 flex-shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </div>
-                )
-              )}
             </div>
 
             {/* Action CTAs: Order Now (COD) & Add to Cart */}
