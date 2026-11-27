@@ -56,22 +56,26 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
   }));
 
   return (
-    <div className="w-full select-none">
+    <div className="w-full select-none flex flex-row items-start gap-2 sm:flex-col sm:items-stretch sm:gap-0">
       {/* Main Image Container */}
       <div
-        className="relative group bg-gradient-to-b from-stone-50 via-white to-neutral-50 rounded-3xl overflow-hidden border border-neutral-100 shadow-sm transition-all duration-300 hover:shadow-md"
+        className="flex-1 min-w-0 relative group bg-gradient-to-b from-stone-50 via-white to-neutral-50 rounded-2xl sm:rounded-3xl overflow-hidden border border-neutral-100 shadow-sm transition-all duration-300 hover:shadow-md"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
         {/* Badges on main image */}
-        <div className="absolute top-3.5 start-3.5 z-10 flex flex-col gap-1.5 pointer-events-none">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold tracking-wide uppercase bg-teal-700 text-white shadow-xs">
-            <Sparkles className="w-3.5 h-3.5" />
-            {isAr ? 'رغوة لطيفة بدون جفاف' : 'Gentle Foaming Cleanser'}
+        <div className="absolute top-2.5 start-2.5 sm:top-3.5 sm:start-3.5 z-10 flex flex-col gap-1 sm:gap-1.5 max-w-[calc(100%-3.25rem)] pointer-events-none">
+          <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold tracking-wide uppercase bg-teal-700 text-white shadow-xs w-fit">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+            <span className="truncate">
+              {isAr ? 'رغوة لطيفة بدون جفاف' : 'Gentle Foaming Cleanser'}
+            </span>
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-white/95 backdrop-blur-md text-neutral-800 border border-neutral-200/60 shadow-2xs">
-            <ShieldCheck className="w-3.5 h-3.5 text-teal-700" />
-            {isAr ? 'مفحوص جلدياً · 200 ملليلتر' : 'Dermatologically Tested · 200ml'}
+          <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[11px] font-semibold bg-white/95 backdrop-blur-md text-neutral-800 border border-neutral-200/60 shadow-2xs w-fit">
+            <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-teal-700 shrink-0" />
+            <span className="truncate">
+              {isAr ? 'مفحوص جلدياً · 200 ملليلتر' : 'Dermatologically Tested · 200ml'}
+            </span>
           </span>
         </div>
 
@@ -79,21 +83,21 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
         <button
           type="button"
           onClick={() => setLightboxOpen(true)}
-          className="absolute top-3.5 end-3.5 z-10 p-2 sm:p-2.5 rounded-full bg-white/90 backdrop-blur-md text-neutral-700 hover:text-teal-700 hover:bg-white shadow-sm transition-transform duration-200 hover:scale-105 active:scale-95"
+          className="absolute top-2.5 end-2.5 sm:top-3.5 sm:end-3.5 z-10 p-1.5 sm:p-2.5 rounded-full bg-white/90 backdrop-blur-md text-neutral-700 hover:text-teal-700 hover:bg-white shadow-sm transition-transform duration-200 hover:scale-105 active:scale-95"
           aria-label={isAr ? 'تكبير الصورة' : 'Zoom Image'}
         >
-          <Maximize2 className="w-4 h-4" />
+          <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </button>
 
         {/* Responsive Main Image View */}
         <div
-          className="relative w-full aspect-square max-h-[460px] sm:max-h-[520px] flex items-center justify-center p-3 sm:p-6 cursor-zoom-in"
+          className="relative w-full aspect-square max-h-[460px] sm:max-h-[520px] flex items-center justify-center p-2 sm:p-6 cursor-zoom-in"
           onClick={() => setLightboxOpen(true)}
         >
           {images.map((img, idx) => (
             <div
               key={img.id}
-              className={`absolute inset-0 p-4 sm:p-6 transition-opacity duration-300 flex items-center justify-center ${
+              className={`absolute inset-0 p-3 sm:p-6 transition-opacity duration-300 flex items-center justify-center ${
                 idx === activeIndex ? 'opacity-100 z-1 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
               }`}
             >
@@ -101,9 +105,9 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
                 src={img.src}
                 alt={isAr ? img.altAr : img.altEn}
                 fill
-                priority={idx === 0}
+                preload={idx === 0}
                 className="object-contain p-2 sm:p-4"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 639px) 75vw, (max-width: 768px) 100vw, 50vw"
               />
             </div>
           ))}
@@ -118,10 +122,10 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
                 e.stopPropagation();
                 handlePrev();
               }}
-              className="absolute start-2 sm:start-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/85 backdrop-blur-md text-neutral-700 hover:bg-white hover:text-teal-700 shadow-md transition-all active:scale-90"
+              className="absolute start-1.5 sm:start-3 top-1/2 -translate-y-1/2 z-10 p-1.5 sm:p-2 rounded-full bg-white/85 backdrop-blur-md text-neutral-700 hover:bg-white hover:text-teal-700 shadow-md transition-all active:scale-90"
               aria-label={isAr ? 'الصورة السابقة' : 'Previous Image'}
             >
-              {isAr ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+              {isAr ? <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" /> : <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
             <button
               type="button"
@@ -129,16 +133,16 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
                 e.stopPropagation();
                 handleNext();
               }}
-              className="absolute end-2 sm:end-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/85 backdrop-blur-md text-neutral-700 hover:bg-white hover:text-teal-700 shadow-md transition-all active:scale-90"
+              className="absolute end-1.5 sm:end-3 top-1/2 -translate-y-1/2 z-10 p-1.5 sm:p-2 rounded-full bg-white/85 backdrop-blur-md text-neutral-700 hover:bg-white hover:text-teal-700 shadow-md transition-all active:scale-90"
               aria-label={isAr ? 'الصورة التالية' : 'Next Image'}
             >
-              {isAr ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+              {isAr ? <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" /> : <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
           </>
         )}
 
         {/* Caption Bar & Dot Indicators */}
-        <div className="py-2.5 px-4 bg-white/95 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-600">
+        <div className="py-2 px-3 sm:py-2.5 sm:px-4 bg-white/95 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-600">
           <span className="font-medium truncate text-[11px] sm:text-xs">
             {isAr ? currentImage.captionAr : currentImage.captionEn}
           </span>
@@ -158,15 +162,15 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
         </div>
       </div>
 
-      {/* Thumbnails Strip */}
+      {/* Thumbnails Strip: Vertical side rail on mobile, grid underneath on sm+ */}
       {images.length > 1 && (
         <div
-          className={`mt-3 grid gap-2 sm:gap-3 ${
+          className={`flex flex-col gap-2 w-16 min-[420px]:w-[72px] shrink-0 sm:mt-3 sm:w-full sm:grid sm:gap-3 ${
             images.length === 2
-              ? 'grid-cols-2 max-w-xs mx-auto'
+              ? 'sm:grid-cols-2 sm:max-w-xs sm:mx-auto'
               : images.length >= 4
-              ? 'grid-cols-4'
-              : 'grid-cols-3'
+              ? 'sm:grid-cols-4'
+              : 'sm:grid-cols-3'
           }`}
         >
           {images.map((img, idx) => {
@@ -176,7 +180,7 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
                 key={img.id}
                 type="button"
                 onClick={() => setActiveIndex(idx)}
-                className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition-all duration-200 text-start group/thumb ${
+                className={`relative w-full aspect-square rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all duration-200 text-start group/thumb ${
                   isSelected
                     ? 'border-teal-700 ring-2 ring-teal-700/20 shadow-sm scale-[1.02]'
                     : 'border-neutral-200 hover:border-neutral-300 opacity-70 hover:opacity-100'
@@ -187,10 +191,10 @@ export const VichyNormadermGallery: React.FC<VichyNormadermGalleryProps> = ({ im
                   alt={isAr ? img.altAr : img.altEn}
                   fill
                   className="object-cover transition-transform duration-300 group-hover/thumb:scale-105"
-                  sizes="(max-width: 768px) 33vw, 120px"
+                  sizes="(max-width: 639px) 72px, 120px"
                 />
                 {img.badgeAr && (
-                  <span className="absolute bottom-1 inset-x-1 text-center py-0.5 text-[8px] sm:text-[9px] font-semibold bg-neutral-900/80 text-white backdrop-blur-xs rounded-md">
+                  <span className="hidden sm:block absolute bottom-1 inset-x-1 text-center py-0.5 text-[9px] font-semibold bg-neutral-900/80 text-white backdrop-blur-xs rounded-md">
                     {isAr ? img.badgeAr : img.badgeEn}
                   </span>
                 )}
