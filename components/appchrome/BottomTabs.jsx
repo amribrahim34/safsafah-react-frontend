@@ -14,6 +14,11 @@ export default function BottomTabs() {
   useEffect(() => setMounted(true), []);
   const authState = mounted ? isAuthenticated : false;
 
+  // Dedicated landing pages provide their own conversion CTA bar at bottom-0 on mobile.
+  if (pathname?.includes('/landing/vichy-normaderm')) {
+    return null;
+  }
+
   const isAr = locale === 'ar';
   const labels = {
     home:    isAr ? "الرئيسية" : "Home",
