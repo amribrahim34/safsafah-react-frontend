@@ -26,6 +26,7 @@ export interface ReviewItem {
   cityEn: string;
   rating: number;
   date: string;
+  dateEn?: string;
   titleAr: string;
   titleEn: string;
   commentAr: string;
@@ -33,6 +34,8 @@ export interface ReviewItem {
   verified: boolean;
   highlightAr?: string;
   highlightEn?: string;
+  sourceAr?: string;
+  sourceEn?: string;
 }
 
 export interface FAQItem {

@@ -9,6 +9,7 @@ import VichyNormadermHighlights from './_components/VichyNormadermHighlights';
 import VichyNormadermDescription from './_components/VichyNormadermDescription';
 import VichyNormadermFormulaStandards from './_components/VichyNormadermFormulaStandards';
 import VichyNormadermComparison from './_components/VichyNormadermComparison';
+import VichyNormadermTestimonials from './_components/VichyNormadermTestimonials';
 import VichyNormadermFAQ from './_components/VichyNormadermFAQ';
 import VichyNormadermOrderSection from './_components/VichyNormadermOrderSection';
 import VichyNormadermSimilarProducts from './_components/VichyNormadermSimilarProducts';
@@ -294,7 +295,10 @@ export default async function VichyNormadermLandingPage({ params }: PageProps) {
         {/* 5. Comparison Table (Vichy vs. Ordinary Cleansers) */}
         <VichyNormadermComparison lang={lang} />
 
-        {/* 6. Frequently Asked Questions (Accordion + JSON-LD) */}
+        {/* 6. Verified Customer Reviews (from Noon Egypt) */}
+        <VichyNormadermTestimonials reviews={product.reviews} lang={lang} />
+
+        {/* 7. Frequently Asked Questions (Accordion + JSON-LD) */}
         <VichyNormadermFAQ faqs={product.faqs} lang={lang} />
 
         {/* 7. Express Cash on Delivery Order Form */}
